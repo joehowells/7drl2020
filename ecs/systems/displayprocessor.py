@@ -1,3 +1,5 @@
+import itertools
+
 from bearlibterminal import terminal
 
 from ecs.components.display import Display
@@ -16,14 +18,15 @@ class DisplayProcessor(Processor):
         y_offset = 10 - position.y
 
         _, map_ = next(iter(self.world.get_component(Map)))
-        for y, row in enumerate(map_.walkable):
-            for x, walkable in enumerate(row):
-                if walkable:
-                    terminal.put(x + x_offset, y + y_offset, chr(0x002e))
-                else:
-                    terminal.put(x + x_offset, y + y_offset, chr(0x0023))
+        for x, y in itertools.product(range(map_.w), range(map_.h)):
+            if map_.explored[y][x]:
+                color = 0xCCCCCCCC if map_.visible[y][x] else 0x66666666
+                code = 0x002E if map_.walkable[y][x] else 0x0023
+                terminal.color(color)
+                terminal.put(x + x_offset, y + y_offset, code)
 
         for _, (display, position) in self.world.get_components(Display, Position):
+            terminal.color("white")
             terminal.put(position.x + x_offset, position.y + y_offset, chr(display.code))
 
         terminal.refresh()

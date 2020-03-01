@@ -6,6 +6,7 @@ from ecs.components.display import Display
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
+from ecs.systems.visionprocessor import VisionProcessor
 from ecs.world import World
 from ecs.systems.displayprocessor import DisplayProcessor
 from ecs.systems.inputprocessor import InputProcessor
@@ -31,8 +32,9 @@ class Main:
         map_ = self.world.create_entity()
         self.world.add_component(map_, Map())
 
-        self.world.add_processor(DisplayProcessor())
         self.world.add_processor(MovementProcessor())
+        self.world.add_processor(VisionProcessor())
+        self.world.add_processor(DisplayProcessor())
         self.world.add_processor(InputProcessor())
 
     def core_game_loop(self):
