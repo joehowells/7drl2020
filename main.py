@@ -4,6 +4,7 @@ from bearlibterminal import terminal
 
 from ecs.components.display import Display
 from ecs.components.map import Map
+from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.world import World
 from ecs.systems.displayprocessor import DisplayProcessor
@@ -24,6 +25,7 @@ class Main:
 
         player = self.world.create_entity()
         self.world.add_component(player, Display(0x0040))
+        self.world.add_component(player, Player())
         self.world.add_component(player, Position(10, 10))
 
         map_ = self.world.create_entity()
