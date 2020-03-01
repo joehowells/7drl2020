@@ -16,10 +16,10 @@ class VisionProcessor(Processor):
 
         _, (_, position) = next(iter(self.world.get_components(Player, Position)))
 
-        x_min = max(position.x-8, 0)
-        x_max = min(position.x+8, map_.w-1)
-        y_min = max(position.y-8, 0)
-        y_max = min(position.y+8, map_.h-1)
+        x_min = max(position.x - 8, 0)
+        x_max = min(position.x + 9, map_.w)
+        y_min = max(position.y - 8, 0)
+        y_max = min(position.y + 9, map_.h)
 
         map_.visible[position.y][position.x] = True
         map_.explored[position.y][position.x] = True

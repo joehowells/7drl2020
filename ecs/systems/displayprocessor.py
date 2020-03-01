@@ -28,13 +28,13 @@ class DisplayProcessor(Processor):
                 else:
                     color = 0x66666666
 
-                if map_.walkable[y][x]:
-                    if 0 <= map_.dijkstra[y][x] < 26:
-                        code = 0x0041 + map_.dijkstra[y][x]
-                    else:
-                        code = 0x002E
+                if 0 <= map_.dijkstra[y][x] < 26:
+                    code = 0x0040 + map_.dijkstra[y][x]
                 else:
-                    code = 0x0023
+                    if map_.walkable[y][x]:
+                        code = 0x002E
+                    else:
+                        code = 0x0023
 
                 terminal.color(color)
                 terminal.put(x + x_offset, y + y_offset, code)
