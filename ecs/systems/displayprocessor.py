@@ -14,11 +14,17 @@ class DisplayProcessor(Processor):
         terminal.clear()
 
         _, (_, position) = next(iter(self.world.get_components(Player, Position)))
-        x_offset = 10 - position.x
+        x_offset = 16 - position.x
         y_offset = 10 - position.y
 
         _, map_ = next(iter(self.world.get_component(Map)))
-        for x, y in itertools.product(range(map_.w), range(map_.h)):
+        for xc, yc in itertools.product(range(33), range(21)):
+            x = xc - x_offset
+            y = yc - y_offset
+
+            if not 0 <= x < map_.w or not 0 <= y < map_.h:
+                continue
+
             if map_.explored[y][x]:
                 if map_.visible[y][x]:
                     if map_.walkable[y][x]:

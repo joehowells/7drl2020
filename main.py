@@ -37,7 +37,7 @@ class Main:
         player = self.world.create_entity()
         self.world.add_component(player, Display(0x0040))
         self.world.add_component(player, Player())
-        self.world.add_component(player, Position(10, 10))
+        self.world.add_component(player, Position(50, 50))
 
         player = self.world.create_entity()
         self.world.add_component(player, Display(0x0026))
