@@ -1,11 +1,39 @@
+from contextlib import contextmanager
+
 from bearlibterminal import terminal
 
+from ecs.components.display import Display
+from ecs.components.position import Position
+from ecs.world import World
+from ecs.systems.displayprocessor import DisplayProcessor
+from ecs.systems.inputprocessor import InputProcessor
+from ecs.systems.movementprocessor import MovementProcessor
 
-terminal.open()
-terminal.printf(1, 1, "Hello, World!")
-terminal.refresh()
 
-while terminal.read() != terminal.TK_CLOSE:
-    pass
+@contextmanager
+def terminal_context():
+    terminal.open()
+    yield
+    terminal.close()
 
-terminal.close()
+
+class Main:
+    def __init__(self):
+        self.world = World()
+
+        self.player = self.world.create_entity()
+        self.world.add_component(self.player, Display(0x0040))
+        self.world.add_component(self.player, Position(10, 10))
+
+        self.world.add_processor(DisplayProcessor())
+        self.world.add_processor(MovementProcessor())
+        self.world.add_processor(InputProcessor())
+
+    def core_game_loop(self):
+        while True:
+            self.world.process()
+
+
+if __name__ == "__main__":
+    with terminal_context():
+        Main().core_game_loop()
