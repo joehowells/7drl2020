@@ -2,6 +2,7 @@ import itertools
 from typing import Generator, Tuple, Collection, Set, List
 
 from ecs.components.map import Map
+from ecs.components.position import Position
 
 
 def line_iter(xo: int, yo: int, xd: int, yd: int) -> Generator[Tuple[int, int], None, None]:
@@ -98,3 +99,22 @@ def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> List[List[i
             break
 
     return output
+
+
+def move_dijkstra(map_: Map, position: Position, key: str) -> bool:
+    neighbors = [
+        (x, y)
+        for x, y, in iter_neighbors(position.x, position.y, map_)
+        if map_.walkable[y][x] and map_.dijkstra[key][y][x] < map_.dijkstra[key][position.y][position.x]
+    ]
+
+    if not neighbors:
+        return False
+
+    neighbors.sort(key=lambda xy: map_.dijkstra[key][xy[1]][xy[0]])
+    x, y = neighbors[0]
+
+    position.x = x
+    position.y = y
+
+    return True
