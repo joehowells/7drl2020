@@ -1,7 +1,7 @@
 from ecs.components.map import Map
 from ecs.components.position import Position
 from ecs.processor import Processor
-from ecs.systems.dijkstramapprocessor import iter_neighbors
+from functions import iter_neighbors
 
 
 class MovementProcessor(Processor):
