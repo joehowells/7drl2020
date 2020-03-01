@@ -21,7 +21,8 @@ class VisionProcessor(Processor):
         y_min = max(position.y-8, 0)
         y_max = min(position.y+8, map_.h-1)
 
-        map_.visible[position.y][position.x] = False
+        map_.visible[position.y][position.x] = True
+        map_.explored[position.y][position.x] = True
 
         for x, y in itertools.product(range(x_min, x_max), range(y_min, y_max)):
             for xi, yi in line_iter(position.x, position.y, x, y):
