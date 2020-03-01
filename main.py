@@ -8,6 +8,7 @@ from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.staircase import Staircase
+from ecs.systems.attackaiprocessor import AttackAIProcessor
 from ecs.systems.autoexploreprocessor import AutoExploreProcessor
 from ecs.systems.displayprocessor import DisplayProcessor
 from ecs.systems.findstaircaseprocessor import FindStaircaseProcessor
@@ -43,6 +44,11 @@ class Main:
         self.world.add_component(player, Monster())
         self.world.add_component(player, Position(9, 8))
 
+        player = self.world.create_entity()
+        self.world.add_component(player, Display(0x0026))
+        self.world.add_component(player, Monster())
+        self.world.add_component(player, Position(13, 8))
+
         map_ = self.world.create_entity()
         self.world.add_component(map_, Map())
 
@@ -51,6 +57,7 @@ class Main:
         self.world.add_processor(AutoExploreProcessor())
         self.world.add_processor(FindStaircaseProcessor())
         self.world.add_processor(DisplayProcessor())
+        self.world.add_processor(AttackAIProcessor())
         self.world.add_processor(InputProcessor())
 
     def core_game_loop(self):

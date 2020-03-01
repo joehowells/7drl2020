@@ -12,5 +12,5 @@ class InputProcessor(Processor):
             raise SystemExit
 
         if event == terminal.TK_Z:
-            self.event(Event("move", {}))
+            self.event(Event("attack_ai", {}))
             return

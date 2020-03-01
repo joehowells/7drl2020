@@ -101,7 +101,7 @@ def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> List[List[i
     return output
 
 
-def move_dijkstra(map_: Map, position: Position, key: str) -> bool:
+def move_dijkstra(map_: Map, position: Position, key: str) -> None:
     neighbors = [
         (x, y)
         for x, y, in iter_neighbors(position.x, position.y, map_)
@@ -109,12 +109,10 @@ def move_dijkstra(map_: Map, position: Position, key: str) -> bool:
     ]
 
     if not neighbors:
-        return False
+        return
 
     neighbors.sort(key=lambda xy: map_.dijkstra[key][xy[1]][xy[0]])
     x, y = neighbors[0]
 
     position.x = x
     position.y = y
-
-    return True
