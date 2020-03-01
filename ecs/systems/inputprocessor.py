@@ -8,6 +8,9 @@ class InputProcessor(Processor):
     def process(self):
         event = terminal.read()
 
+        while terminal.has_input():
+            terminal.read()
+
         if event == terminal.TK_CLOSE:
             raise SystemExit
 
