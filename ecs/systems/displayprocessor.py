@@ -19,11 +19,11 @@ class DisplayProcessor(Processor):
         for y, row in enumerate(map_.walkable):
             for x, walkable in enumerate(row):
                 if walkable:
-                    terminal.put(x+x_offset, y+y_offset, chr(0x002e))
+                    terminal.put(x + x_offset, y + y_offset, chr(0x002e))
                 else:
-                    terminal.put(x+x_offset, y+y_offset, chr(0x0023))
+                    terminal.put(x + x_offset, y + y_offset, chr(0x0023))
 
         for _, (display, position) in self.world.get_components(Display, Position):
-            terminal.put(position.x+x_offset, position.y+y_offset, chr(display.code))
+            terminal.put(position.x + x_offset, position.y + y_offset, chr(display.code))
 
         terminal.refresh()
