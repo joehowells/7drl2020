@@ -6,6 +6,7 @@ from ecs.components.display import Display
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
+from ecs.systems.dijkstramapprocessor import DijkstraMapProcessor
 from ecs.systems.displayprocessor import DisplayProcessor
 from ecs.systems.inputprocessor import InputProcessor
 from ecs.systems.movementprocessor import MovementProcessor
@@ -22,7 +23,7 @@ def terminal_context():
 
 class Main:
     def __init__(self):
-        self.world = World()
+        self.world = World(timed=True)
 
         player = self.world.create_entity()
         self.world.add_component(player, Display(0x0040))
@@ -34,12 +35,16 @@ class Main:
 
         self.world.add_processor(MovementProcessor())
         self.world.add_processor(VisionProcessor())
+        self.world.add_processor(DijkstraMapProcessor())
         self.world.add_processor(DisplayProcessor())
         self.world.add_processor(InputProcessor())
 
     def core_game_loop(self):
         while True:
             self.world.process()
+
+            if hasattr(self.world, "process_times"):
+                print(self.world.process_times)
 
 
 if __name__ == "__main__":
