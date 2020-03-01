@@ -44,4 +44,8 @@ class AttackAIProcessor(Processor):
             self.event(Event("move", {"dijkstra": "enemy"}))
             return
 
-        self.event(Event("move", {"dijkstra": "auto_explore"}))
+        if not map_.done_exploring:
+            self.event(Event("move", {"dijkstra": "auto_explore"}))
+            return
+
+        self.event(Event("move", {"dijkstra": "staircase"}))

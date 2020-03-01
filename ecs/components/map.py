@@ -16,6 +16,7 @@ class Map:
             "enemy": [[-1 for _ in range(self.w)] for _ in range(self.h)],
             "staircase": [[-1 for _ in range(self.w)] for _ in range(self.h)],
         }
+        self.done_exploring = False
 
         for y, row in enumerate(self.walkable):
             for x, _ in enumerate(row):

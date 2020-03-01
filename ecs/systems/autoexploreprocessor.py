@@ -19,4 +19,7 @@ class AutoExploreProcessor(Processor):
             if not map_.explored[y][x] and any(map_.explored[y][x] for x, y in iter_neighbors(x, y, map_)):
                 sources.add((x, y))
 
-        map_.dijkstra["auto_explore"] = dijkstra_map(map_, sources)
+        if sources:
+            map_.dijkstra["auto_explore"] = dijkstra_map(map_, sources)
+        else:
+            map_.done_exploring = True
