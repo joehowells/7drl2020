@@ -39,8 +39,10 @@ class DisplayProcessor(Processor):
                 terminal.color(color)
                 terminal.put(x + x_offset, y + y_offset, code)
 
+        terminal.color(0xFFFFFFFF)
+
         for _, (display, position) in self.world.get_components(Display, Position):
-            terminal.color("white")
-            terminal.put(position.x + x_offset, position.y + y_offset, chr(display.code))
+            if map_.visible[position.y][position.x]:
+                terminal.put(position.x + x_offset, position.y + y_offset, chr(display.code))
 
         terminal.refresh()

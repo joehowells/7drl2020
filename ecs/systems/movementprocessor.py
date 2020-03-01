@@ -1,4 +1,5 @@
 from ecs.components.map import Map
+from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.processor import Processor
 from functions import iter_neighbors
@@ -11,7 +12,7 @@ class MovementProcessor(Processor):
     def event_move(self, event):
         _, map_ = next(iter(self.world.get_component(Map)))
 
-        for _, (position,) in self.world.get_components(Position):
+        for _, (position, _) in self.world.get_components(Position, Player):
             neighbors = [
                 (x, y)
                 for x, y, in iter_neighbors(position.x, position.y, map_)
