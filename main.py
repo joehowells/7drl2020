@@ -6,11 +6,11 @@ from ecs.components.display import Display
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.systems.visionprocessor import VisionProcessor
-from ecs.world import World
 from ecs.systems.displayprocessor import DisplayProcessor
 from ecs.systems.inputprocessor import InputProcessor
 from ecs.systems.movementprocessor import MovementProcessor
+from ecs.systems.visionprocessor import VisionProcessor
+from ecs.world import World
 
 
 @contextmanager
