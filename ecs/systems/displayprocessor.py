@@ -28,8 +28,8 @@ class DisplayProcessor(Processor):
                 else:
                     color = 0x66666666
 
-                if 0 <= map_.dijkstra[y][x] < 26:
-                    code = 0x0040 + map_.dijkstra[y][x]
+                if 0 <= map_.dijkstra["auto_explore"][y][x] < 26:
+                    code = 0x0040 + map_.dijkstra["auto_explore"][y][x]
                 else:
                     if map_.walkable[y][x]:
                         code = 0x002E

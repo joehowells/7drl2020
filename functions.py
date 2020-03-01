@@ -1,5 +1,5 @@
 import itertools
-from typing import Generator, Tuple, Collection, Set
+from typing import Generator, Tuple, Collection, Set, List
 
 from ecs.components.map import Map
 
@@ -64,12 +64,11 @@ def iter_neighbors(x: int, y: int, map_: Map) -> Generator[Tuple[int, int], None
             yield x_neighbor, y_neighbor
 
 
-def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> None:
-    for x, y in itertools.product(range(map_.w), range(map_.h)):
-        map_.dijkstra[y][x] = -1
+def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> List[List[int]]:
+    output = [[-1 for _ in range(map_.w)] for _ in range(map_.h)]
 
     for x, y in sources:
-        map_.dijkstra[y][x] = 0
+        output[y][x] = 0
 
     old_front: Set[Tuple[int, int]]
     new_front: Set[Tuple[int, int]] = set(sources)
@@ -81,7 +80,7 @@ def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> None:
         visited.update(old_front)
 
         for x, y in old_front:
-            map_.dijkstra[y][x] = value
+            output[y][x] = value
 
             for x_neighbor, y_neighbor in iter_neighbors(x, y, map_):
                 if not map_.explored[y_neighbor][x_neighbor]:
@@ -97,3 +96,5 @@ def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> None:
 
         if not new_front:
             break
+
+    return output

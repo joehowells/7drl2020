@@ -11,7 +11,7 @@ class Map:
         self.visible = [[False for _ in range(self.w)] for _ in range(self.h)]
         self.transparent = [[False for _ in range(self.w)] for _ in range(self.h)]
         self.explored = [[False for _ in range(self.w)] for _ in range(self.h)]
-        self.dijkstra = [[0 for _ in range(self.w)] for _ in range(self.h)]
+        self.dijkstra = {}
 
         for y, row in enumerate(self.walkable):
             for x, _ in enumerate(row):

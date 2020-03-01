@@ -9,6 +9,7 @@ from ecs.components.position import Position
 from ecs.components.staircase import Staircase
 from ecs.systems.autoexploreprocessor import AutoExploreProcessor
 from ecs.systems.displayprocessor import DisplayProcessor
+from ecs.systems.findstaircaseprocessor import FindStaircaseProcessor
 from ecs.systems.inputprocessor import InputProcessor
 from ecs.systems.movementprocessor import MovementProcessor
 from ecs.systems.visionprocessor import VisionProcessor
@@ -42,6 +43,7 @@ class Main:
         self.world.add_processor(MovementProcessor())
         self.world.add_processor(VisionProcessor())
         self.world.add_processor(AutoExploreProcessor())
+        self.world.add_processor(FindStaircaseProcessor())
         self.world.add_processor(DisplayProcessor())
         self.world.add_processor(InputProcessor())
 
