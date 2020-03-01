@@ -3,6 +3,7 @@ from contextlib import contextmanager
 from bearlibterminal import terminal
 
 from ecs.components.display import Display
+from ecs.components.map import Map
 from ecs.components.position import Position
 from ecs.world import World
 from ecs.systems.displayprocessor import DisplayProcessor
@@ -21,9 +22,12 @@ class Main:
     def __init__(self):
         self.world = World()
 
-        self.player = self.world.create_entity()
-        self.world.add_component(self.player, Display(0x0040))
-        self.world.add_component(self.player, Position(10, 10))
+        player = self.world.create_entity()
+        self.world.add_component(player, Display(0x0040))
+        self.world.add_component(player, Position(10, 10))
+
+        map_ = self.world.create_entity()
+        self.world.add_component(map_, Map())
 
         self.world.add_processor(DisplayProcessor())
         self.world.add_processor(MovementProcessor())
