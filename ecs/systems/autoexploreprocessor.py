@@ -8,7 +8,7 @@ from ecs.processor import Processor
 from functions import dijkstra_map, iter_neighbors
 
 
-class DijkstraMapProcessor(Processor):
+class AutoExploreProcessor(Processor):
     def process(self):
         _, map_ = next(iter(self.world.get_component(Map)))
         _, (_, position) = next(iter(self.world.get_components(Player, Position)))

@@ -6,7 +6,7 @@ from ecs.components.display import Display
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.systems.dijkstramapprocessor import DijkstraMapProcessor
+from ecs.systems.autoexploreprocessor import AutoExploreProcessor
 from ecs.systems.displayprocessor import DisplayProcessor
 from ecs.systems.inputprocessor import InputProcessor
 from ecs.systems.movementprocessor import MovementProcessor
@@ -35,7 +35,7 @@ class Main:
 
         self.world.add_processor(MovementProcessor())
         self.world.add_processor(VisionProcessor())
-        self.world.add_processor(DijkstraMapProcessor())
+        self.world.add_processor(AutoExploreProcessor())
         self.world.add_processor(DisplayProcessor())
         self.world.add_processor(InputProcessor())
 
