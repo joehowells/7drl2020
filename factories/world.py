@@ -43,11 +43,11 @@ def make_world() -> List[List[Any]]:
         if min(room.w, room.h) < 4:
             continue
 
-        for _ in range(randint(2, 8)):
+        for _ in range(randint(4, 16)):
             x = randint(room.x1, room.x2 - 1)
             y = randint(room.y1, room.y2 - 1)
             if not game_map.blocked[y][x]:
-                if randint(1, 2) == 1:
+                if randint(1, 5) < 5:
                     entities.append([
                         Display(0x0026),
                         Monster(),
@@ -56,9 +56,8 @@ def make_world() -> List[List[Any]]:
                     game_map.blocked[y][x] = True
                 else:
                     entities.append([
-                        Display(0x0041),
+                        Display(0x0021),
                         Item(),
-                        # Monster(target_distance=2, threat=10),
                         Position(x, y),
                     ])
 
