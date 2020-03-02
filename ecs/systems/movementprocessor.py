@@ -1,6 +1,6 @@
 from esper import Processor
 
-from constants import DijkstraMap
+from constants import DijkstraMap, AWAKE_DISTANCE
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
@@ -20,4 +20,9 @@ class MovementProcessor(Processor, EventMixin):
 
         if event.name == "move":
             move_dijkstra(game_map, position, event.data["dijkstra"])
-            game_map.dijkstra[DijkstraMap.PLAYER] = dijkstra_map(game_map, [(position.x, position.y)], check_explored=False, max_value=16)
+            game_map.dijkstra[DijkstraMap.PLAYER] = dijkstra_map(
+                game_map=game_map,
+                sources=[(position.x, position.y)],
+                check_explored=False,
+                max_value=AWAKE_DISTANCE,
+            )

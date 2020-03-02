@@ -11,3 +11,4 @@ class DijkstraMap(Enum):
 ROOM_SIZE: int = 9
 GRAPH_MIN_DEPTH: int = 4
 GRAPH_MAX_DEPTH: int = 8
+AWAKE_DISTANCE = 20

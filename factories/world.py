@@ -1,7 +1,7 @@
 from random import choice, randint
 from typing import List, Any
 
-from constants import DijkstraMap
+from constants import DijkstraMap, AWAKE_DISTANCE
 from ecs.components.display import Display
 from ecs.components.map import Map
 from ecs.components.monster import Monster
@@ -36,7 +36,7 @@ def make_world() -> List[List[Any]]:
     ])
     game_map.blocked[y][x] = True
 
-    game_map.dijkstra[DijkstraMap.PLAYER] = dijkstra_map(game_map, [(x, y)], check_explored=False)
+    game_map.dijkstra[DijkstraMap.PLAYER] = dijkstra_map(game_map, [(x, y)], check_explored=False, max_value=AWAKE_DISTANCE)
 
     for _ in range(100):
         room = choice(game_map.rooms)
