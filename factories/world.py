@@ -1,12 +1,14 @@
 from random import choice, randint
 from typing import List, Any
 
+from constants import DijkstraMap
 from ecs.components.display import Display
 from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.staircase import Staircase
+from functions import dijkstra_map
 
 
 def make_world() -> List[List[Any]]:
@@ -21,6 +23,8 @@ def make_world() -> List[List[Any]]:
         Staircase(),
         Position(x, y),
     ])
+
+    game_map.dijkstra[DijkstraMap.STAIRS] = dijkstra_map(game_map, [(x, y)], check_explored=False)
 
     room = choice(game_map.rooms)
     x = randint(room.x1, room.x2-1)
