@@ -1,4 +1,5 @@
 from collections import deque
+from math import hypot
 from typing import Generator, Tuple, Collection, List
 
 from constants import DijkstraMap
@@ -104,7 +105,7 @@ def move_dijkstra(game_map: Map, position: Position, key: DijkstraMap) -> None:
     if not neighbors:
         return
 
-    neighbors.sort(key=lambda xy: game_map.dijkstra[key][xy[1]][xy[0]])
+    neighbors.sort(key=lambda xy: (game_map.dijkstra[key][xy[1]][xy[0]], hypot(xy[0]-position.x, xy[1]-position.y)))
     x, y = neighbors[0]
 
     position.x = x
