@@ -5,6 +5,7 @@ class DijkstraMap(Enum):
     EXPLORE = auto()
     PLAYER = auto()
     MONSTER = auto()
+    ITEM = auto()
     STAIRS = auto()
 
 

@@ -3,6 +3,7 @@ from typing import List, Any
 
 from constants import DijkstraMap, AWAKE_DISTANCE
 from ecs.components.display import Display
+from ecs.components.item import Item
 from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
@@ -52,13 +53,13 @@ def make_world() -> List[List[Any]]:
                         Monster(),
                         Position(x, y),
                     ])
+                    game_map.blocked[y][x] = True
                 else:
                     entities.append([
                         Display(0x0041),
-                        Monster(target_distance=2, threat=10),
+                        Item(),
+                        # Monster(target_distance=2, threat=10),
                         Position(x, y),
                     ])
-
-                game_map.blocked[y][x] = True
 
     return entities

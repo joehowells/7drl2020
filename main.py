@@ -10,6 +10,7 @@ from ecs.systems.combatsystem import CombatProcessor
 from ecs.systems.defendaiprocessor import DefendAIProcessor
 from ecs.systems.displayprocessor import DisplayProcessor
 from ecs.systems.inputprocessor import InputProcessor
+from ecs.systems.itemprocessor import ItemProcessor
 from ecs.systems.monsterprocessor import MonsterProcessor
 from ecs.systems.movementprocessor import MovementProcessor
 from ecs.systems.threatprocessor import ThreatProcessor
@@ -40,6 +41,7 @@ class Main:
 
         self.world.add_processor(VisionProcessor())
         self.world.add_processor(VisibilityProcessor())
+        self.world.add_processor(ItemProcessor())
         self.world.add_processor(AwakeProcessor())
         self.world.add_processor(MonsterProcessor())
         self.world.add_processor(ThreatProcessor())

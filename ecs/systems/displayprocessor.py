@@ -4,6 +4,7 @@ from textwrap import wrap
 from bearlibterminal import terminal
 from esper import Processor
 
+from constants import DijkstraMap
 from ecs.components.message import Message
 from ecs.components.display import Display
 from ecs.components.map import Map
@@ -78,7 +79,7 @@ class DisplayProcessor(Processor):
                     color = 0x66666666
 
                 if game_map.walkable[y][x]:
-                    code = 0x002E
+                    code = 0x0041 + game_map.dijkstra[DijkstraMap.ITEM][y][x]
                 else:
                     code = 0x0023
 
