@@ -108,8 +108,8 @@ class DisplayProcessor(Processor):
         draw_bar(46, 2, player.visible_threat // 5, 0xFFFFFF00)
         draw_bar(46, 2, player.actual_threat // 5, 0xFFFF0000)
 
-        terminal.printf(34, 4, f"[[X]] {player.attack_action.name}")
-        terminal.printf(34, 5, f"[[Z]] {player.defend_action.name}")
+        terminal.printf(34, 4, f"[[Z]] {player.attack_action.name}")
+        terminal.printf(34, 5, f"[[X]] {player.defend_action.name}")
 
     def draw_messages(self):
         for entity, message in self.world.get_component(Message):

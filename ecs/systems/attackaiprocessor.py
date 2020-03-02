@@ -8,6 +8,7 @@ from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
+from ecs.components.staircase import Staircase
 from ecs.eventmixin import EventMixin
 from functions import dijkstra_map, iter_neighbors
 
@@ -46,4 +47,9 @@ class AttackAIProcessor(Processor, EventMixin):
             player.attack_action = Event("move", {"dijkstra": DijkstraMap.EXPLORE, "anger": 1})
 
         else:
-            player.attack_action = Event("move", {"dijkstra": DijkstraMap.STAIRS, "anger": 1})
+            for entity, (position, _) in self.world.get_components(Position, Staircase):
+                if position.x == player_position.x and position.y == player_position.y:
+                    player.attack_action = Event("stairs", {})
+                    break
+            else:
+                player.attack_action = Event("move", {"dijkstra": DijkstraMap.STAIRS, "anger": 1})

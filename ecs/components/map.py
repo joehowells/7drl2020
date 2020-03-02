@@ -4,8 +4,6 @@ from itertools import product
 from constants import DijkstraMap
 from factories.map import make_map
 
-random.seed(100)
-
 
 class Map:
     def __init__(self):
