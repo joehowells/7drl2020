@@ -17,7 +17,13 @@ class AutoExploreProcessor(Processor):
         sources: Set[Tuple[int, int]] = set()
 
         for x, y in itertools.product(range(map_.w), range(map_.h)):
-            if not map_.explored[y][x] and any(map_.explored[y][x] for x, y in iter_neighbors(x, y, map_)):
+            if map_.explored[y][x]:
+                continue
+
+            if not map_.walkable[y][x] and not any(map_.walkable[y][x] for x, y in iter_neighbors(x, y, map_)):
+                continue
+
+            if any(map_.explored[y][x] for x, y in iter_neighbors(x, y, map_)):
                 sources.add((x, y))
 
         if sources:

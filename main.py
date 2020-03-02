@@ -3,12 +3,6 @@ from contextlib import contextmanager
 from bearlibterminal import terminal
 from esper import World
 
-from ecs.components.display import Display
-from ecs.components.map import Map
-from ecs.components.monster import Monster
-from ecs.components.player import Player
-from ecs.components.position import Position
-from ecs.components.staircase import Staircase
 from ecs.systems.attackaiprocessor import AttackAIProcessor
 from ecs.systems.autoexploreprocessor import AutoExploreProcessor
 from ecs.systems.displayprocessor import DisplayProcessor
@@ -16,6 +10,7 @@ from ecs.systems.findstaircaseprocessor import FindStaircaseProcessor
 from ecs.systems.inputprocessor import InputProcessor
 from ecs.systems.movementprocessor import MovementProcessor
 from ecs.systems.visionprocessor import VisionProcessor
+from factories.world import make_world
 
 
 @contextmanager
@@ -29,28 +24,10 @@ class Main:
     def __init__(self):
         self.world = World(timed=True)
 
-        player = self.world.create_entity()
-        self.world.add_component(player, Display(0x003E))
-        self.world.add_component(player, Staircase())
-        self.world.add_component(player, Position(92, 12))
+        entities = make_world()
 
-        player = self.world.create_entity()
-        self.world.add_component(player, Display(0x0040))
-        self.world.add_component(player, Player())
-        self.world.add_component(player, Position(50, 50))
-
-        player = self.world.create_entity()
-        self.world.add_component(player, Display(0x0026))
-        self.world.add_component(player, Monster())
-        self.world.add_component(player, Position(9, 8))
-
-        player = self.world.create_entity()
-        self.world.add_component(player, Display(0x0026))
-        self.world.add_component(player, Monster())
-        self.world.add_component(player, Position(13, 8))
-
-        map_ = self.world.create_entity()
-        self.world.add_component(map_, Map())
+        for entity in entities:
+            self.world.create_entity(*entity)
 
         self.world.add_processor(MovementProcessor())
         self.world.add_processor(VisionProcessor())

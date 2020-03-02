@@ -1,13 +1,15 @@
 import random
 
+from factories.map import make_map
+
 random.seed(100)
 
 
 class Map:
     def __init__(self):
-        self.w = 100
-        self.h = 100
-        self.walkable = [[False for _ in range(self.w)] for _ in range(self.h)]
+        self.walkable, self.rooms = make_map()
+        self.w = len(self.walkable[0])
+        self.h = len(self.walkable)
         self.visible = [[False for _ in range(self.w)] for _ in range(self.h)]
         self.transparent = [[False for _ in range(self.w)] for _ in range(self.h)]
         self.explored = [[False for _ in range(self.w)] for _ in range(self.h)]
@@ -20,6 +22,4 @@ class Map:
 
         for y, row in enumerate(self.walkable):
             for x, _ in enumerate(row):
-                if random.random() < 0.8:
-                    self.walkable[y][x] = True
-                    self.transparent[y][x] = True
+                self.transparent[y][x] = self.walkable[y][x]
