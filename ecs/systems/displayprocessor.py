@@ -18,25 +18,25 @@ class DisplayProcessor(Processor):
         x_offset = 16 - position.x
         y_offset = 10 - position.y
 
-        _, map_ = next(iter(self.world.get_component(Map)))
+        _, game_map = next(iter(self.world.get_component(Map)))
         for xc, yc in itertools.product(range(33), range(21)):
             x = xc - x_offset
             y = yc - y_offset
 
-            if not 0 <= x < map_.w or not 0 <= y < map_.h:
+            if not 0 <= x < game_map.w or not 0 <= y < game_map.h:
                 continue
 
-            if map_.explored[y][x]:
-                if map_.visible[y][x]:
-                    if map_.walkable[y][x]:
+            if game_map.explored[y][x]:
+                if game_map.visible[y][x]:
+                    if game_map.walkable[y][x]:
                         color = 0x99999999
                     else:
                         color = 0xCCCCCCCC
                 else:
                     color = 0x66666666
 
-                if map_.walkable[y][x]:
-                    code = 0x0041 + map_.dijkstra[DijkstraMap.EXPLORE][y][x]
+                if game_map.walkable[y][x]:
+                    code = 0x0041 + game_map.dijkstra[DijkstraMap.EXPLORE][y][x]
                 else:
                     code = 0x0023
 
@@ -46,7 +46,7 @@ class DisplayProcessor(Processor):
         terminal.color(0xFFFFFFFF)
 
         for _, (display, position) in self.world.get_components(Display, Position):
-            if map_.visible[position.y][position.x]:
+            if game_map.visible[position.y][position.x]:
                 terminal.put(position.x + x_offset, position.y + y_offset, chr(display.code))
 
         terminal.refresh()

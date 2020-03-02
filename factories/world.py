@@ -10,10 +10,10 @@ from ecs.components.staircase import Staircase
 
 
 def make_world() -> List[List[Any]]:
-    dungeon_map = Map()
-    entities = [[dungeon_map]]
+    game_map = Map()
+    entities = [[game_map]]
 
-    room = choice(dungeon_map.rooms)
+    room = choice(game_map.rooms)
     x = randint(room.x1, room.x2-1)
     y = randint(room.y1, room.y2-1)
     entities.append([
@@ -22,7 +22,7 @@ def make_world() -> List[List[Any]]:
         Position(x, y),
     ])
 
-    room = choice(dungeon_map.rooms)
+    room = choice(game_map.rooms)
     x = randint(room.x1, room.x2-1)
     y = randint(room.y1, room.y2-1)
     entities.append([
@@ -32,7 +32,7 @@ def make_world() -> List[List[Any]]:
     ])
 
     for _ in range(10):
-        room = choice(dungeon_map.rooms)
+        room = choice(game_map.rooms)
         x = randint(room.x1, room.x2-1)
         y = randint(room.y1, room.y2-1)
         entities.append([

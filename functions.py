@@ -49,7 +49,7 @@ def line_iter(xo: int, yo: int, xd: int, yd: int) -> Generator[Tuple[int, int], 
         return
 
 
-def iter_neighbors(x: int, y: int, map_: Map) -> Generator[Tuple[int, int], None, None]:
+def iter_neighbors(x: int, y: int, game_map: Map) -> Generator[Tuple[int, int], None, None]:
     neighbors = [
         (x - 1, y - 1),
         (x, y - 1),
@@ -62,12 +62,12 @@ def iter_neighbors(x: int, y: int, map_: Map) -> Generator[Tuple[int, int], None
     ]
 
     for x_neighbor, y_neighbor in neighbors:
-        if 0 <= x_neighbor < map_.w and 0 <= y_neighbor < map_.h:
+        if 0 <= x_neighbor < game_map.w and 0 <= y_neighbor < game_map.h:
             yield x_neighbor, y_neighbor
 
 
-def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> List[List[int]]:
-    output = [[-1 for _ in range(map_.w)] for _ in range(map_.h)]
+def dijkstra_map(game_map: Map, sources: Collection[Tuple[int, int]]) -> List[List[int]]:
+    output = [[-1 for _ in range(game_map.w)] for _ in range(game_map.h)]
     queue = deque()
 
     for x, y in sources:
@@ -78,11 +78,11 @@ def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> List[List[i
         x, y = queue.popleft()
         value = output[y][x]
 
-        for x_neighbor, y_neighbor in iter_neighbors(x, y, map_):
-            if not map_.explored[y_neighbor][x_neighbor]:
+        for x_neighbor, y_neighbor in iter_neighbors(x, y, game_map):
+            if not game_map.explored[y_neighbor][x_neighbor]:
                 continue
 
-            if not map_.walkable[y_neighbor][x_neighbor]:
+            if not game_map.walkable[y_neighbor][x_neighbor]:
                 continue
 
             if output[y_neighbor][x_neighbor] > -1:
@@ -94,17 +94,17 @@ def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> List[List[i
     return output
 
 
-def move_dijkstra(map_: Map, position: Position, key: DijkstraMap) -> None:
+def move_dijkstra(game_map: Map, position: Position, key: DijkstraMap) -> None:
     neighbors = [
         (x, y)
-        for x, y, in iter_neighbors(position.x, position.y, map_)
-        if map_.walkable[y][x] and map_.dijkstra[key][y][x] < map_.dijkstra[key][position.y][position.x]
+        for x, y, in iter_neighbors(position.x, position.y, game_map)
+        if game_map.walkable[y][x] and game_map.dijkstra[key][y][x] < game_map.dijkstra[key][position.y][position.x]
     ]
 
     if not neighbors:
         return
 
-    neighbors.sort(key=lambda xy: map_.dijkstra[key][xy[1]][xy[0]])
+    neighbors.sort(key=lambda xy: game_map.dijkstra[key][xy[1]][xy[0]])
     x, y = neighbors[0]
 
     position.x = x

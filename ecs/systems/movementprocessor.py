@@ -14,7 +14,7 @@ class MovementProcessor(Processor, EventMixin):
         if not event:
             return
 
-        _, map_ = next(iter(self.world.get_component(Map)))
+        _, game_map = next(iter(self.world.get_component(Map)))
         _, (position, _) = next(iter(self.world.get_components(Position, Player)))
 
-        move_dijkstra(map_, position, event.data["dijkstra"])
+        move_dijkstra(game_map, position, event.data["dijkstra"])

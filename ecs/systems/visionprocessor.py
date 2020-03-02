@@ -12,31 +12,31 @@ from functions import line_iter
 
 class VisionProcessor(Processor, EventMixin):
     def process(self):
-        _, map_ = next(iter(self.world.get_component(Map)))
+        _, game_map = next(iter(self.world.get_component(Map)))
 
-        for x, y in itertools.product(range(map_.w), range(map_.h)):
-            map_.visible[y][x] = False
+        for x, y in itertools.product(range(game_map.w), range(game_map.h)):
+            game_map.visible[y][x] = False
 
         _, (_, position) = next(iter(self.world.get_components(Player, Position)))
 
         x_min = max(position.x - 8, 0)
-        x_max = min(position.x + 9, map_.w)
+        x_max = min(position.x + 9, game_map.w)
         y_min = max(position.y - 8, 0)
-        y_max = min(position.y + 9, map_.h)
+        y_max = min(position.y + 9, game_map.h)
 
-        map_.visible[position.y][position.x] = True
-        map_.explored[position.y][position.x] = True
+        game_map.visible[position.y][position.x] = True
+        game_map.explored[position.y][position.x] = True
         new_tiles_explored = False
 
         for x, y in itertools.product(range(x_min, x_max), range(y_min, y_max)):
             for xi, yi in line_iter(position.x, position.y, x, y):
-                map_.visible[yi][xi] = True
+                game_map.visible[yi][xi] = True
 
-                if not map_.explored[yi][xi]:
-                    map_.explored[yi][xi] = True
+                if not game_map.explored[yi][xi]:
+                    game_map.explored[yi][xi] = True
                     new_tiles_explored = True
 
-                if not map_.transparent[yi][xi]:
+                if not game_map.transparent[yi][xi]:
                     break
 
         if new_tiles_explored:

@@ -9,7 +9,7 @@ from functions import dijkstra_map
 
 class FindStaircaseProcessor(Processor):
     def process(self):
-        _, map_ = next(iter(self.world.get_component(Map)))
+        _, game_map = next(iter(self.world.get_component(Map)))
         _, (_, position) = next(iter(self.world.get_components(Staircase, Position)))
 
-        map_.dijkstra[DijkstraMap.STAIRS] = dijkstra_map(map_, [(position.x, position.y)])
+        game_map.dijkstra[DijkstraMap.STAIRS] = dijkstra_map(game_map, [(position.x, position.y)])

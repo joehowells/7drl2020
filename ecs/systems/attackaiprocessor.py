@@ -23,16 +23,16 @@ class AttackAIProcessor(Processor, EventMixin):
         if not self.get_event("attack_ai"):
             return
 
-        _, map_ = next(iter(self.world.get_component(Map)))
+        _, game_map = next(iter(self.world.get_component(Map)))
         _, (_, player_position) = next(iter(self.world.get_components(Player, Position)))
 
-        neighbors = set(iter_neighbors(player_position.x, player_position.y, map_))
+        neighbors = set(iter_neighbors(player_position.x, player_position.y, game_map))
 
         sources = set()
         adjacent_entities = []
 
         for entity, (position, _) in self.world.get_components(Position, Monster):
-            if map_.visible[position.y][position.x]:
+            if game_map.visible[position.y][position.x]:
                 sources.add((position.x, position.y))
 
                 if (position.x, position.y) in neighbors:
@@ -43,11 +43,11 @@ class AttackAIProcessor(Processor, EventMixin):
             return
 
         if sources:
-            map_.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(map_, sources)
+            game_map.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(game_map, sources)
             self.set_event(Event("move", {"dijkstra": DijkstraMap.MONSTER}))
             return
 
-        if not map_.done_exploring:
+        if not game_map.done_exploring:
             self.set_event(Event("move", {"dijkstra": DijkstraMap.EXPLORE}))
             return
 
