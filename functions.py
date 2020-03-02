@@ -1,5 +1,5 @@
-import itertools
-from typing import Generator, Tuple, Collection, Set, List
+from collections import deque
+from typing import Generator, Tuple, Collection, List
 
 from ecs.components.map import Map
 from ecs.components.position import Position
@@ -67,36 +67,28 @@ def iter_neighbors(x: int, y: int, map_: Map) -> Generator[Tuple[int, int], None
 
 def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> List[List[int]]:
     output = [[-1 for _ in range(map_.w)] for _ in range(map_.h)]
+    queue = deque()
 
     for x, y in sources:
+        queue.append((x, y))
         output[y][x] = 0
 
-    old_front: Set[Tuple[int, int]]
-    new_front: Set[Tuple[int, int]] = set(sources)
-    visited: Set[Tuple[int, int]] = set()
+    while queue:
+        x, y = queue.popleft()
+        value = output[y][x]
 
-    for value in itertools.count():
-        old_front = new_front.copy()
-        new_front = set()
-        visited.update(old_front)
+        for x_neighbor, y_neighbor in iter_neighbors(x, y, map_):
+            if not map_.explored[y_neighbor][x_neighbor]:
+                continue
 
-        for x, y in old_front:
-            output[y][x] = value
+            if not map_.walkable[y_neighbor][x_neighbor]:
+                continue
 
-            for x_neighbor, y_neighbor in iter_neighbors(x, y, map_):
-                if not map_.explored[y_neighbor][x_neighbor]:
-                    continue
+            if output[y_neighbor][x_neighbor] > -1:
+                continue
 
-                if not map_.walkable[y_neighbor][x_neighbor]:
-                    continue
-
-                if (x_neighbor, y_neighbor) in visited:
-                    continue
-
-                new_front.add((x_neighbor, y_neighbor))
-
-        if not new_front:
-            break
+            queue.append((x_neighbor, y_neighbor))
+            output[y_neighbor][x_neighbor] = value + 1
 
     return output
 
