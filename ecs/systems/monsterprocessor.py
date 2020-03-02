@@ -19,5 +19,9 @@ class MonsterProcessor(Processor):
                 self.world.add_component(entity, Threatening())
             else:
                 if self.world.has_component(entity, Threatening):
-                    self.world.add_component(entity, Threatening)
-                move_dijkstra(game_map, position, DijkstraMap.PLAYER)
+                    self.world.remove_component(entity, Threatening)
+
+                if distance > monster.target_distance:
+                    move_dijkstra(game_map, position, DijkstraMap.PLAYER)
+                else:
+                    move_dijkstra(game_map, position, DijkstraMap.PLAYER, reverse=True)

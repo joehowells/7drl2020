@@ -38,18 +38,27 @@ def make_world() -> List[List[Any]]:
 
     game_map.dijkstra[DijkstraMap.PLAYER] = dijkstra_map(game_map, [(x, y)], check_explored=False, max_value=AWAKE_DISTANCE)
 
-    for _ in range(100):
-        room = choice(game_map.rooms)
+    for room in game_map.rooms:
+        if min(room.w, room.h) < 4:
+            continue
 
-        for _ in range(10):
+        for _ in range(randint(2, 8)):
             x = randint(room.x1, room.x2 - 1)
             y = randint(room.y1, room.y2 - 1)
             if not game_map.blocked[y][x]:
-                entities.append([
-                    Display(0x0026),
-                    Monster(),
-                    Position(x, y),
-                ])
+                if randint(1, 2) == 1:
+                    entities.append([
+                        Display(0x0026),
+                        Monster(),
+                        Position(x, y),
+                    ])
+                else:
+                    entities.append([
+                        Display(0x0041),
+                        Monster(target_distance=2, threat=10),
+                        Position(x, y),
+                    ])
+
                 game_map.blocked[y][x] = True
 
     return entities
