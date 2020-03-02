@@ -67,7 +67,7 @@ def iter_neighbors(x: int, y: int, game_map: Map) -> Generator[Tuple[int, int], 
             yield x_neighbor, y_neighbor
 
 
-def dijkstra_map(game_map: Map, sources: Collection[Tuple[int, int]], check_explored=True) -> List[List[int]]:
+def dijkstra_map(game_map: Map, sources: Collection[Tuple[int, int]], check_explored=True, max_value: int = None) -> List[List[int]]:
     output = [[-1 for _ in range(game_map.w)] for _ in range(game_map.h)]
     queue = deque()
 
@@ -78,6 +78,9 @@ def dijkstra_map(game_map: Map, sources: Collection[Tuple[int, int]], check_expl
     while queue:
         x, y = queue.popleft()
         value = output[y][x]
+
+        if max_value and value >= max_value:
+            continue
 
         for x_neighbor, y_neighbor in iter_neighbors(x, y, game_map):
             if check_explored and not game_map.explored[y_neighbor][x_neighbor]:
