@@ -47,7 +47,7 @@ class AttackAIProcessor(Processor, EventMixin):
             player.attack_action = Event("move", {"dijkstra": DijkstraMap.MONSTER, "anger": 1})
 
         elif not game_map.done_exploring:
-            player.attack_action = Event("move", {"dijkstra": DijkstraMap.EXPLORE})
+            player.attack_action = Event("move", {"dijkstra": DijkstraMap.EXPLORE, "anger": 1})
 
         else:
-            player.attack_action = Event("move", {"dijkstra": DijkstraMap.STAIRS})
+            player.attack_action = Event("move", {"dijkstra": DijkstraMap.STAIRS, "anger": 1})

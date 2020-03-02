@@ -3,11 +3,26 @@ import itertools
 from bearlibterminal import terminal
 from esper import Processor
 
-from constants import DijkstraMap
 from ecs.components.display import Display
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
+
+
+def draw_borders() -> None:
+    for y in range(21):
+        terminal.put(33, y, 0x2551)
+        terminal.put(33, 3, 0x255F)
+        terminal.put(33, 6, 0x255F)
+    for x in range(34, 67):
+        terminal.put(x, 3, 0x2500)
+        terminal.put(x, 6, 0x2500)
+
+
+def draw_bar(x: int, y: int, value: int, color: int = 0xFFFFFFFF) -> None:
+    terminal.color(color)
+    terminal.printf(x, y, "="*value)
+    terminal.color(0xFFFFFFFF)
 
 
 class DisplayProcessor(Processor):
@@ -15,21 +30,25 @@ class DisplayProcessor(Processor):
         terminal.clear()
 
         terminal.color(0xFF666666)
-        for y in range(21):
-            terminal.put(33, y, 0x2551)
-            terminal.put(33, 3, 0x255F)
-            terminal.put(33, 6, 0x255F)
 
-        for x in range(34, 67):
-            terminal.put(x, 3, 0x2500)
-            terminal.put(x, 6, 0x2500)
+        draw_borders()
 
         self.draw_map()
 
         _, player = next(iter(self.world.get_component(Player)))
-        terminal.printf(34, 0, f"Health: {player.health}")
-        terminal.printf(34, 1, f"Anger: {player.anger}")
-        terminal.printf(34, 2, f"Threat: {player.actual_threat}/{player.visible_threat}")
+
+        terminal.printf(34, 0, f"Health: {player.health:>3d}")
+        terminal.printf(34, 1, f"Anger:  {player.anger:>3d}")
+        terminal.printf(34, 2, f"Threat: {player.actual_threat:>3d}")
+
+        draw_bar(46, 0, 20, 0xFF333333)
+        draw_bar(46, 1, 20, 0xFF333333)
+        draw_bar(46, 2, 20, 0xFF333333)
+
+        draw_bar(46, 0, player.health)
+        draw_bar(46, 1, player.anger // 5, 0xFFFF0000)
+        draw_bar(46, 2, player.visible_threat // 5, 0xFFFFFF00)
+        draw_bar(46, 2, player.actual_threat // 5, 0xFFFF0000)
 
         terminal.printf(34, 4, f"[[X]] {player.attack_action.name}")
         terminal.printf(34, 5, f"[[Z]] {player.defend_action.name}")

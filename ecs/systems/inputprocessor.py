@@ -23,5 +23,4 @@ class InputProcessor(Processor, EventMixin):
 
         if event == terminal.TK_X:
             player.action = player.defend_action
-            player.anger += player.attack_action.anger
-            player.anger = min(max(player.anger + player.actiondata.get("anger", 0), 0), 100)
+            player.anger = min(max(player.anger + player.action.data.get("anger", 0), 0), 100)
