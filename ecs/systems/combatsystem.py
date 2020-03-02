@@ -1,6 +1,6 @@
 from esper import Processor
 
-from ecs.components.Message import Message
+from ecs.components.message import Message
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
