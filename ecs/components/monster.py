@@ -1,2 +1,6 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class Monster:
-    pass
+    target_distance: int = 1

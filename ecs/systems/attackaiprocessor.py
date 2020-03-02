@@ -37,6 +37,8 @@ class AttackAIProcessor(Processor, EventMixin):
 
         if adjacent_entities:
             self.world.delete_entity(adjacent_entities[0])
+            position = self.world.component_for_entity(adjacent_entities[0], Position)
+            game_map.blocked[position.y][position.x] = False
             player.attack_action = Event("attack", {})
 
         elif sources:

@@ -8,6 +8,7 @@ from ecs.systems.autoexploreprocessor import AutoExploreProcessor
 from ecs.systems.defendaiprocessor import DefendAIProcessor
 from ecs.systems.displayprocessor import DisplayProcessor
 from ecs.systems.inputprocessor import InputProcessor
+from ecs.systems.monsterprocessor import MonsterProcessor
 from ecs.systems.movementprocessor import MovementProcessor
 from ecs.systems.visionprocessor import VisionProcessor
 from factories.world import make_world
@@ -33,6 +34,7 @@ class Main:
             self.world.create_entity(*entity)
 
         self.world.add_processor(MovementProcessor())
+        self.world.add_processor(MonsterProcessor())
         self.world.add_processor(VisionProcessor())
         self.world.add_processor(AutoExploreProcessor())
         self.world.add_processor(AttackAIProcessor())

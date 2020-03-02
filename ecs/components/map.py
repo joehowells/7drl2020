@@ -1,4 +1,5 @@
 import random
+from itertools import product
 
 from constants import DijkstraMap
 from factories.map import make_map
@@ -23,6 +24,6 @@ class Map:
 
         self.done_exploring = False
 
-        for y, row in enumerate(self.walkable):
-            for x, _ in enumerate(row):
-                self.transparent[y][x] = self.walkable[y][x]
+        for x, y in product(range(self.w), range(self.h)):
+            self.transparent[y][x] = self.walkable[y][x]
+            self.blocked[y][x] = not self.walkable[y][x]

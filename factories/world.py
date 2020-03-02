@@ -14,7 +14,6 @@ from functions import dijkstra_map
 def make_world() -> List[List[Any]]:
     game_map = Map()
     entities = [[game_map]]
-    blocked = set()
 
     room = choice(game_map.rooms)
     x = randint(room.x1, room.x2 - 1)
@@ -35,7 +34,7 @@ def make_world() -> List[List[Any]]:
         Player(),
         Position(x, y),
     ])
-    blocked.add((x, y))
+    game_map.blocked[y][x] = True
 
     game_map.dijkstra[DijkstraMap.PLAYER] = dijkstra_map(game_map, [(x, y)], check_explored=False)
 
@@ -45,12 +44,12 @@ def make_world() -> List[List[Any]]:
         for _ in range(10):
             x = randint(room.x1, room.x2 - 1)
             y = randint(room.y1, room.y2 - 1)
-            if (x, y) not in blocked:
+            if not game_map.blocked[y][x]:
                 entities.append([
                     Display(0x0026),
                     Monster(),
                     Position(x, y),
                 ])
-                blocked.add((x, y))
+                game_map.blocked[y][x] = True
 
     return entities
