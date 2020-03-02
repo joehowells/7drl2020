@@ -59,7 +59,7 @@ class DisplayProcessor(Processor):
                     color = 0x66666666
 
                 if game_map.walkable[y][x]:
-                    code = 0x0041 + game_map.dijkstra[DijkstraMap.EXPLORE][y][x]
+                    code = 0x002E
                 else:
                     code = 0x0023
 
