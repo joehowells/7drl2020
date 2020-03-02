@@ -36,11 +36,7 @@ class AttackAIProcessor(Processor, EventMixin):
                     adjacent_entities.append(entity)
 
         if adjacent_entities:
-            self.world.delete_entity(adjacent_entities[0])
-            position = self.world.component_for_entity(adjacent_entities[0], Position)
-            game_map.blocked[position.y][position.x] = False
-            self.set_event(Event("attack", {}))
-            player.attack_action = Event("attack", {"anger": 2})
+            player.attack_action = Event("attack", {"target": adjacent_entities[0], "anger": 2})
 
         elif sources:
             game_map.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(game_map, sources)

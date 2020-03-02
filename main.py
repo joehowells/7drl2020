@@ -6,6 +6,7 @@ from esper import World
 from ecs.systems.attackaiprocessor import AttackAIProcessor
 from ecs.systems.autoexploreprocessor import AutoExploreProcessor
 from ecs.systems.awakeprocessor import AwakeProcessor
+from ecs.systems.combatsystem import CombatProcessor
 from ecs.systems.defendaiprocessor import DefendAIProcessor
 from ecs.systems.displayprocessor import DisplayProcessor
 from ecs.systems.inputprocessor import InputProcessor
@@ -36,7 +37,6 @@ class Main:
         for entity in entities:
             self.world.create_entity(*entity)
 
-        self.world.add_processor(MovementProcessor())
         self.world.add_processor(VisionProcessor())
         self.world.add_processor(VisibilityProcessor())
         self.world.add_processor(AwakeProcessor())
@@ -47,6 +47,8 @@ class Main:
         self.world.add_processor(DefendAIProcessor())
         self.world.add_processor(DisplayProcessor())
         self.world.add_processor(InputProcessor())
+        self.world.add_processor(CombatProcessor())
+        self.world.add_processor(MovementProcessor())
 
     def core_game_loop(self):
         while True:
