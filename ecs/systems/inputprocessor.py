@@ -1,7 +1,7 @@
 from bearlibterminal import terminal
 from esper import Processor
 
-from ecs.components.event import Event
+from ecs.components.player import Player
 from ecs.eventmixin import EventMixin
 
 
@@ -15,6 +15,10 @@ class InputProcessor(Processor, EventMixin):
         if event == terminal.TK_CLOSE:
             raise SystemExit
 
+        _, player = next(iter(self.world.get_component(Player)))
+
         if event == terminal.TK_Z:
-            self.set_event(Event("attack_ai", {}))
-            return
+            player.action = player.attack_action
+
+        if event == terminal.TK_X:
+            player.action = player.defend_action

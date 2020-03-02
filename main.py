@@ -5,6 +5,7 @@ from esper import World
 
 from ecs.systems.attackaiprocessor import AttackAIProcessor
 from ecs.systems.autoexploreprocessor import AutoExploreProcessor
+from ecs.systems.defendaiprocessor import DefendAIProcessor
 from ecs.systems.displayprocessor import DisplayProcessor
 from ecs.systems.findstaircaseprocessor import FindStaircaseProcessor
 from ecs.systems.inputprocessor import InputProcessor
@@ -34,8 +35,9 @@ class Main:
         self.world.add_processor(AutoExploreProcessor())
         self.world.add_processor(FindStaircaseProcessor())
         self.world.add_processor(DisplayProcessor())
-        self.world.add_processor(InputProcessor())
         self.world.add_processor(AttackAIProcessor())
+        self.world.add_processor(DefendAIProcessor())
+        self.world.add_processor(InputProcessor())
 
     def core_game_loop(self):
         while True:

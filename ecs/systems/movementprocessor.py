@@ -9,12 +9,14 @@ from functions import move_dijkstra
 
 class MovementProcessor(Processor, EventMixin):
     def process(self):
-        event = self.get_event("move")
+        _, game_map = next(iter(self.world.get_component(Map)))
+        _, (position, player) = next(iter(self.world.get_components(Position, Player)))
+
+        event = player.action
+        print(event)
 
         if not event:
             return
 
-        _, game_map = next(iter(self.world.get_component(Map)))
-        _, (position, _) = next(iter(self.world.get_components(Position, Player)))
-
-        move_dijkstra(game_map, position, event.data["dijkstra"])
+        if event.name == "move":
+            move_dijkstra(game_map, position, event.data["dijkstra"])

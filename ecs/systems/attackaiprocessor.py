@@ -20,11 +20,8 @@ class AttackMode(Enum):
 
 class AttackAIProcessor(Processor, EventMixin):
     def process(self):
-        if not self.get_event("attack_ai"):
-            return
-
         _, game_map = next(iter(self.world.get_component(Map)))
-        _, (_, player_position) = next(iter(self.world.get_components(Player, Position)))
+        _, (player, player_position) = next(iter(self.world.get_components(Player, Position)))
 
         neighbors = set(iter_neighbors(player_position.x, player_position.y, game_map))
 
@@ -42,13 +39,12 @@ class AttackAIProcessor(Processor, EventMixin):
             self.world.delete_entity(adjacent_entities[0])
             return
 
-        if sources:
+        elif sources:
             game_map.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(game_map, sources)
-            self.set_event(Event("move", {"dijkstra": DijkstraMap.MONSTER}))
-            return
+            player.attack_action = Event("move", {"dijkstra": DijkstraMap.MONSTER})
 
-        if not game_map.done_exploring:
-            self.set_event(Event("move", {"dijkstra": DijkstraMap.EXPLORE}))
-            return
+        elif not game_map.done_exploring:
+            player.attack_action = Event("move", {"dijkstra": DijkstraMap.EXPLORE})
 
-        self.set_event(Event("move", {"dijkstra": DijkstraMap.STAIRS}))
+        else:
+            player.attack_action = Event("move", {"dijkstra": DijkstraMap.STAIRS})
