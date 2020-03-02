@@ -1,5 +1,6 @@
 from esper import Processor
 
+from constants import DijkstraMap
 from ecs.components.map import Map
 from ecs.components.position import Position
 from ecs.components.staircase import Staircase
@@ -11,4 +12,4 @@ class FindStaircaseProcessor(Processor):
         _, map_ = next(iter(self.world.get_component(Map)))
         _, (_, position) = next(iter(self.world.get_components(Staircase, Position)))
 
-        map_.dijkstra["staircase"] = dijkstra_map(map_, [(position.x, position.y)])
+        map_.dijkstra[DijkstraMap.STAIRS] = dijkstra_map(map_, [(position.x, position.y)])

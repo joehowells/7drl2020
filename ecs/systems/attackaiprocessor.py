@@ -2,6 +2,7 @@ from enum import Enum, auto
 
 from esper import Processor
 
+from constants import DijkstraMap
 from ecs.components.event import Event
 from ecs.components.map import Map
 from ecs.components.monster import Monster
@@ -42,12 +43,12 @@ class AttackAIProcessor(Processor, EventMixin):
             return
 
         if sources:
-            map_.dijkstra["enemy"] = dijkstra_map(map_, sources)
-            self.set_event(Event("move", {"dijkstra": "enemy"}))
+            map_.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(map_, sources)
+            self.set_event(Event("move", {"dijkstra": DijkstraMap.MONSTER}))
             return
 
         if not map_.done_exploring:
-            self.set_event(Event("move", {"dijkstra": "auto_explore"}))
+            self.set_event(Event("move", {"dijkstra": DijkstraMap.EXPLORE}))
             return
 
-        self.set_event(Event("move", {"dijkstra": "staircase"}))
+        self.set_event(Event("move", {"dijkstra": DijkstraMap.STAIRS}))

@@ -1,6 +1,7 @@
 from collections import deque
 from typing import Generator, Tuple, Collection, List
 
+from constants import DijkstraMap
 from ecs.components.map import Map
 from ecs.components.position import Position
 
@@ -93,7 +94,7 @@ def dijkstra_map(map_: Map, sources: Collection[Tuple[int, int]]) -> List[List[i
     return output
 
 
-def move_dijkstra(map_: Map, position: Position, key: str) -> None:
+def move_dijkstra(map_: Map, position: Position, key: DijkstraMap) -> None:
     neighbors = [
         (x, y)
         for x, y, in iter_neighbors(position.x, position.y, map_)

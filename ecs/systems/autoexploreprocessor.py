@@ -3,6 +3,7 @@ from typing import Tuple, Set
 
 from esper import Processor
 
+from constants import DijkstraMap
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
@@ -33,6 +34,6 @@ class AutoExploreProcessor(Processor, EventMixin):
                 sources.add((x, y))
 
         if sources:
-            map_.dijkstra["auto_explore"] = dijkstra_map(map_, sources)
+            map_.dijkstra[DijkstraMap.EXPLORE] = dijkstra_map(map_, sources)
         else:
             map_.done_exploring = True

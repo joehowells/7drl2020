@@ -3,6 +3,7 @@ import itertools
 from bearlibterminal import terminal
 from esper import Processor
 
+from constants import DijkstraMap
 from ecs.components.display import Display
 from ecs.components.map import Map
 from ecs.components.player import Player
@@ -35,7 +36,7 @@ class DisplayProcessor(Processor):
                     color = 0x66666666
 
                 if map_.walkable[y][x]:
-                    code = 0x002E
+                    code = 0x0041 + map_.dijkstra[DijkstraMap.EXPLORE][y][x]
                 else:
                     code = 0x0023
 
