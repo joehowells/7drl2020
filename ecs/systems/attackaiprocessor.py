@@ -36,14 +36,14 @@ class AttackAIProcessor(Processor, EventMixin):
                     adjacent_entities.append(entity)
 
         if adjacent_entities:
-            player.attack_action = Event("attack", {"target": adjacent_entities[0], "anger": 3})
+            player.attack_action = Event("attack", {"target": adjacent_entities[0], "anger": 1})
 
         elif sources:
             game_map.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(game_map, sources)
-            player.attack_action = Event("move", {"dijkstra": DijkstraMap.MONSTER, "anger": 2})
+            player.attack_action = Event("move", {"dijkstra": DijkstraMap.MONSTER, "anger": 1})
 
         elif not game_map.done_exploring:
-            player.attack_action = Event("move", {"dijkstra": DijkstraMap.EXPLORE, "anger": -1})
+            player.attack_action = Event("move", {"dijkstra": DijkstraMap.EXPLORE, "anger": 1})
 
         else:
-            player.attack_action = Event("move", {"dijkstra": DijkstraMap.STAIRS, "anger": -1})
+            player.attack_action = Event("move", {"dijkstra": DijkstraMap.STAIRS, "anger": 1})

@@ -13,7 +13,7 @@ class DefendAIProcessor(Processor):
 
         for entity, (position, _) in self.world.get_components(Position, Item):
             if position.x == player_position.x and position.y == player_position.y:
-                player.defend_action = Event("pickup", {"item": entity, "anger": -2})
+                player.defend_action = Event("pickup", {"item": entity, "anger": -1})
                 break
         else:
-            player.defend_action = Event("move", {"dijkstra": DijkstraMap.ITEM, "anger": -2})
+            player.defend_action = Event("move", {"dijkstra": DijkstraMap.ITEM, "anger": -1})
