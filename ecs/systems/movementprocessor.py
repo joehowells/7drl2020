@@ -1,16 +1,19 @@
+from esper import Processor
+
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.event import Event
-from ecs.processor import Processor
+from ecs.eventmixin import EventMixin
 from functions import move_dijkstra
 
 
-class MovementProcessor(Processor):
+class MovementProcessor(Processor, EventMixin):
     def process(self):
-        pass
+        event = self.get_event("move")
 
-    def event_move(self, event: Event):
+        if not event:
+            return
+
         _, map_ = next(iter(self.world.get_component(Map)))
         _, (position, _) = next(iter(self.world.get_components(Position, Player)))
 

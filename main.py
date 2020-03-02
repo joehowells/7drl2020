@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 
 from bearlibterminal import terminal
+from esper import World
 
 from ecs.components.display import Display
 from ecs.components.map import Map
@@ -15,7 +16,6 @@ from ecs.systems.findstaircaseprocessor import FindStaircaseProcessor
 from ecs.systems.inputprocessor import InputProcessor
 from ecs.systems.movementprocessor import MovementProcessor
 from ecs.systems.visionprocessor import VisionProcessor
-from ecs.world import World
 
 
 @contextmanager
@@ -57,8 +57,8 @@ class Main:
         self.world.add_processor(AutoExploreProcessor())
         self.world.add_processor(FindStaircaseProcessor())
         self.world.add_processor(DisplayProcessor())
-        self.world.add_processor(AttackAIProcessor())
         self.world.add_processor(InputProcessor())
+        self.world.add_processor(AttackAIProcessor())
 
     def core_game_loop(self):
         while True:

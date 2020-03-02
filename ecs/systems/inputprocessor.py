@@ -1,10 +1,11 @@
 from bearlibterminal import terminal
+from esper import Processor
 
-from ecs.event import Event
-from ecs.processor import Processor
+from ecs.components.event import Event
+from ecs.eventmixin import EventMixin
 
 
-class InputProcessor(Processor):
+class InputProcessor(Processor, EventMixin):
     def process(self):
         event = terminal.read()
 
@@ -15,5 +16,5 @@ class InputProcessor(Processor):
             raise SystemExit
 
         if event == terminal.TK_Z:
-            self.event(Event("attack_ai", {}))
+            self.set_event(Event("attack_ai", {}))
             return

@@ -1,7 +1,8 @@
+from esper import Processor
+
 from ecs.components.map import Map
 from ecs.components.position import Position
 from ecs.components.staircase import Staircase
-from ecs.processor import Processor
 from functions import dijkstra_map
 
 

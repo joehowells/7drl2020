@@ -1,11 +1,13 @@
 from enum import Enum, auto
 
+from esper import Processor
+
+from ecs.components.event import Event
 from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.event import Event
-from ecs.processor import Processor
+from ecs.eventmixin import EventMixin
 from functions import dijkstra_map, iter_neighbors
 
 
@@ -15,11 +17,11 @@ class AttackMode(Enum):
     FIND_STAIRCASE = auto()
 
 
-class AttackAIProcessor(Processor):
+class AttackAIProcessor(Processor, EventMixin):
     def process(self):
-        pass
+        if not self.get_event("attack_ai"):
+            return
 
-    def event_attack_ai(self, event):
         _, map_ = next(iter(self.world.get_component(Map)))
         _, (_, player_position) = next(iter(self.world.get_components(Player, Position)))
 
@@ -41,11 +43,11 @@ class AttackAIProcessor(Processor):
 
         if sources:
             map_.dijkstra["enemy"] = dijkstra_map(map_, sources)
-            self.event(Event("move", {"dijkstra": "enemy"}))
+            self.set_event(Event("move", {"dijkstra": "enemy"}))
             return
 
         if not map_.done_exploring:
-            self.event(Event("move", {"dijkstra": "auto_explore"}))
+            self.set_event(Event("move", {"dijkstra": "auto_explore"}))
             return
 
-        self.event(Event("move", {"dijkstra": "staircase"}))
+        self.set_event(Event("move", {"dijkstra": "staircase"}))

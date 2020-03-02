@@ -1,12 +1,12 @@
 import itertools
 
 from bearlibterminal import terminal
+from esper import Processor
 
 from ecs.components.display import Display
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.processor import Processor
 
 
 class DisplayProcessor(Processor):
