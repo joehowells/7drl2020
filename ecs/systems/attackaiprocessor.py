@@ -37,7 +37,7 @@ class AttackAIProcessor(Processor, EventMixin):
 
         if adjacent_entities:
             self.world.delete_entity(adjacent_entities[0])
-            return
+            player.attack_action = Event("attack", {})
 
         elif sources:
             game_map.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(game_map, sources)

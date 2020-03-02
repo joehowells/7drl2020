@@ -16,6 +16,9 @@ from factories.world import make_world
 @contextmanager
 def terminal_context():
     terminal.open()
+    terminal.set("""
+        window.size=67x21;
+    """)
     yield
     terminal.close()
 
@@ -32,9 +35,9 @@ class Main:
         self.world.add_processor(MovementProcessor())
         self.world.add_processor(VisionProcessor())
         self.world.add_processor(AutoExploreProcessor())
-        self.world.add_processor(DisplayProcessor())
         self.world.add_processor(AttackAIProcessor())
         self.world.add_processor(DefendAIProcessor())
+        self.world.add_processor(DisplayProcessor())
         self.world.add_processor(InputProcessor())
 
     def core_game_loop(self):

@@ -35,7 +35,7 @@ def make_world() -> List[List[Any]]:
         Position(x, y),
     ])
 
-    for _ in range(10):
+    for _ in range(100):
         room = choice(game_map.rooms)
         x = randint(room.x1, room.x2-1)
         y = randint(room.y1, room.y2-1)

@@ -14,6 +14,29 @@ class DisplayProcessor(Processor):
     def process(self):
         terminal.clear()
 
+        terminal.color(0xFF666666)
+        for y in range(21):
+            terminal.put(33, y, 0x2551)
+            terminal.put(33, 3, 0x255F)
+            terminal.put(33, 6, 0x255F)
+
+        for x in range(34, 67):
+            terminal.put(x, 3, 0x2500)
+            terminal.put(x, 6, 0x2500)
+
+        self.draw_map()
+
+        _, player = next(iter(self.world.get_component(Player)))
+        terminal.printf(34, 0, f"Health:")
+        terminal.printf(34, 1, f"Anger:")
+        terminal.printf(34, 2, f"Threat:")
+
+        terminal.printf(34, 4, f"[[X]] {player.attack_action.name}")
+        terminal.printf(34, 5, f"[[Z]] {player.defend_action.name}")
+
+        terminal.refresh()
+
+    def draw_map(self):
         _, (_, position) = next(iter(self.world.get_components(Player, Position)))
         x_offset = 16 - position.x
         y_offset = 10 - position.y
@@ -48,5 +71,3 @@ class DisplayProcessor(Processor):
         for _, (display, position) in self.world.get_components(Display, Position):
             if game_map.visible[position.y][position.x]:
                 terminal.put(position.x + x_offset, position.y + y_offset, chr(display.code))
-
-        terminal.refresh()
