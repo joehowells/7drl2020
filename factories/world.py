@@ -24,7 +24,6 @@ def make_world() -> List[List[Any]]:
         Staircase(),
         Position(x, y),
     ])
-    blocked.add((x, y))
 
     game_map.dijkstra[DijkstraMap.STAIRS] = dijkstra_map(game_map, [(x, y)], check_explored=False)
 
@@ -36,6 +35,7 @@ def make_world() -> List[List[Any]]:
         Player(),
         Position(x, y),
     ])
+    blocked.add((x, y))
 
     game_map.dijkstra[DijkstraMap.PLAYER] = dijkstra_map(game_map, [(x, y)], check_explored=False)
 

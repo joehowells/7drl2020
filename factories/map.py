@@ -4,11 +4,11 @@ from itertools import product, combinations
 from random import shuffle, randint, random
 from typing import List, Tuple, Set
 
+from constants import ROOM_SIZE, GRAPH_MIN_DEPTH, GRAPH_MAX_DEPTH
+
 Map = List[List[bool]]
 Node = Tuple[int, int]
 Link = Tuple[Node, Node]
-
-ROOM_SIZE: int = 9
 
 
 @dataclass()
@@ -31,7 +31,7 @@ class Room:
         return [(x, y) for x in range(self.x1, self.x2) for y in range(self.y1, self.y2)]
 
 
-def make_graph(min_depth: int = 5, max_depth: int = 10) -> Tuple[Set[Node], Set[Link]]:
+def make_graph() -> Tuple[Set[Node], Set[Link]]:
     nodes = set()
     links = set()
     stack = deque([((0, 0), 0)])
@@ -39,7 +39,7 @@ def make_graph(min_depth: int = 5, max_depth: int = 10) -> Tuple[Set[Node], Set[
     while stack:
         v, depth = stack.popleft()
 
-        if depth > randint(min_depth, max_depth):
+        if depth > randint(GRAPH_MIN_DEPTH, GRAPH_MAX_DEPTH):
             continue
 
         m, n = v
@@ -65,7 +65,7 @@ def make_graph(min_depth: int = 5, max_depth: int = 10) -> Tuple[Set[Node], Set[
             else:
                 links.add((v, w))
 
-            if depth > randint(min_depth, max_depth):
+            if depth > randint(GRAPH_MIN_DEPTH, GRAPH_MAX_DEPTH):
                 break
 
     return nodes, links
