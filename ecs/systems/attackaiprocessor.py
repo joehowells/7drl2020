@@ -40,11 +40,11 @@ class AttackAIProcessor(Processor, EventMixin):
             position = self.world.component_for_entity(adjacent_entities[0], Position)
             game_map.blocked[position.y][position.x] = False
             self.set_event(Event("attack", {}))
-            player.attack_action = Event("attack", {})
+            player.attack_action = Event("attack", {"anger": 2})
 
         elif sources:
             game_map.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(game_map, sources)
-            player.attack_action = Event("move", {"dijkstra": DijkstraMap.MONSTER})
+            player.attack_action = Event("move", {"dijkstra": DijkstraMap.MONSTER, "anger": 1})
 
         elif not game_map.done_exploring:
             player.attack_action = Event("move", {"dijkstra": DijkstraMap.EXPLORE})

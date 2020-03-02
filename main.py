@@ -11,6 +11,7 @@ from ecs.systems.displayprocessor import DisplayProcessor
 from ecs.systems.inputprocessor import InputProcessor
 from ecs.systems.monsterprocessor import MonsterProcessor
 from ecs.systems.movementprocessor import MovementProcessor
+from ecs.systems.threatprocessor import ThreatProcessor
 from ecs.systems.visibilityprocessor import VisibilityProcessor
 from ecs.systems.visionprocessor import VisionProcessor
 from factories.world import make_world
@@ -40,6 +41,7 @@ class Main:
         self.world.add_processor(VisibilityProcessor())
         self.world.add_processor(AwakeProcessor())
         self.world.add_processor(MonsterProcessor())
+        self.world.add_processor(ThreatProcessor())
         self.world.add_processor(AutoExploreProcessor())
         self.world.add_processor(AttackAIProcessor())
         self.world.add_processor(DefendAIProcessor())

@@ -27,9 +27,9 @@ class DisplayProcessor(Processor):
         self.draw_map()
 
         _, player = next(iter(self.world.get_component(Player)))
-        terminal.printf(34, 0, f"Health:")
-        terminal.printf(34, 1, f"Anger:")
-        terminal.printf(34, 2, f"Threat:")
+        terminal.printf(34, 0, f"Health: {player.health}")
+        terminal.printf(34, 1, f"Anger: {player.anger}")
+        terminal.printf(34, 2, f"Threat: {player.actual_threat}/{player.visible_threat}")
 
         terminal.printf(34, 4, f"[[X]] {player.attack_action.name}")
         terminal.printf(34, 5, f"[[Z]] {player.defend_action.name}")
