@@ -1,5 +1,6 @@
 from esper import Processor
 
+from ecs.components.Message import Message
 from ecs.components.map import Map
 from ecs.components.position import Position
 from ecs.components.visible import Visible
@@ -11,5 +12,7 @@ class VisibilityProcessor(Processor, EventMixin):
         _, game_map = next(iter(self.world.get_component(Map)))
 
         for entity, position in self.world.get_component(Position):
-            if game_map.visible[position.y][position.x]:
+            if game_map.visible[position.y][position.x] and not self.world.has_component(entity, Visible):
                 self.world.add_component(entity, Visible())
+
+                self.world.create_entity(Message("You see a monster."))

@@ -1,5 +1,6 @@
 from esper import Processor
 
+from ecs.components.Message import Message
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
@@ -20,3 +21,5 @@ class CombatProcessor(Processor):
             position = self.world.component_for_entity(entity, Position)
             self.world.delete_entity(entity)
             game_map.blocked[position.y][position.x] = False
+
+            self.world.create_entity(Message("You attack."))

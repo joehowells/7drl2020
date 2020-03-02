@@ -22,7 +22,8 @@ from factories.world import make_world
 def terminal_context():
     terminal.open()
     terminal.set("""
-        window.size=67x21;
+    font: UbuntuMono-R.ttf, size=12;
+    window.size=67x21;
     """)
     yield
     terminal.close()

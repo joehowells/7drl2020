@@ -1,8 +1,10 @@
 import itertools
+from textwrap import wrap
 
 from bearlibterminal import terminal
 from esper import Processor
 
+from ecs.components.Message import Message
 from ecs.components.display import Display
 from ecs.components.map import Map
 from ecs.components.player import Player
@@ -37,6 +39,9 @@ def draw_bar(x: int, y: int, value: int, color: int = 0xFFFFFFFF) -> None:
 
 
 class DisplayProcessor(Processor):
+    def __init__(self):
+        self.buffer = []
+
     def process(self):
         terminal.clear()
 
@@ -45,24 +50,8 @@ class DisplayProcessor(Processor):
         draw_borders()
 
         self.draw_map()
-
-        _, player = next(iter(self.world.get_component(Player)))
-
-        terminal.printf(34, 0, f"Health: {player.health:>3d}")
-        terminal.printf(34, 1, f"Anger:  {player.anger:>3d}")
-        terminal.printf(34, 2, f"Threat: {player.actual_threat:>3d}")
-
-        draw_bar(46, 0, 20, 0xFF333333)
-        draw_bar(46, 1, 20, 0xFF333333)
-        draw_bar(46, 2, 20, 0xFF333333)
-
-        draw_bar(46, 0, player.health)
-        draw_bar(46, 1, player.anger // 5, 0xFFFF0000)
-        draw_bar(46, 2, player.visible_threat // 5, 0xFFFFFF00)
-        draw_bar(46, 2, player.actual_threat // 5, 0xFFFF0000)
-
-        terminal.printf(34, 4, f"[[X]] {player.attack_action.name}")
-        terminal.printf(34, 5, f"[[Z]] {player.defend_action.name}")
+        self.draw_ui()
+        self.draw_messages()
 
         terminal.refresh()
 
@@ -101,3 +90,33 @@ class DisplayProcessor(Processor):
         for _, (display, position) in self.world.get_components(Display, Position):
             if game_map.visible[position.y][position.x]:
                 terminal.put(position.x + x_offset, position.y + y_offset, chr(display.code))
+
+    def draw_ui(self):
+        _, player = next(iter(self.world.get_component(Player)))
+
+        terminal.printf(34, 0, f"Health: {player.health:>3d}")
+        terminal.printf(34, 1, f"Anger:  {player.anger:>3d}")
+        terminal.printf(34, 2, f"Threat: {player.actual_threat:>3d}")
+
+        draw_bar(46, 0, 20, 0xFF333333)
+        draw_bar(46, 1, 20, 0xFF333333)
+        draw_bar(46, 2, 20, 0xFF333333)
+
+        draw_bar(46, 0, player.health)
+        draw_bar(46, 1, player.anger // 5, 0xFFFF0000)
+        draw_bar(46, 2, player.visible_threat // 5, 0xFFFFFF00)
+        draw_bar(46, 2, player.actual_threat // 5, 0xFFFF0000)
+
+        terminal.printf(34, 4, f"[[X]] {player.attack_action.name}")
+        terminal.printf(34, 5, f"[[Z]] {player.defend_action.name}")
+
+    def draw_messages(self):
+        for entity, message in self.world.get_component(Message):
+            self.world.delete_entity(entity)
+            self.buffer.extend(wrap(message.text, 31))
+
+        self.buffer = self.buffer[-14:]
+
+        for row, message in enumerate(self.buffer):
+            terminal.printf(34, row+7, message)
+
