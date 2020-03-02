@@ -12,11 +12,22 @@ from ecs.components.position import Position
 def draw_borders() -> None:
     for y in range(21):
         terminal.put(33, y, 0x2551)
-        terminal.put(33, 3, 0x255F)
-        terminal.put(33, 6, 0x255F)
-    for x in range(34, 67):
+
+    for x in range(34, 50):
         terminal.put(x, 3, 0x2500)
         terminal.put(x, 6, 0x2500)
+
+    for x in range(51, 67):
+        terminal.put(x, 3, 0x2500)
+        terminal.put(x, 6, 0x2500)
+
+    for y in range(4, 6):
+        terminal.put(50, y, 0x2502)
+
+    terminal.put(33, 3, 0x255F)
+    terminal.put(33, 6, 0x255F)
+    terminal.put(50, 3, 0x252C)
+    terminal.put(50, 6, 0x2534)
 
 
 def draw_bar(x: int, y: int, value: int, color: int = 0xFFFFFFFF) -> None:
