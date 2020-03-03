@@ -1,4 +1,4 @@
-from random import choice, randint
+from random import choice, randint, shuffle
 from typing import List, Any, Optional
 
 from ecs.components.display import Display
@@ -9,6 +9,7 @@ from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.stair import Stair
 from ecs.components.trap import Trap
+from factories.map import Room
 
 
 def make_soldier(x: int, y: int) -> List[Any]:
@@ -98,21 +99,23 @@ def make_world(player: Optional[Player] = None) -> List[List[Any]]:
     game_map = Map()
     entities = [[game_map]]
 
-    room = choice(game_map.rooms)
-    x = randint(room.x1, room.x2 - 1)
-    y = randint(room.y1, room.y2 - 1)
-    entities.append([
-        Display(0x003E, draw_order=-2),
-        Stair(),
-        Position(x, y),
-    ])
-
     if player is None:
         player = Player()
 
-    room = choice(game_map.rooms)
-    x = randint(room.x1, room.x2 - 1)
-    y = randint(room.y1, room.y2 - 1)
+    big_rooms = [
+        room for room in game_map.rooms
+        if room.w >= 4 and room.h >= 4
+    ]
+
+    shuffle(big_rooms)
+
+    # Start room
+    room = big_rooms.pop()
+
+    cells = [(x, y) for x, y, in room.cells if game_map.walkable[y][x]]
+    shuffle(cells)
+    x, y = cells.pop()
+
     entities.append([
         Display(0x0040),
         player,
@@ -120,42 +123,120 @@ def make_world(player: Optional[Player] = None) -> List[List[Any]]:
     ])
     game_map.blocked[y][x] = True
 
-    for room in game_map.rooms:
-        if min(room.w, room.h) < 4:
-            continue
+    # Exit room
+    room = big_rooms.pop()
 
-        if randint(1, 4) == 1:
-            for _ in range(randint(2, 8)):
-                x = randint(room.x1, room.x2 - 1)
-                y = randint(room.y1, room.y2 - 1)
+    cells = [(x, y) for x, y, in room.cells if game_map.walkable[y][x]]
+    shuffle(cells)
+    x, y = cells.pop()
 
-                if not game_map.blocked[y][x]:
-                    entity = make_trap(x, y)
-                    entities.append(entity)
+    entities.append([
+        Display(0x003E, draw_order=-2),
+        Stair(),
+        Position(x, y),
+    ])
 
-            x = randint(room.x1, room.x2 - 1)
-            y = randint(room.y1, room.y2 - 1)
-            entity = make_soldier(x, y)
-            entities.append(entity)
-            game_map.blocked[y][x] = True
-        else:
-            for _ in range(randint(4, 16)):
-                x = randint(room.x1, room.x2 - 1)
-                y = randint(room.y1, room.y2 - 1)
+    # Populate the rest of the rooms
+    while big_rooms:
+        room = big_rooms.pop()
 
-                if not game_map.blocked[y][x]:
-                    factories = [
-                        make_soldier,
-                        make_defender,
-                        make_officer,
-                        make_assassin,
-                        make_archer,
-                        make_potion,
-                    ]
-                    factory = choice(factories)
-                    entity = factory(x, y)
-                    entities.append(entity)
-                    if Monster in entity:
-                        game_map.blocked[y][x] = True
+        factories = [
+            make_enemy_room,
+            make_enemy_room,
+            make_item_room,
+            make_item_room,
+            make_trap_room,
+        ]
+        factory = choice(factories)
+        factory(game_map, entities, room)
 
     return entities
+
+
+def make_enemy_room(game_map: Map, entities: List[List[Any]], room: Room) -> None:
+    cells = [(x, y) for x, y, in room.cells if game_map.walkable[y][x]]
+    shuffle(cells)
+
+    for _ in range(randint(2, 8)):
+        if not cells:
+            break
+
+        x, y = cells.pop()
+
+        if not game_map.blocked[y][x]:
+            factories = [
+                make_soldier,
+                make_defender,
+                make_officer,
+                make_assassin,
+                make_archer,
+            ]
+            factory = choice(factories)
+            entity = factory(x, y)
+            entities.append(entity)
+            game_map.blocked[y][x] = True
+
+
+def make_trap_room(game_map: Map, entities: List[List[Any]], room: Room) -> None:
+    cells = [(x, y) for x, y, in room.cells if game_map.walkable[y][x]]
+    shuffle(cells)
+
+    for _ in range(randint(2, 8)):
+        if not cells:
+            break
+
+        x, y = cells.pop()
+
+        if not game_map.blocked[y][x]:
+            entity = make_trap(x, y)
+            entities.append(entity)
+
+    for _ in range(randint(1, 2)):
+        if not cells:
+            break
+
+        x, y = cells.pop()
+
+        if not game_map.blocked[y][x]:
+            factories = [
+                make_soldier,
+            ]
+            factory = choice(factories)
+            entity = factory(x, y)
+            entities.append(entity)
+            game_map.blocked[y][x] = True
+
+
+def make_item_room(game_map: Map, entities: List[List[Any]], room: Room) -> None:
+    cells = [(x, y) for x, y, in room.cells if game_map.walkable[y][x]]
+    shuffle(cells)
+
+    for _ in range(randint(1, 2)):
+        if not cells:
+            break
+
+        x, y = cells.pop()
+
+        if not game_map.blocked[y][x]:
+            factories = [
+                make_potion,
+            ]
+            factory = choice(factories)
+            entity = factory(x, y)
+            entities.append(entity)
+
+    for _ in range(randint(2, 4)):
+        if not cells:
+            break
+
+        x, y = cells.pop()
+
+        if not game_map.blocked[y][x]:
+            factories = [
+                make_soldier,
+            ]
+            factory = choice(factories)
+            entity = factory(x, y)
+            entities.append(entity)
+            game_map.blocked[y][x] = True
+

@@ -186,6 +186,21 @@ def make_map() -> Tuple[(List[List[bool]]), List[Room]]:
         for x, y in product(range(room.x1, room.x2), range(room.y1, room.y2)):
             walkable[y][x] = True
 
+        # Decorations
+        if room.w >= 7 and room.h >= 7 and random() < 0.2:
+            for x, y in product(range(room.x1 + 2, room.x2 - 2), range(room.y1 + 2, room.y2 - 2)):
+                walkable[y][x] = False
+        elif room.w >= 5 and room.h >= 5:
+            if room.w % 2:  # and random() < 0.4:
+                for x in range(room.x1 + 1, room.x2 - 1, 2):
+                    walkable[room.y1 + 1][x] = False
+                    walkable[room.y2 - 2][x] = False
+
+            if room.h % 2:  # and random() < 0.4:
+                for y in range(room.y1 + 1, room.y2 - 1, 2):
+                    walkable[y][room.x1 + 1] = False
+                    walkable[y][room.x2 - 2] = False
+
     for room in h_links.values():
         for x, y in product(range(room.x1, room.x2), range(room.y1, room.y2)):
             walkable[y][x] = True
