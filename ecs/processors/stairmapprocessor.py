@@ -20,9 +20,10 @@ class StairMapProcessor(Processor):
         _, game_map = next(iter(self.world.get_component(Map)))
 
         sources: Set[Tuple[int, int]] = set()
-        for _, (position, item) in self.world.get_components(LastKnownPosition, Stair):
+        for _, (position, _) in self.world.get_components(LastKnownPosition, Stair):
             sources.add((position.x, position.y))
 
         if self.sources != sources:
-            game_map.dijkstra[DijkstraMap.ITEM] = dijkstra_map(game_map, sources)
+            print("gen???")
+            game_map.dijkstra[DijkstraMap.STAIRS] = dijkstra_map(game_map, sources, check_explored=False)
             self.sources = sources

@@ -1,5 +1,6 @@
 from esper import Processor, World
 
+from ecs.components.gamestate import GameState
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
 from ecs.components.message import Message
@@ -17,7 +18,12 @@ class StairProcessor(Processor):
         if event and event.name == "stairs":
             entities = make_world(player=player)
 
-            for entity, (_, _) in self.world.get_components(Item, Inventory):
+            for entity, _ in self.world.get_component(GameState):
+                # noinspection PyTypeChecker
+                entities.append(self.world.components_for_entity(entity))
+
+            for entity, _ in self.world.get_components(Item, Inventory):
+                # noinspection PyTypeChecker
                 entities.append(self.world.components_for_entity(entity))
 
             self.world.clear_database()

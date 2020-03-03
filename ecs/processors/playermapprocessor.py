@@ -23,7 +23,6 @@ class PlayerMapProcessor(Processor):
         sources = {(position.x, position.y)}
 
         if self.sources != sources:
-            print("regen")
             game_map.dijkstra[DijkstraMap.PLAYER] = dijkstra_map(
                 game_map=game_map,
                 sources=sources,
