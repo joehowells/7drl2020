@@ -4,10 +4,9 @@ from esper import Processor, World
 from ecs.components.dead import Dead
 from ecs.components.gamestate import GameState
 from ecs.components.player import Player
-from ecs.eventmixin import EventMixin
 
 
-class InputProcessor(Processor, EventMixin):
+class InputProcessor(Processor):
     def __init__(self):
         self.z_keydown = False
         self.x_keydown = False

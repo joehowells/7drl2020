@@ -7,10 +7,9 @@ from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.visible import Visible
-from ecs.eventmixin import EventMixin
 
 
-class AwakeProcessor(Processor, EventMixin):
+class AwakeProcessor(Processor):
     def process(self):
         _, game_map = next(iter(self.world.get_component(Map)))
         _, player = next(iter(self.world.get_component(Player)))

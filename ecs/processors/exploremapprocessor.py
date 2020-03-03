@@ -6,12 +6,11 @@ from esper import Processor, World
 
 from constants import DijkstraMap
 from ecs.components.map import Map
-from ecs.eventmixin import EventMixin
 from functions import dijkstra_map
 
 
 @dataclass
-class ExploreMapProcessor(Processor, EventMixin):
+class ExploreMapProcessor(Processor):
     sources: Optional[Set[Tuple[int, int]]] = None
 
     def process(self):

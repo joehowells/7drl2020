@@ -10,7 +10,6 @@ from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.stair import Stair
 from ecs.components.targeted import Targeted
-from ecs.eventmixin import EventMixin
 from ecs.processors.spatialprocessor import Adjacent, Coincident
 from functions import move_dijkstra
 
@@ -21,7 +20,7 @@ class AttackMode(Enum):
     FIND_STAIRCASE = auto()
 
 
-class AttackAIProcessor(Processor, EventMixin):
+class AttackAIProcessor(Processor):
     def process(self):
         _, game_map = next(iter(self.world.get_component(Map)))
         _, (player, player_position) = next(iter(self.world.get_components(Player, Position)))

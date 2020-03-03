@@ -4,10 +4,9 @@ from ecs.components.lastknownposition import LastKnownPosition
 from ecs.components.map import Map
 from ecs.components.position import Position
 from ecs.components.visible import Visible
-from ecs.eventmixin import EventMixin
 
 
-class VisibilityProcessor(Processor, EventMixin):
+class VisibilityProcessor(Processor):
     """
     Determines whether entities are visible.
     """

@@ -6,10 +6,9 @@ from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.targeted import Targeted
-from ecs.eventmixin import EventMixin
 
 
-class CombatProcessor(Processor, EventMixin):
+class CombatProcessor(Processor):
     def process(self):
         self.world: World
 
