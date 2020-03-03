@@ -5,11 +5,13 @@ from bearlibterminal import terminal
 from esper import Processor
 
 from constants import DijkstraMap
-from ecs.components.message import Message
 from ecs.components.display import Display
+from ecs.components.lastknownposition import LastKnownPosition
 from ecs.components.map import Map
+from ecs.components.message import Message
 from ecs.components.player import Player
 from ecs.components.position import Position
+from ecs.components.visible import Visible
 
 
 def draw_borders() -> None:
@@ -35,7 +37,7 @@ def draw_borders() -> None:
 
 def draw_bar(x: int, y: int, value: int, color: int = 0xFFFFFFFF) -> None:
     terminal.color(color)
-    terminal.printf(x, y, "="*value)
+    terminal.printf(x, y, "=" * value)
     terminal.color(0xFFFFFFFF)
 
 
@@ -51,6 +53,7 @@ class DisplayProcessor(Processor):
         draw_borders()
 
         self.draw_map()
+        self.draw_entities()
         self.draw_ui()
         self.draw_messages()
 
@@ -85,24 +88,53 @@ class DisplayProcessor(Processor):
 
                 distance = min(game_map.dijkstra[DijkstraMap.EXPLORE][y][x], 63)
                 if 0 <= distance <= 15:
-                    color = terminal.color_from_argb(255, 255, 0x11*distance, 0)
+                    color = terminal.color_from_argb(255, 255, 0x11 * distance, 0)
                 elif 16 <= distance <= 31:
-                    color = terminal.color_from_argb(255, 255-0x11*(distance-16), 255, 0)
+                    color = terminal.color_from_argb(255, 255 - 0x11 * (distance - 16), 255, 0)
                 elif 32 <= distance <= 47:
-                    color = terminal.color_from_argb(255, 0, 255, 0x11*(distance-32))
+                    color = terminal.color_from_argb(255, 0, 255, 0x11 * (distance - 32))
                 elif 48 <= distance <= 63:
-                    color = terminal.color_from_argb(255, 0, 255-0x11*(distance-48), 255)
+                    color = terminal.color_from_argb(255, 0, 255 - 0x11 * (distance - 48), 255)
 
                 terminal.color(color)
                 terminal.put(x + x_offset, y + y_offset, code)
 
-        terminal.color(0xFFFFFFFF)
+    def draw_entities(self):
+        _, (_, position) = next(iter(self.world.get_components(Player, Position)))
 
-        for _, (display, position) in self.world.get_components(Display, Position):
-            if game_map.visible[position.y][position.x]:
-                terminal.put(position.x + x_offset, position.y + y_offset, chr(display.code))
+        # Set player offset relative to display
+        x_offset = 16 - position.x
+        y_offset = 10 - position.y
+
+        # Set the bounding box for filtering out entities
+        x_min = position.x-16
+        x_max = position.x+16
+        y_min = position.y-10
+        y_max = position.y+10
+
+        for entity, (display, position) in self.world.get_components(Display, Position):
+            if not x_min <= position.x <= x_max or not y_min <= position.y <= y_max:
+                continue
+
+            if self.world.has_component(entity, Visible):
+                terminal.color(0xFFFFFFFF)
+                terminal.put(
+                    position.x + x_offset,
+                    position.y + y_offset,
+                    display.code,
+                )
+            else:
+                for old_position in self.world.try_component(entity, LastKnownPosition):
+                    terminal.color(0xFF666666)
+                    terminal.put(
+                        old_position.x + x_offset,
+                        old_position.y + y_offset,
+                        display.code,
+                    )
+                    break
 
     def draw_ui(self):
+        _, game_map = next(iter(self.world.get_component(Map)))
         _, player = next(iter(self.world.get_component(Player)))
 
         terminal.printf(34, 0, f"Health: {player.health:>3d}")
@@ -129,5 +161,4 @@ class DisplayProcessor(Processor):
         self.buffer = self.buffer[-14:]
 
         for row, message in enumerate(self.buffer):
-            terminal.printf(34, row+7, message)
-
+            terminal.printf(34, row + 7, message)

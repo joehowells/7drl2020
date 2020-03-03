@@ -2,6 +2,7 @@ from esper import Processor
 
 from constants import DijkstraMap
 from ecs.components.item import Item
+from ecs.components.lastknownposition import LastKnownPosition
 from ecs.components.map import Map
 from ecs.components.message import Message
 from ecs.components.player import Player
@@ -18,6 +19,7 @@ class ItemProcessor(Processor):
 
         if event and event.name == "pickup":
             self.world.remove_component(event.data["item"], Position)
+            self.world.remove_component(event.data["item"], LastKnownPosition)
             self.world.create_entity(Message("You pick up something."))
 
         _, game_map = next(iter(self.world.get_component(Map)))
