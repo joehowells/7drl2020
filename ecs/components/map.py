@@ -1,4 +1,3 @@
-import random
 from itertools import product
 
 from constants import DijkstraMap

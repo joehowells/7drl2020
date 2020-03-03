@@ -5,7 +5,7 @@ from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.eventmixin import EventMixin
-from functions import move_dijkstra, dijkstra_map, move
+from functions import dijkstra_map, move
 
 
 class MovementProcessor(Processor, EventMixin):
