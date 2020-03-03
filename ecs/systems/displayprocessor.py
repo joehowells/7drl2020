@@ -65,6 +65,10 @@ class DisplayProcessor(Processor):
         y_offset = 10 - position.y
 
         _, game_map = next(iter(self.world.get_component(Map)))
+
+        key = DijkstraMap.EXPLORE
+        max_dijkstra = max(max(value for value in row) for row in game_map.dijkstra[key])
+
         for xc, yc in itertools.product(range(33), range(21)):
             x = xc - x_offset
             y = yc - y_offset
@@ -86,15 +90,16 @@ class DisplayProcessor(Processor):
                 else:
                     code = 0x0023
 
-                distance = min(game_map.dijkstra[DijkstraMap.EXPLORE][y][x], 63)
-                if 0 <= distance <= 15:
-                    color = terminal.color_from_argb(255, 255, 0x11 * distance, 0)
-                elif 16 <= distance <= 31:
-                    color = terminal.color_from_argb(255, 255 - 0x11 * (distance - 16), 255, 0)
-                elif 32 <= distance <= 47:
-                    color = terminal.color_from_argb(255, 0, 255, 0x11 * (distance - 32))
-                elif 48 <= distance <= 63:
-                    color = terminal.color_from_argb(255, 0, 255 - 0x11 * (distance - 48), 255)
+                if game_map.dijkstra[key][y][x] >= 0:
+                    distance = int(max(game_map.dijkstra[key][y][x], 0) / max_dijkstra * 63)
+                    if 0 <= distance <= 15:
+                        color = terminal.color_from_argb(255, 255, 0x11 * distance, 0)
+                    elif 16 <= distance <= 31:
+                        color = terminal.color_from_argb(255, 255 - 0x11 * (distance - 16), 255, 0)
+                    elif 32 <= distance <= 47:
+                        color = terminal.color_from_argb(255, 0, 255, 0x11 * (distance - 32))
+                    elif 48 <= distance <= 63:
+                        color = terminal.color_from_argb(255, 0, 255 - 0x11 * (distance - 48), 255)
 
                 terminal.color(color)
                 terminal.put(x + x_offset, y + y_offset, code)
