@@ -9,7 +9,7 @@ class Player:
     attack_action: Event = None
     defend_action: Event = None
 
-    health: int = 10
+    health: int = 1
     anger: int = 0
     visible_threat: int = 0
     actual_threat: int = 0

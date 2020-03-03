@@ -3,26 +3,10 @@ from contextlib import contextmanager
 from bearlibterminal import terminal
 from esper import World
 
-from ecs.processors.angerprocessor import AngerProcessor
-from ecs.processors.attackaiprocessor import AttackAIProcessor
-from ecs.processors.exploremapprocessor import ExploreMapProcessor
-from ecs.processors.awakeprocessor import AwakeProcessor
-from ecs.processors.combatsystem import CombatProcessor
-from ecs.processors.defendaiprocessor import DefendAIProcessor
+from ecs.components.gamestate import GameState
 from ecs.processors.displayprocessor import DisplayProcessor
+from ecs.processors.gamestateprocessor import GameStateProcessor
 from ecs.processors.inputprocessor import InputProcessor
-from ecs.processors.itemmapprocessor import ItemMapProcessor
-from ecs.processors.itemprocessor import ItemProcessor
-from ecs.processors.monstermapprocessor import MonsterMapProcessor
-from ecs.processors.monsterprocessor import MonsterProcessor
-from ecs.processors.movementprocessor import MovementProcessor
-from ecs.processors.stairmapprocessor import StairMapProcessor
-from ecs.processors.stairprocessor import StairProcessor
-from ecs.processors.threatprocessor import ThreatProcessor
-from ecs.processors.trapprocessor import TrapProcessor
-from ecs.processors.useitemprocessor import UseItemProcessor
-from ecs.processors.visibilityprocessor import VisibilityProcessor
-from ecs.processors.visionprocessor import VisionProcessor
 from factories.world import make_world
 
 
@@ -41,36 +25,11 @@ class Main:
     def __init__(self):
         self.world = World(timed=True)
 
-        entities = make_world()
+        self.world.add_processor(DisplayProcessor(), priority=-100)
+        self.world.add_processor(InputProcessor(), priority=-200)
+        self.world.add_processor(GameStateProcessor(), priority=-300)
 
-        for entity in entities:
-            self.world.create_entity(*entity)
-
-        self.world.add_processor(VisionProcessor())
-        self.world.add_processor(VisibilityProcessor())
-        self.world.add_processor(ItemProcessor())
-        self.world.add_processor(AwakeProcessor())
-        self.world.add_processor(MonsterProcessor())
-        self.world.add_processor(ThreatProcessor())
-        self.world.add_processor(TrapProcessor())
-
-        # Update player Dijkstra maps
-        self.world.add_processor(ExploreMapProcessor())
-        self.world.add_processor(ItemMapProcessor())
-        self.world.add_processor(MonsterMapProcessor())
-        self.world.add_processor(StairMapProcessor())
-
-        # Decide which options to give the player
-        self.world.add_processor(AttackAIProcessor())
-        self.world.add_processor(DefendAIProcessor())
-
-        self.world.add_processor(DisplayProcessor())
-        self.world.add_processor(InputProcessor())
-        self.world.add_processor(StairProcessor())
-        self.world.add_processor(UseItemProcessor())
-        self.world.add_processor(CombatProcessor())
-        self.world.add_processor(MovementProcessor())
-        self.world.add_processor(AngerProcessor())
+        self.world.create_entity(GameState.TITLE_SCREEN)
 
     def core_game_loop(self):
         while True:

@@ -2,10 +2,11 @@ import itertools
 from textwrap import wrap
 
 from bearlibterminal import terminal
-from esper import Processor
+from esper import Processor, World
 
 from constants import DijkstraMap
 from ecs.components.display import Display
+from ecs.components.gamestate import GameState
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
 from ecs.components.lastknownposition import LastKnownPosition
@@ -52,6 +53,25 @@ class DisplayProcessor(Processor):
         self.buffer = []
 
     def process(self):
+        self.world: World
+
+        _, state = next(iter(self.world.get_component(GameState)))
+
+        if state is GameState.TITLE_SCREEN:
+            self.draw_title_screen()
+
+        if state is GameState.MAIN_GAME:
+            self.draw_main_game()
+
+    @staticmethod
+    def draw_title_screen():
+        terminal.bkcolor(0xFF000000)
+        terminal.color(0xFFFFFFFF)
+        terminal.clear()
+        terminal.printf(0, 0, "Title Screen")
+        terminal.refresh()
+
+    def draw_main_game(self):
         terminal.bkcolor(0xFF000000)
         terminal.color(0xFFFFFFFF)
         terminal.clear()
@@ -64,7 +84,7 @@ class DisplayProcessor(Processor):
         self.draw_messages()
 
         i = sum(1 for _ in self.world.get_components(Item, Inventory))
-        terminal.print(0, 0, str(i))
+        terminal.printf(0, 0, str(i))
 
         terminal.refresh()
 
@@ -160,7 +180,6 @@ class DisplayProcessor(Processor):
             if self.world.has_component(entity, Targeted):
                 terminal.bkcolor(0xFFFF0000)
                 terminal.color(0xFF000000)
-                self.world.remove_component(entity, Targeted)
             elif self.world.has_component(entity, Visible):
                 terminal.bkcolor(0xFF000000)
                 terminal.color(0xFFFFFFFF)
