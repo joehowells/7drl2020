@@ -1,6 +1,6 @@
 from esper import Processor
 
-from constants import DijkstraMap
+from constants import DijkstraMap, AWAKE_DISTANCE
 from ecs.components.awake import Awake
 from ecs.components.map import Map
 from ecs.components.monster import Monster
@@ -16,11 +16,11 @@ class AwakeProcessor(Processor, EventMixin):
 
         for entity, (_, position) in self.world.get_components(Monster, Position):
             if self.world.has_component(entity, Awake):
-                if game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x] < 0:
+                if game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x] > AWAKE_DISTANCE:
                     self.world.remove_component(entity, Awake)
             else:
                 if self.world.has_component(entity, Visible):
                     self.world.add_component(entity, Awake())
 
-                if event and game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x] > 0:
+                if event and game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x] <= AWAKE_DISTANCE:
                     self.world.add_component(entity, Awake())

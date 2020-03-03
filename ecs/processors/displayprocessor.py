@@ -16,6 +16,9 @@ from ecs.components.visible import Visible
 
 
 def draw_borders() -> None:
+    terminal.bkcolor(0xFF000000)
+    terminal.color(0xFF666666)
+
     for y in range(21):
         terminal.put(33, y, 0x2551)
 
@@ -47,9 +50,9 @@ class DisplayProcessor(Processor):
         self.buffer = []
 
     def process(self):
+        terminal.bkcolor(0xFF000000)
+        terminal.color(0xFFFFFFFF)
         terminal.clear()
-
-        terminal.color(0xFF666666)
 
         draw_borders()
 
@@ -77,7 +80,7 @@ class DisplayProcessor(Processor):
 
         _, game_map = next(iter(self.world.get_component(Map)))
 
-        key = DijkstraMap.EXPLORE
+        key = DijkstraMap.PLAYER
         max_dijkstra = max(max(value for value in row) for row in game_map.dijkstra[key])
 
         for xc, yc in itertools.product(range(33), range(21)):
@@ -138,7 +141,7 @@ class DisplayProcessor(Processor):
         y_min = position.y - 10
         y_max = position.y + 10
 
-        entity_pairs = self.world.get_components(Display, Position)
+        entity_pairs = self.world.get_components(Display, LastKnownPosition)
 
         if not entity_pairs:
             return
@@ -149,37 +152,28 @@ class DisplayProcessor(Processor):
             if not x_min <= position.x <= x_max or not y_min <= position.y <= y_max:
                 continue
 
-            if self.world.has_component(entity, Visible):
-                if self.world.has_component(entity, Targeted):
-                    terminal.bkcolor(0xFFFF0000)
-                    terminal.color(0xFF000000)
-                    self.world.remove_component(entity, Targeted)
-                else:
-                    terminal.bkcolor(0xFF000000)
-                    terminal.color(0xFFFFFFFF)
-
-                terminal.put(
-                    position.x + x_offset,
-                    position.y + y_offset,
-                    display.code,
-                )
+            if self.world.has_component(entity, Targeted):
+                terminal.bkcolor(0xFFFF0000)
+                terminal.color(0xFF000000)
+                self.world.remove_component(entity, Targeted)
+            elif self.world.has_component(entity, Visible):
+                terminal.bkcolor(0xFF000000)
+                terminal.color(0xFFFFFFFF)
             else:
-                for old_position in self.world.try_component(entity, LastKnownPosition):
-                    terminal.bkcolor(0xFF000000)
-                    terminal.color(0xFF666666)
-                    terminal.put(
-                        old_position.x + x_offset,
-                        old_position.y + y_offset,
-                        display.code,
-                    )
-                    break
+                terminal.bkcolor(0xFF000000)
+                terminal.color(0xFF666666)
 
-        terminal.bkcolor(0xFF000000)
+            terminal.put(
+                position.x + x_offset,
+                position.y + y_offset,
+                display.code,
+            )
 
     def draw_ui(self):
         _, game_map = next(iter(self.world.get_component(Map)))
         _, player = next(iter(self.world.get_component(Player)))
 
+        terminal.bkcolor(0xFF000000)
         terminal.color(0xFFFFFFFF)
 
         terminal.printf(34, 0, f"Health: {player.health:>3d}")
@@ -210,6 +204,9 @@ class DisplayProcessor(Processor):
             terminal.printf(61, 5, f"(+{player.defend_bonus})")
 
     def draw_messages(self):
+        terminal.bkcolor(0xFF000000)
+        terminal.color(0xFFFFFFFF)
+
         # Load new messages into a list
         messages = []
         for entity, message in self.world.get_component(Message):

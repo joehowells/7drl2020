@@ -5,9 +5,10 @@ from ecs.components.message import Message
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
+from ecs.eventmixin import EventMixin
 
 
-class CombatProcessor(Processor):
+class CombatProcessor(Processor, EventMixin):
     def process(self):
         _, game_map = next(iter(self.world.get_component(Map)))
         _, (position, player) = next(iter(self.world.get_components(Position, Player)))
@@ -18,6 +19,7 @@ class CombatProcessor(Processor):
             return
 
         if event.name == "attack":
+            self.set_event(event)
             entity = event.data["target"]
             monster = self.world.component_for_entity(entity, Monster)
 

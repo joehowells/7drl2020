@@ -9,6 +9,7 @@ from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.staircase import Staircase
+from ecs.components.trap import Trap
 from functions import dijkstra_map
 
 
@@ -87,6 +88,14 @@ def make_potion(x: int, y: int) -> List[Any]:
     ]
 
 
+def make_trap(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x005E, draw_order=-2),
+        Trap(),
+        Position(x, y),
+    ]
+
+
 def make_world() -> List[List[Any]]:
     game_map = Map()
     entities = [[game_map]]
@@ -119,23 +128,38 @@ def make_world() -> List[List[Any]]:
         if min(room.w, room.h) < 4:
             continue
 
-        for _ in range(randint(4, 16)):
+        if randint(1, 4) == 1:
+            for _ in range(randint(2, 8)):
+                x = randint(room.x1, room.x2 - 1)
+                y = randint(room.y1, room.y2 - 1)
+
+                if not game_map.blocked[y][x]:
+                    entity = make_trap(x, y)
+                    entities.append(entity)
+
             x = randint(room.x1, room.x2 - 1)
             y = randint(room.y1, room.y2 - 1)
+            entity = make_soldier(x, y)
+            entities.append(entity)
+            game_map.blocked[y][x] = True
+        else:
+            for _ in range(randint(4, 16)):
+                x = randint(room.x1, room.x2 - 1)
+                y = randint(room.y1, room.y2 - 1)
 
-            if not game_map.blocked[y][x]:
-                factories = [
-                    make_soldier,
-                    make_defender,
-                    make_officer,
-                    make_assassin,
-                    make_archer,
-                    make_potion,
-                ]
-                factory = choice(factories)
-                entity = factory(x, y)
-                entities.append(entity)
-                if Monster in entity:
-                    game_map.blocked[y][x] = True
+                if not game_map.blocked[y][x]:
+                    factories = [
+                        make_soldier,
+                        make_defender,
+                        make_officer,
+                        make_assassin,
+                        make_archer,
+                        make_potion,
+                    ]
+                    factory = choice(factories)
+                    entity = factory(x, y)
+                    entities.append(entity)
+                    if Monster in entity:
+                        game_map.blocked[y][x] = True
 
     return entities

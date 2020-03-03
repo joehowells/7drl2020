@@ -82,3 +82,5 @@ class AttackAIProcessor(Processor, EventMixin):
                 if target:
                     player.attack_action = Event("move", {"target": target, "anger": -1})
                     return
+
+        player.defend_action = Event("wait", {"anger": -1})

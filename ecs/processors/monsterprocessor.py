@@ -15,7 +15,7 @@ class MonsterProcessor(Processor):
 
         for entity, (monster, position, _) in self.world.get_components(Monster, Position, Awake):
             distance = game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x]
-            if distance <= len(monster.threat):
+            if 1 <= distance <= len(monster.threat):
                 self.world.add_component(entity, Threatening(threat=monster.threat[distance-1]))
             else:
                 if self.world.has_component(entity, Threatening):
