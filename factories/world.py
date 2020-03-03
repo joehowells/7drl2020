@@ -12,6 +12,68 @@ from ecs.components.staircase import Staircase
 from functions import dijkstra_map
 
 
+def make_soldier(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x0073),
+        Monster(
+            name="soldier",
+            threat=1,
+            defend=1,
+            health=1,
+        ),
+        Position(x, y),
+    ]
+
+
+def make_defender(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x0064),
+        Monster(
+            name="defender",
+            threat=1,
+            defend=3,
+            health=1,
+        ),
+        Position(x, y),
+    ]
+
+
+def make_officer(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x006F),
+        Monster(
+            name="officer",
+            threat=2,
+            defend=2,
+            health=2,
+        ),
+        Position(x, y),
+    ]
+
+
+def make_assassin(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x0020),
+        Monster(
+            name="assassin",
+            threat=5,
+            defend=1,
+            health=1,
+        ),
+        Position(x, y),
+    ]
+
+
+def make_potion(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x0021, draw_order=-1),
+        Item(
+            name="potion",
+        ),
+        Position(x, y),
+    ]
+
+
 def make_world() -> List[List[Any]]:
     game_map = Map()
     entities = [[game_map]]
@@ -37,7 +99,8 @@ def make_world() -> List[List[Any]]:
     ])
     game_map.blocked[y][x] = True
 
-    game_map.dijkstra[DijkstraMap.PLAYER] = dijkstra_map(game_map, [(x, y)], check_explored=False, max_value=AWAKE_DISTANCE)
+    game_map.dijkstra[DijkstraMap.PLAYER] = dijkstra_map(game_map, [(x, y)], check_explored=False,
+                                                         max_value=AWAKE_DISTANCE)
 
     for room in game_map.rooms:
         if min(room.w, room.h) < 4:
@@ -46,19 +109,19 @@ def make_world() -> List[List[Any]]:
         for _ in range(randint(4, 16)):
             x = randint(room.x1, room.x2 - 1)
             y = randint(room.y1, room.y2 - 1)
+
             if not game_map.blocked[y][x]:
-                if randint(1, 5) < 5:
-                    entities.append([
-                        Display(0x0026),
-                        Monster(),
-                        Position(x, y),
-                    ])
+                factories = [
+                    make_soldier,
+                    make_defender,
+                    make_officer,
+                    make_assassin,
+                    make_potion,
+                ]
+                factory = choice(factories)
+                entity = factory(x, y)
+                entities.append(entity)
+                if Monster in entity:
                     game_map.blocked[y][x] = True
-                else:
-                    entities.append([
-                        Display(0x0021, draw_order=-1),
-                        Item(),
-                        Position(x, y),
-                    ])
 
     return entities
