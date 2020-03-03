@@ -15,13 +15,13 @@ class MonsterProcessor(Processor):
 
         for entity, (monster, position, _) in self.world.get_components(Monster, Position, Awake):
             distance = game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x]
-            if distance == monster.target_distance:
-                self.world.add_component(entity, Threatening())
+            if distance <= len(monster.threat):
+                self.world.add_component(entity, Threatening(threat=monster.threat[distance-1]))
             else:
                 if self.world.has_component(entity, Threatening):
                     self.world.remove_component(entity, Threatening)
 
-                if distance > monster.target_distance:
+                if distance > len(monster.threat):
                     target = move_dijkstra(game_map, position, DijkstraMap.PLAYER)
                 else:
                     target = move_dijkstra(game_map, position, DijkstraMap.PLAYER, reverse=True)

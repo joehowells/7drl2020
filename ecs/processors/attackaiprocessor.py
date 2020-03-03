@@ -39,7 +39,7 @@ class AttackAIProcessor(Processor, EventMixin):
                     if player.attack <= monster.defend:
                         strong_entities.append(entity)
                     else:
-                        weak_entities.append((-monster.threat, monster.health, entity))
+                        weak_entities.append((-monster.threat[0], monster.health, entity))
 
         # Attack something we can actually damage
         if weak_entities:

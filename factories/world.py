@@ -17,7 +17,7 @@ def make_soldier(x: int, y: int) -> List[Any]:
         Display(0x0073),
         Monster(
             name="soldier",
-            threat=3,
+            threat=[3],
             defend=1,
             health=1,
         ),
@@ -30,9 +30,9 @@ def make_defender(x: int, y: int) -> List[Any]:
         Display(0x0064),
         Monster(
             name="defender",
-            threat=3,
-            defend=3,
-            health=1,
+            threat=[3],
+            defend=2,
+            health=2,
         ),
         Position(x, y),
     ]
@@ -43,8 +43,8 @@ def make_officer(x: int, y: int) -> List[Any]:
         Display(0x006F),
         Monster(
             name="officer",
-            threat=4,
-            defend=2,
+            threat=[5],
+            defend=1,
             health=2,
         ),
         Position(x, y),
@@ -56,7 +56,20 @@ def make_assassin(x: int, y: int) -> List[Any]:
         Display(0x0020),
         Monster(
             name="assassin",
-            threat=5,
+            threat=[5],
+            defend=1,
+            health=1,
+        ),
+        Position(x, y),
+    ]
+
+
+def make_archer(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x0061),
+        Monster(
+            name="archer",
+            threat=[2, 5],
             defend=1,
             health=1,
         ),
@@ -116,6 +129,7 @@ def make_world() -> List[List[Any]]:
                     make_defender,
                     make_officer,
                     make_assassin,
+                    make_archer,
                     make_potion,
                 ]
                 factory = choice(factories)

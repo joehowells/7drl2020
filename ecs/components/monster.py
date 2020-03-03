@@ -1,10 +1,10 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
 
 
 @dataclass
 class Monster:
     name: str = "monster"
-    target_distance: int = 1
-    threat: int = 5
-    health: int = 2
+    threat: List[int] = field(default_factory=lambda: [1])
+    health: int = 1
     defend: int = 1

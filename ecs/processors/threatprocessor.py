@@ -21,13 +21,15 @@ class ThreatProcessor(Processor):
         weights = []
 
         for entity, (monster, visible) in self.world.get_components(Monster, Visible):
-            player.visible_threat += monster.threat
+            threat = max(0, max(monster.threat) - player.defend)
+            player.visible_threat += threat
 
-            if self.world.has_component(entity, Threatening):
-                player.actual_threat += max(0, monster.threat - player.defend)
+        for entity, (monster, threatening) in self.world.get_components(Monster, Threatening):
+            threat = max(0, threatening.threat - player.defend)
+            player.actual_threat += threat
 
-                monsters.append(monster)
-                weights.append(monster.threat)
+            monsters.append(monster)
+            weights.append(threat)
 
         if randint(0, 99) < player.actual_threat:
             # Work out which monster hit us
@@ -45,4 +47,3 @@ class ThreatProcessor(Processor):
                 self.world.create_entity(Message(
                     text=f"You die...",
                 ))
-
