@@ -10,7 +10,7 @@ from ecs.processors.combatsystem import CombatProcessor
 from ecs.processors.defendaiprocessor import DefendAIProcessor
 from ecs.processors.exploremapprocessor import ExploreMapProcessor
 from ecs.processors.itemmapprocessor import ItemMapProcessor
-from ecs.processors.itemprocessor import ItemProcessor
+from ecs.processors.getitemprocessor import GetItemProcessor
 from ecs.processors.monstermapprocessor import MonsterMapProcessor
 from ecs.processors.monsterprocessor import MonsterProcessor
 from ecs.processors.movementprocessor import MovementProcessor
@@ -51,7 +51,7 @@ class GameStateProcessor(Processor):
         self.world.add_processor(StairProcessor())
         self.world.add_processor(UseItemProcessor())
         self.world.add_processor(CombatProcessor())
-        self.world.add_processor(ItemProcessor())
+        self.world.add_processor(GetItemProcessor())
         self.world.add_processor(MovementProcessor())
 
         self.world.add_processor(AngerProcessor())
@@ -89,7 +89,7 @@ class GameStateProcessor(Processor):
         self.world.remove_processor(StairProcessor)
         self.world.remove_processor(UseItemProcessor)
         self.world.remove_processor(CombatProcessor)
-        self.world.remove_processor(ItemProcessor)
+        self.world.remove_processor(GetItemProcessor)
         self.world.remove_processor(MovementProcessor)
 
         self.world.remove_processor(AngerProcessor)

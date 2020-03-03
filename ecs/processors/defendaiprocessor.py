@@ -1,4 +1,4 @@
-from esper import Processor
+from esper import Processor, World
 
 from constants import DijkstraMap
 from ecs.components.event import Event
@@ -9,12 +9,15 @@ from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
+from ecs.components.targeted import Targeted
 from ecs.components.visible import Visible
 from functions import move_dijkstra
 
 
 class DefendAIProcessor(Processor):
     def process(self):
+        self.world: World
+
         _, game_map = next(iter(self.world.get_component(Map)))
         _, (player, player_position) = next(iter(self.world.get_components(Player, Position)))
 
@@ -23,7 +26,8 @@ class DefendAIProcessor(Processor):
 
             if entity_pairs:
                 entity = entity_pairs[0][0]
-                player.defend_action = Event("use", {"item": entity, "anger": -10})
+                self.world.add_component(entity, Targeted())
+                player.defend_action = Event("use", {"anger": -10})
                 return
 
             target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER, reverse=True)
