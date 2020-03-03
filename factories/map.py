@@ -6,7 +6,6 @@ from typing import List, Tuple, Set
 
 from constants import ROOM_SIZE, GRAPH_MIN_DEPTH, GRAPH_MAX_DEPTH
 
-Map = List[List[bool]]
 Node = Tuple[int, int]
 Link = Tuple[Node, Node]
 
@@ -124,7 +123,7 @@ def link_box(link: Link) -> Room:
     )
 
 
-def make_map() -> Tuple[Map, List[Room]]:
+def make_map() -> Tuple[(List[List[bool]]), List[Room]]:
     nodes, links = make_graph()
     nodes, links = apply_offset(nodes, links)
     add_more_links(nodes, links)
@@ -164,7 +163,7 @@ def make_map() -> Tuple[Map, List[Room]]:
         box.y2 = y2
 
         dead_end = len(h_neighbors) + len(v_neighbors) == 1
-        
+
         if dead_end or random() < 0.5:
             box.x1 = randint(x1_base, x1 - 1)
             box.x2 = randint(x2 + 1, x2_base)

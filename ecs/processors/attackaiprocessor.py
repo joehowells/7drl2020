@@ -11,7 +11,8 @@ from ecs.components.position import Position
 from ecs.components.stair import Stair
 from ecs.components.targeted import Targeted
 from ecs.eventmixin import EventMixin
-from functions import iter_neighbors, move_dijkstra
+from ecs.processors.spatialprocessor import Adjacent, Coincident
+from functions import move_dijkstra
 
 
 class AttackMode(Enum):
@@ -25,21 +26,14 @@ class AttackAIProcessor(Processor, EventMixin):
         _, game_map = next(iter(self.world.get_component(Map)))
         _, (player, player_position) = next(iter(self.world.get_components(Player, Position)))
 
-        neighbors = set(iter_neighbors(player_position.x, player_position.y, game_map))
-
-        sources = set()
         strong_entities = []
         weak_entities = []
 
-        for entity, (position, monster) in self.world.get_components(Position, Monster):
-            if game_map.visible[position.y][position.x]:
-                sources.add((position.x, position.y))
-
-                if (position.x, position.y) in neighbors:
-                    if player.attack <= monster.defend:
-                        strong_entities.append(entity)
-                    else:
-                        weak_entities.append((-monster.threat[0], monster.health, entity))
+        for entity, (position, monster, _) in self.world.get_components(Position, Monster, Adjacent):
+            if player.attack <= monster.defend:
+                strong_entities.append(entity)
+            else:
+                weak_entities.append((-monster.threat[0], monster.health, entity))
 
         # Attack something we can actually damage
         if weak_entities:
@@ -56,30 +50,26 @@ class AttackAIProcessor(Processor, EventMixin):
             player.attack_action = Event("attack", {"target": target, "anger": 2})
             return
 
-        elif sources:
-            target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER)
+        target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER)
 
-            if target:
-                player.attack_action = Event("move", {"target": target, "anger": 1})
-                return
+        if target:
+            player.attack_action = Event("move", {"target": target, "anger": 1})
+            return
 
-        elif not game_map.done_exploring:
-            target = move_dijkstra(game_map, player_position, DijkstraMap.EXPLORE)
+        target = move_dijkstra(game_map, player_position, DijkstraMap.EXPLORE)
 
-            if target:
-                player.attack_action = Event("move", {"target": target, "anger": -1})
-                return
+        if target:
+            player.attack_action = Event("move", {"target": target, "anger": -1})
+            return
 
-        else:
-            for entity, (position, _) in self.world.get_components(Position, Stair):
-                if position.x == player_position.x and position.y == player_position.y:
-                    player.attack_action = Event("stairs", {})
-                    break
-            else:
-                target = move_dijkstra(game_map, player_position, DijkstraMap.STAIRS)
+        for entity, (position, _, _) in self.world.get_components(Position, Stair, Coincident):
+            player.attack_action = Event("stairs", {})
+            return
 
-                if target:
-                    player.attack_action = Event("move", {"target": target, "anger": -1})
-                    return
+        target = move_dijkstra(game_map, player_position, DijkstraMap.STAIRS)
 
-        player.defend_action = Event("wait", {"anger": -1})
+        if target:
+            player.attack_action = Event("move", {"target": target, "anger": -1})
+            return
+
+        player.attack_action = Event("wait", {"anger": -1})

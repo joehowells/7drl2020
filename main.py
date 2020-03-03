@@ -7,7 +7,6 @@ from ecs.components.gamestate import GameState
 from ecs.processors.displayprocessor import DisplayProcessor
 from ecs.processors.gamestateprocessor import GameStateProcessor
 from ecs.processors.inputprocessor import InputProcessor
-from factories.world import make_world
 
 
 @contextmanager

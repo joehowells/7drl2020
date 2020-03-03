@@ -4,7 +4,6 @@ from textwrap import wrap
 from bearlibterminal import terminal
 from esper import Processor, World
 
-from constants import DijkstraMap
 from ecs.components.display import Display
 from ecs.components.gamestate import GameState
 from ecs.components.inventory import Inventory
@@ -106,8 +105,8 @@ class DisplayProcessor(Processor):
 
         _, game_map = next(iter(self.world.get_component(Map)))
 
-        key = DijkstraMap.MONSTER
-        max_dijkstra = max(max(value for value in row) for row in game_map.dijkstra[key])
+        # key = DijkstraMap.MONSTER
+        # max_dijkstra = max(max(value for value in row) for row in game_map.dijkstra[key])
 
         for xc, yc in itertools.product(range(33), range(21)):
             x = xc - x_offset

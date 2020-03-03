@@ -14,6 +14,8 @@ from ecs.processors.itemprocessor import ItemProcessor
 from ecs.processors.monstermapprocessor import MonsterMapProcessor
 from ecs.processors.monsterprocessor import MonsterProcessor
 from ecs.processors.movementprocessor import MovementProcessor
+from ecs.processors.playermapprocessor import PlayerMapProcessor
+from ecs.processors.spatialprocessor import SpatialProcessor
 from ecs.processors.stairmapprocessor import StairMapProcessor
 from ecs.processors.stairprocessor import StairProcessor
 from ecs.processors.threatprocessor import ThreatProcessor
@@ -49,22 +51,27 @@ class GameStateProcessor(Processor):
         self.world.add_processor(StairProcessor())
         self.world.add_processor(UseItemProcessor())
         self.world.add_processor(CombatProcessor())
+        self.world.add_processor(ItemProcessor())
         self.world.add_processor(MovementProcessor())
 
         self.world.add_processor(AngerProcessor())
-        self.world.add_processor(VisionProcessor())
-        self.world.add_processor(VisibilityProcessor())
-        self.world.add_processor(ItemProcessor())
-        self.world.add_processor(AwakeProcessor())
+        self.world.add_processor(PlayerMapProcessor())
+
         self.world.add_processor(MonsterProcessor())
         self.world.add_processor(ThreatProcessor())
         self.world.add_processor(TrapProcessor())
+
+        self.world.add_processor(VisionProcessor())
+        self.world.add_processor(VisibilityProcessor())
+        self.world.add_processor(AwakeProcessor())
 
         # Update player Dijkstra maps
         self.world.add_processor(ExploreMapProcessor())
         self.world.add_processor(ItemMapProcessor())
         self.world.add_processor(MonsterMapProcessor())
         self.world.add_processor(StairMapProcessor())
+
+        self.world.add_processor(SpatialProcessor())
 
         # Decide which options to give the player
         self.world.add_processor(AttackAIProcessor())
@@ -82,22 +89,27 @@ class GameStateProcessor(Processor):
         self.world.remove_processor(StairProcessor)
         self.world.remove_processor(UseItemProcessor)
         self.world.remove_processor(CombatProcessor)
+        self.world.remove_processor(ItemProcessor)
         self.world.remove_processor(MovementProcessor)
 
         self.world.remove_processor(AngerProcessor)
-        self.world.remove_processor(VisionProcessor)
-        self.world.remove_processor(VisibilityProcessor)
-        self.world.remove_processor(ItemProcessor)
-        self.world.remove_processor(AwakeProcessor)
+        self.world.remove_processor(PlayerMapProcessor)
+
         self.world.remove_processor(MonsterProcessor)
         self.world.remove_processor(ThreatProcessor)
         self.world.remove_processor(TrapProcessor)
+
+        self.world.remove_processor(VisionProcessor)
+        self.world.remove_processor(VisibilityProcessor)
+        self.world.remove_processor(AwakeProcessor)
 
         # Update player Dijkstra maps
         self.world.remove_processor(ExploreMapProcessor)
         self.world.remove_processor(ItemMapProcessor)
         self.world.remove_processor(MonsterMapProcessor)
         self.world.remove_processor(StairMapProcessor)
+
+        self.world.remove_processor(SpatialProcessor)
 
         # Decide which options to give the player
         self.world.remove_processor(AttackAIProcessor)
