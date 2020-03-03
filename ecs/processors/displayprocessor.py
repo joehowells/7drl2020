@@ -210,9 +210,16 @@ class DisplayProcessor(Processor):
             terminal.printf(61, 5, f"(+{player.defend_bonus})")
 
     def draw_messages(self):
+        # Load new messages into a list
+        messages = []
         for entity, message in self.world.get_component(Message):
+            messages.append(message)
             self.world.delete_entity(entity)
 
+        # Sort by priority
+        messages.sort(key=lambda m: m.priority, reverse=True)
+
+        for message in messages:
             for text in wrap(message.text, 31):
                 self.buffer.append((text, message.color))
 

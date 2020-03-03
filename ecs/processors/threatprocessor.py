@@ -46,4 +46,5 @@ class ThreatProcessor(Processor):
                 self.world.add_component(player_entity, Dead())
                 self.world.create_entity(Message(
                     text=f"You die...",
+                    priority=-100,
                 ))
