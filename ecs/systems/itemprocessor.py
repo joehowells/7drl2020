@@ -18,6 +18,7 @@ class ItemProcessor(Processor):
         event = player.action
 
         if event and event.name == "pickup":
+            print("event?")
             self.world.remove_component(event.data["item"], Position)
             self.world.remove_component(event.data["item"], LastKnownPosition)
             self.world.create_entity(Message("You pick up something."))
