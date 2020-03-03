@@ -2,7 +2,6 @@ import itertools
 
 from esper import Processor
 
-from ecs.components.event import Event
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
@@ -26,7 +25,6 @@ class VisionProcessor(Processor, EventMixin):
 
         game_map.visible[position.y][position.x] = True
         game_map.explored[position.y][position.x] = True
-        new_tiles_explored = False
 
         for x, y in itertools.product(range(x_min, x_max), range(y_min, y_max)):
             for xi, yi in line_iter(position.x, position.y, x, y):
@@ -34,10 +32,6 @@ class VisionProcessor(Processor, EventMixin):
 
                 if not game_map.explored[yi][xi]:
                     game_map.explored[yi][xi] = True
-                    new_tiles_explored = True
 
                 if not game_map.transparent[yi][xi]:
                     break
-
-        if new_tiles_explored:
-            self.set_event(Event("new_tiles_explored", {}))

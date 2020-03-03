@@ -18,12 +18,7 @@ class CombatProcessor(Processor, EventMixin):
 
         event = player.action
 
-        if not event:
-            return
-
-        if event.name == "attack":
-            self.set_event(event)
-
+        if event and event.name == "attack":
             for entity, (monster, _) in self.world.get_components(Monster, Targeted):
                 self.world.remove_component(entity, Targeted)
 
