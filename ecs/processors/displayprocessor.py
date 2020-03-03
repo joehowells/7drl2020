@@ -130,14 +130,14 @@ class DisplayProcessor(Processor):
                 else:
                     code = 0x0023
 
-                if game_map.dijkstra[key][y][x] >= 0:
-                    distance = int(game_map.dijkstra[key][y][x] / max_dijkstra * 767)
-                    if 0 <= distance <= 255:
-                        color = terminal.color_from_argb(255, 255, 255 - distance, 0)
-                    elif 256 <= distance <= 511:
-                        color = terminal.color_from_argb(255, 255, 0, distance - 256)
-                    elif 512 <= distance <= 767:
-                        color = terminal.color_from_argb(255, 767 - distance, 0, 255)
+                # if game_map.dijkstra[key][y][x] >= 0:
+                #     distance = int(game_map.dijkstra[key][y][x] / max_dijkstra * 767)
+                #     if 0 <= distance <= 255:
+                #         color = terminal.color_from_argb(255, 255, 255 - distance, 0)
+                #     elif 256 <= distance <= 511:
+                #         color = terminal.color_from_argb(255, 255, 0, distance - 256)
+                #     elif 512 <= distance <= 767:
+                #         color = terminal.color_from_argb(255, 767 - distance, 0, 255)
 
                 if (x, y) == attack_target == defend_target:
                     terminal.color(0xFF000000)

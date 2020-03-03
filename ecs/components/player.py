@@ -9,7 +9,7 @@ class Player:
     attack_action: Event = Event("wait", {"anger": -1})
     defend_action: Event = Event("wait", {"anger": -1})
 
-    health: int = 1
+    health: int = 10
     anger: int = 0
     visible_threat: int = 0
     actual_threat: int = 0
