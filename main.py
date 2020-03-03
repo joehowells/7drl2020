@@ -3,6 +3,7 @@ from contextlib import contextmanager
 from bearlibterminal import terminal
 from esper import World
 
+from ecs.systems.angerprocessor import AngerProcessor
 from ecs.systems.attackaiprocessor import AttackAIProcessor
 from ecs.systems.autoexploreprocessor import AutoExploreProcessor
 from ecs.systems.awakeprocessor import AwakeProcessor
@@ -54,6 +55,7 @@ class Main:
         self.world.add_processor(StairProcessor())
         self.world.add_processor(CombatProcessor())
         self.world.add_processor(MovementProcessor())
+        self.world.add_processor(AngerProcessor())
 
     def core_game_loop(self):
         while True:

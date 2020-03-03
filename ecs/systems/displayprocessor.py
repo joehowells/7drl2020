@@ -107,10 +107,10 @@ class DisplayProcessor(Processor):
         y_offset = 10 - position.y
 
         # Set the bounding box for filtering out entities
-        x_min = position.x-16
-        x_max = position.x+16
-        y_min = position.y-10
-        y_max = position.y+10
+        x_min = position.x - 16
+        x_max = position.x + 16
+        y_min = position.y - 10
+        y_max = position.y + 10
 
         for entity, (display, position) in self.world.get_components(Display, Position):
             if not x_min <= position.x <= x_max or not y_min <= position.y <= y_max:
@@ -137,6 +137,8 @@ class DisplayProcessor(Processor):
         _, game_map = next(iter(self.world.get_component(Map)))
         _, player = next(iter(self.world.get_component(Player)))
 
+        terminal.color(0xFFFFFFFF)
+
         terminal.printf(34, 0, f"Health: {player.health:>3d}")
         terminal.printf(34, 1, f"Anger:  {player.anger:>3d}")
         terminal.printf(34, 2, f"Threat: {player.actual_threat:>3d}")
@@ -153,12 +155,26 @@ class DisplayProcessor(Processor):
         terminal.printf(34, 4, f"[[Z]] {player.attack_action.name}")
         terminal.printf(34, 5, f"[[X]] {player.defend_action.name}")
 
+        terminal.printf(51, 4, f"Attack: {player.attack}")
+        terminal.printf(51, 5, f"Defend: {player.defend}")
+
+        if player.attack_bonus > 0:
+            terminal.color(0xFFFF0000)
+            terminal.printf(61, 4, f"(+{player.attack_bonus})")
+
+        if player.defend_bonus > 0:
+            terminal.color(0xFFFF0000)
+            terminal.printf(61, 5, f"(+{player.defend_bonus})")
+
     def draw_messages(self):
         for entity, message in self.world.get_component(Message):
             self.world.delete_entity(entity)
-            self.buffer.extend(wrap(message.text, 31))
+
+            for text in wrap(message.text, 31):
+                self.buffer.append((text, message.color))
 
         self.buffer = self.buffer[-14:]
 
-        for row, message in enumerate(self.buffer):
+        for row, (message, color) in enumerate(self.buffer):
+            terminal.color(color)
             terminal.printf(34, row + 7, message)
