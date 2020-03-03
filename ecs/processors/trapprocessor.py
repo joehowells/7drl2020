@@ -8,7 +8,7 @@ from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.trap import Trap
 from ecs.components.visible import Visible
-from factories.world import make_officer
+from factories.world import make_soldier
 
 
 class TrapProcessor(Processor):
@@ -26,7 +26,7 @@ class TrapProcessor(Processor):
                 sprung_trap = True
 
                 if not game_map.blocked[position.y][position.x]:
-                    components = make_officer(position.x, position.y)
+                    components = make_soldier(position.x, position.y)
                     components.extend([
                         Visible(),
                         Awake(),

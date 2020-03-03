@@ -210,8 +210,8 @@ class DisplayProcessor(Processor):
 
         draw_bar(46, 0, player.health * 2)
         draw_bar(46, 1, player.anger // 5, 0xFFFF0000)
-        draw_bar(46, 2, player.visible_threat // 5, 0xFFFFFF00)
-        draw_bar(46, 2, player.actual_threat // 5, 0xFFFF0000)
+        draw_bar(46, 2, player.visible_threat, 0xFFFFFF00)
+        draw_bar(46, 2, player.actual_threat, 0xFFFF0000)
 
         terminal.printf(34, 4, f"Z: {player.attack_action.name}")
         terminal.printf(34, 5, f"X: {player.defend_action.name}")

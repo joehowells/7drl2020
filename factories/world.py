@@ -17,7 +17,7 @@ def make_soldier(x: int, y: int) -> List[Any]:
         Display(0x0073),
         Monster(
             name="soldier",
-            threat=[3],
+            threat=[2],
             defend=1,
             health=1,
         ),
@@ -30,7 +30,7 @@ def make_defender(x: int, y: int) -> List[Any]:
         Display(0x0064),
         Monster(
             name="defender",
-            threat=[3],
+            threat=[2],
             defend=2,
             health=2,
         ),
@@ -43,7 +43,7 @@ def make_officer(x: int, y: int) -> List[Any]:
         Display(0x006F),
         Monster(
             name="officer",
-            threat=[5],
+            threat=[3],
             defend=1,
             health=2,
         ),
@@ -56,7 +56,7 @@ def make_assassin(x: int, y: int) -> List[Any]:
         Display(0x0020),
         Monster(
             name="assassin",
-            threat=[5],
+            threat=[3],
             defend=1,
             health=1,
         ),
@@ -69,7 +69,7 @@ def make_archer(x: int, y: int) -> List[Any]:
         Display(0x0061),
         Monster(
             name="archer",
-            threat=[2, 5],
+            threat=[2, 3],
             defend=1,
             health=1,
         ),
@@ -166,6 +166,8 @@ def make_enemy_room(game_map: Map, entities: List[List[Any]], room: Room) -> Non
         if not game_map.blocked[y][x]:
             factories = [
                 make_soldier,
+                make_soldier,
+                make_soldier,
                 make_defender,
                 make_officer,
                 make_assassin,
@@ -239,4 +241,3 @@ def make_item_room(game_map: Map, entities: List[List[Any]], room: Room) -> None
             entity = factory(x, y)
             entities.append(entity)
             game_map.blocked[y][x] = True
-

@@ -31,7 +31,10 @@ class ThreatProcessor(Processor):
             monsters.append(monster)
             weights.append(threat)
 
-        if randint(0, 99) < player.actual_threat:
+        player.visible_threat = min(max(player.visible_threat, 0), 20)
+        player.actual_threat = min(max(player.actual_threat, 0), 20)
+
+        if randint(0, 19) < player.actual_threat:
             # Work out which monster hit us
             monster = choices(monsters, weights)[0]
 
