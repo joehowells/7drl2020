@@ -17,7 +17,7 @@ def make_soldier(x: int, y: int) -> List[Any]:
         Display(0x0073),
         Monster(
             name="soldier",
-            threat=1,
+            threat=3,
             defend=1,
             health=1,
         ),
@@ -30,7 +30,7 @@ def make_defender(x: int, y: int) -> List[Any]:
         Display(0x0064),
         Monster(
             name="defender",
-            threat=1,
+            threat=3,
             defend=3,
             health=1,
         ),
@@ -43,7 +43,7 @@ def make_officer(x: int, y: int) -> List[Any]:
         Display(0x006F),
         Monster(
             name="officer",
-            threat=2,
+            threat=4,
             defend=2,
             health=2,
         ),

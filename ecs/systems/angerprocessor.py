@@ -23,8 +23,8 @@ class AngerProcessor(Processor):
             player.defend_bonus += 1
 
         if player.anger >= 100:
-            player.attack_bonus += 2
-            player.defend_bonus += 2
+            player.attack_bonus += 1
+            player.defend_bonus += 1
 
         player.attack = player.base_attack + player.attack_bonus
         player.defend = player.base_defend + player.defend_bonus

@@ -11,6 +11,7 @@ from ecs.components.map import Map
 from ecs.components.message import Message
 from ecs.components.player import Player
 from ecs.components.position import Position
+from ecs.components.targeted import Targeted
 from ecs.components.visible import Visible
 
 
@@ -127,7 +128,14 @@ class DisplayProcessor(Processor):
                 continue
 
             if self.world.has_component(entity, Visible):
-                terminal.color(0xFFFFFFFF)
+                if self.world.has_component(entity, Targeted):
+                    terminal.bkcolor(0xFFFF0000)
+                    terminal.color(0xFF000000)
+                    self.world.remove_component(entity, Targeted)
+                else:
+                    terminal.bkcolor(0xFF000000)
+                    terminal.color(0xFFFFFFFF)
+
                 terminal.put(
                     position.x + x_offset,
                     position.y + y_offset,
@@ -135,6 +143,7 @@ class DisplayProcessor(Processor):
                 )
             else:
                 for old_position in self.world.try_component(entity, LastKnownPosition):
+                    terminal.bkcolor(0xFF000000)
                     terminal.color(0xFF666666)
                     terminal.put(
                         old_position.x + x_offset,
@@ -142,6 +151,8 @@ class DisplayProcessor(Processor):
                         display.code,
                     )
                     break
+
+        terminal.bkcolor(0xFF000000)
 
     def draw_ui(self):
         _, game_map = next(iter(self.world.get_component(Map)))
