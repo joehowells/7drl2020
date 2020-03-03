@@ -24,7 +24,7 @@ class ThreatProcessor(Processor):
             player.visible_threat += monster.threat
 
             if self.world.has_component(entity, Threatening):
-                player.actual_threat += monster.threat
+                player.actual_threat += max(0, monster.threat - player.defend)
 
                 monsters.append(monster)
                 weights.append(monster.threat)
