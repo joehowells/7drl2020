@@ -20,7 +20,7 @@ def make_world() -> List[List[Any]]:
     x = randint(room.x1, room.x2 - 1)
     y = randint(room.y1, room.y2 - 1)
     entities.append([
-        Display(0x003E),
+        Display(0x003E, draw_order=-2),
         Staircase(),
         Position(x, y),
     ])
@@ -56,7 +56,7 @@ def make_world() -> List[List[Any]]:
                     game_map.blocked[y][x] = True
                 else:
                     entities.append([
-                        Display(0x0021),
+                        Display(0x0021, draw_order=-1),
                         Item(),
                         Position(x, y),
                     ])

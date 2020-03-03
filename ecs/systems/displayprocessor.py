@@ -115,7 +115,14 @@ class DisplayProcessor(Processor):
         y_min = position.y - 10
         y_max = position.y + 10
 
-        for entity, (display, position) in self.world.get_components(Display, Position):
+        entity_pairs = self.world.get_components(Display, Position)
+
+        if not entity_pairs:
+            return
+
+        entity_pairs.sort(key=lambda pair: pair[1][0].draw_order)
+
+        for entity, (display, position) in entity_pairs:
             if not x_min <= position.x <= x_max or not y_min <= position.y <= y_max:
                 continue
 
