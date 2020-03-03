@@ -3,21 +3,21 @@ from contextlib import contextmanager
 from bearlibterminal import terminal
 from esper import World
 
-from ecs.systems.angerprocessor import AngerProcessor
-from ecs.systems.attackaiprocessor import AttackAIProcessor
-from ecs.systems.autoexploreprocessor import AutoExploreProcessor
-from ecs.systems.awakeprocessor import AwakeProcessor
-from ecs.systems.combatsystem import CombatProcessor
-from ecs.systems.defendaiprocessor import DefendAIProcessor
-from ecs.systems.displayprocessor import DisplayProcessor
-from ecs.systems.inputprocessor import InputProcessor
-from ecs.systems.itemprocessor import ItemProcessor
-from ecs.systems.monsterprocessor import MonsterProcessor
-from ecs.systems.movementprocessor import MovementProcessor
-from ecs.systems.stairprocessor import StairProcessor
-from ecs.systems.threatprocessor import ThreatProcessor
-from ecs.systems.visibilityprocessor import VisibilityProcessor
-from ecs.systems.visionprocessor import VisionProcessor
+from ecs.processors.angerprocessor import AngerProcessor
+from ecs.processors.attackaiprocessor import AttackAIProcessor
+from ecs.processors.autoexploreprocessor import AutoExploreProcessor
+from ecs.processors.awakeprocessor import AwakeProcessor
+from ecs.processors.combatsystem import CombatProcessor
+from ecs.processors.defendaiprocessor import DefendAIProcessor
+from ecs.processors.displayprocessor import DisplayProcessor
+from ecs.processors.inputprocessor import InputProcessor
+from ecs.processors.itemprocessor import ItemProcessor
+from ecs.processors.monsterprocessor import MonsterProcessor
+from ecs.processors.movementprocessor import MovementProcessor
+from ecs.processors.stairprocessor import StairProcessor
+from ecs.processors.threatprocessor import ThreatProcessor
+from ecs.processors.visibilityprocessor import VisibilityProcessor
+from ecs.processors.visionprocessor import VisionProcessor
 from factories.world import make_world
 
 
