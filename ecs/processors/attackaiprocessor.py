@@ -8,7 +8,7 @@ from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.components.staircase import Staircase
+from ecs.components.stair import Stair
 from ecs.components.targeted import Targeted
 from ecs.eventmixin import EventMixin
 from functions import iter_neighbors, move_dijkstra
@@ -71,7 +71,7 @@ class AttackAIProcessor(Processor, EventMixin):
                 return
 
         else:
-            for entity, (position, _) in self.world.get_components(Position, Staircase):
+            for entity, (position, _) in self.world.get_components(Position, Stair):
                 if position.x == player_position.x and position.y == player_position.y:
                     player.attack_action = Event("stairs", {})
                     break

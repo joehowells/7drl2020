@@ -5,16 +5,18 @@ from esper import World
 
 from ecs.processors.angerprocessor import AngerProcessor
 from ecs.processors.attackaiprocessor import AttackAIProcessor
-from ecs.processors.autoexploreprocessor import AutoExploreProcessor
+from ecs.processors.exploremapprocessor import ExploreMapProcessor
 from ecs.processors.awakeprocessor import AwakeProcessor
 from ecs.processors.combatsystem import CombatProcessor
 from ecs.processors.defendaiprocessor import DefendAIProcessor
 from ecs.processors.displayprocessor import DisplayProcessor
 from ecs.processors.inputprocessor import InputProcessor
+from ecs.processors.itemmapprocessor import ItemMapProcessor
 from ecs.processors.itemprocessor import ItemProcessor
 from ecs.processors.monstermapprocessor import MonsterMapProcessor
 from ecs.processors.monsterprocessor import MonsterProcessor
 from ecs.processors.movementprocessor import MovementProcessor
+from ecs.processors.stairmapprocessor import StairMapProcessor
 from ecs.processors.stairprocessor import StairProcessor
 from ecs.processors.threatprocessor import ThreatProcessor
 from ecs.processors.trapprocessor import TrapProcessor
@@ -50,11 +52,18 @@ class Main:
         self.world.add_processor(AwakeProcessor())
         self.world.add_processor(MonsterProcessor())
         self.world.add_processor(ThreatProcessor())
-        self.world.add_processor(AutoExploreProcessor())
-        self.world.add_processor(MonsterMapProcessor())
         self.world.add_processor(TrapProcessor())
+
+        # Update player Dijkstra maps
+        self.world.add_processor(ExploreMapProcessor())
+        self.world.add_processor(ItemMapProcessor())
+        self.world.add_processor(MonsterMapProcessor())
+        self.world.add_processor(StairMapProcessor())
+
+        # Decide which options to give the player
         self.world.add_processor(AttackAIProcessor())
         self.world.add_processor(DefendAIProcessor())
+
         self.world.add_processor(DisplayProcessor())
         self.world.add_processor(InputProcessor())
         self.world.add_processor(StairProcessor())

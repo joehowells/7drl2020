@@ -1,0 +1,2 @@
+class Stair:
+    pass

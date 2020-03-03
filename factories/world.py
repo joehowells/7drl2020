@@ -8,7 +8,7 @@ from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.components.staircase import Staircase
+from ecs.components.stair import Stair
 from ecs.components.trap import Trap
 from functions import dijkstra_map
 
@@ -105,11 +105,9 @@ def make_world() -> List[List[Any]]:
     y = randint(room.y1, room.y2 - 1)
     entities.append([
         Display(0x003E, draw_order=-2),
-        Staircase(),
+        Stair(),
         Position(x, y),
     ])
-
-    game_map.dijkstra[DijkstraMap.STAIRS] = dijkstra_map(game_map, [(x, y)], check_explored=False)
 
     room = choice(game_map.rooms)
     x = randint(room.x1, room.x2 - 1)

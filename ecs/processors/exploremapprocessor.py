@@ -11,7 +11,7 @@ from ecs.eventmixin import EventMixin
 from functions import dijkstra_map, iter_neighbors
 
 
-class AutoExploreProcessor(Processor, EventMixin):
+class ExploreMapProcessor(Processor, EventMixin):
     def process(self):
         event = self.get_event("new_tiles_explored")
 
