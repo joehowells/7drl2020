@@ -6,6 +6,8 @@ from esper import Processor
 
 from constants import DijkstraMap
 from ecs.components.display import Display
+from ecs.components.inventory import Inventory
+from ecs.components.item import Item
 from ecs.components.lastknownposition import LastKnownPosition
 from ecs.components.map import Map
 from ecs.components.message import Message
@@ -60,6 +62,9 @@ class DisplayProcessor(Processor):
         self.draw_entities()
         self.draw_ui()
         self.draw_messages()
+
+        i = sum(1 for _ in self.world.get_components(Item, Inventory))
+        terminal.print(0, 0, str(i))
 
         terminal.refresh()
 
