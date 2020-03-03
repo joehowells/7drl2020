@@ -8,6 +8,37 @@ from ecs.eventmixin import EventMixin
 
 
 class InputProcessor(Processor, EventMixin):
+    def __init__(self):
+        self.z_keydown = False
+        self.x_keydown = False
+
+    def check_both_keys(self, event: int) -> bool:
+        if event == terminal.TK_Z:
+            if self.x_keydown:
+                self.z_keydown = False
+                self.x_keydown = False
+                return True
+            else:
+                self.z_keydown = True
+                return False
+
+        if event == terminal.TK_Z | terminal.TK_KEY_RELEASED:
+            self.z_keydown = False
+            return False
+
+        if event == terminal.TK_X:
+            if self.z_keydown:
+                self.z_keydown = False
+                self.x_keydown = False
+                return True
+            else:
+                self.x_keydown = True
+                return False
+
+        if event == terminal.TK_X | terminal.TK_KEY_RELEASED:
+            self.x_keydown = False
+            return False
+
     def process(self):
         self.world: World
 
@@ -25,13 +56,12 @@ class InputProcessor(Processor, EventMixin):
         while True:
             event = terminal.read()
 
-            while terminal.has_input():
-                terminal.read()
-
             if event == terminal.TK_CLOSE:
                 raise SystemExit
 
-            if event == terminal.TK_Z or event == terminal.TK_X:
+            check = self.check_both_keys(event)
+
+            if check:
                 self.world.add_component(game_state_entity, GameState.MAIN_GAME)
                 return
 
@@ -50,7 +80,9 @@ class InputProcessor(Processor, EventMixin):
             entity, player = next(iter(self.world.get_component(Player)))
 
             if self.world.has_component(entity, Dead):
-                if event == terminal.TK_Z or event == terminal.TK_X:
+                check = self.check_both_keys(event)
+
+                if check:
                     self.world.add_component(game_state_entity, GameState.TITLE_SCREEN)
                     return
 

@@ -16,6 +16,7 @@ def terminal_context():
     terminal.set("""
     font: UbuntuMono-R.ttf, size=12;
     window.size=67x21;
+    input.filter=[keyboard+];
     """)
     yield
     terminal.close()
