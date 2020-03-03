@@ -63,8 +63,9 @@ class DisplayProcessor(Processor):
         if state is GameState.MAIN_GAME:
             self.draw_main_game()
 
-    @staticmethod
-    def draw_title_screen():
+    def draw_title_screen(self):
+        self.buffer = []
+
         terminal.bkcolor(0xFF000000)
         terminal.color(0xFFFFFFFF)
         terminal.clear()

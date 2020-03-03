@@ -51,3 +51,4 @@ class DefendAIProcessor(Processor):
                 return
         else:
             player.defend_action = Event("wait", {"anger": -1})
+            return

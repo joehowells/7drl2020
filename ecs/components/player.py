@@ -5,9 +5,9 @@ from ecs.components.event import Event
 
 @dataclass
 class Player:
-    action: Event = None
-    attack_action: Event = None
-    defend_action: Event = None
+    action: Event = Event("wait", {"anger": -1})
+    attack_action: Event = Event("wait", {"anger": -1})
+    defend_action: Event = Event("wait", {"anger": -1})
 
     health: int = 1
     anger: int = 0
