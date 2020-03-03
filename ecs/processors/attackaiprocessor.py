@@ -11,7 +11,7 @@ from ecs.components.position import Position
 from ecs.components.staircase import Staircase
 from ecs.components.targeted import Targeted
 from ecs.eventmixin import EventMixin
-from functions import dijkstra_map, iter_neighbors, move_dijkstra
+from functions import iter_neighbors, move_dijkstra
 
 
 class AttackMode(Enum):
@@ -57,7 +57,6 @@ class AttackAIProcessor(Processor, EventMixin):
             return
 
         elif sources:
-            game_map.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(game_map, sources)
             target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER)
 
             if target:

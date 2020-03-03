@@ -80,7 +80,7 @@ class DisplayProcessor(Processor):
 
         _, game_map = next(iter(self.world.get_component(Map)))
 
-        key = DijkstraMap.PLAYER
+        key = DijkstraMap.MONSTER
         max_dijkstra = max(max(value for value in row) for row in game_map.dijkstra[key])
 
         for xc, yc in itertools.product(range(33), range(21)):

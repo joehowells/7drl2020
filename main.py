@@ -12,11 +12,13 @@ from ecs.processors.defendaiprocessor import DefendAIProcessor
 from ecs.processors.displayprocessor import DisplayProcessor
 from ecs.processors.inputprocessor import InputProcessor
 from ecs.processors.itemprocessor import ItemProcessor
+from ecs.processors.monstermapprocessor import MonsterMapProcessor
 from ecs.processors.monsterprocessor import MonsterProcessor
 from ecs.processors.movementprocessor import MovementProcessor
 from ecs.processors.stairprocessor import StairProcessor
 from ecs.processors.threatprocessor import ThreatProcessor
 from ecs.processors.trapprocessor import TrapProcessor
+from ecs.processors.useitemprocessor import UseItemProcessor
 from ecs.processors.visibilityprocessor import VisibilityProcessor
 from ecs.processors.visionprocessor import VisionProcessor
 from factories.world import make_world
@@ -49,12 +51,14 @@ class Main:
         self.world.add_processor(MonsterProcessor())
         self.world.add_processor(ThreatProcessor())
         self.world.add_processor(AutoExploreProcessor())
+        self.world.add_processor(MonsterMapProcessor())
         self.world.add_processor(TrapProcessor())
         self.world.add_processor(AttackAIProcessor())
         self.world.add_processor(DefendAIProcessor())
         self.world.add_processor(DisplayProcessor())
         self.world.add_processor(InputProcessor())
         self.world.add_processor(StairProcessor())
+        self.world.add_processor(UseItemProcessor())
         self.world.add_processor(CombatProcessor())
         self.world.add_processor(MovementProcessor())
         self.world.add_processor(AngerProcessor())
