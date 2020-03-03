@@ -83,6 +83,16 @@ class DisplayProcessor(Processor):
                 else:
                     code = 0x0023
 
+                distance = min(game_map.dijkstra[DijkstraMap.EXPLORE][y][x], 63)
+                if 0 <= distance <= 15:
+                    color = terminal.color_from_argb(255, 255, 0x11*distance, 0)
+                elif 16 <= distance <= 31:
+                    color = terminal.color_from_argb(255, 255-0x11*(distance-16), 255, 0)
+                elif 32 <= distance <= 47:
+                    color = terminal.color_from_argb(255, 0, 255, 0x11*(distance-32))
+                elif 48 <= distance <= 63:
+                    color = terminal.color_from_argb(255, 0, 255-0x11*(distance-48), 255)
+
                 terminal.color(color)
                 terminal.put(x + x_offset, y + y_offset, code)
 

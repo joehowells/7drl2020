@@ -7,21 +7,21 @@ from ecs.eventmixin import EventMixin
 
 class InputProcessor(Processor, EventMixin):
     def process(self):
-        # event = terminal.read()
-        #
-        # while terminal.has_input():
-        #     terminal.read()
-        #
-        # if event == terminal.TK_CLOSE:
-        #     raise SystemExit
+        event = terminal.read()
+
+        while terminal.has_input():
+            terminal.read()
+
+        if event == terminal.TK_CLOSE:
+            raise SystemExit
 
         _, player = next(iter(self.world.get_component(Player)))
         player.action = player.attack_action
 
-        if True:  # if event == terminal.TK_Z:
+        if event == terminal.TK_Z:
             player.action = player.attack_action
             player.anger = min(max(player.anger + player.action.data.get("anger", 0), 0), 100)
-        #
-        # if event == terminal.TK_X:
-        #     player.action = player.defend_action
-        #     player.anger = min(max(player.anger + player.action.data.get("anger", 0), 0), 100)
+
+        if event == terminal.TK_X:
+            player.action = player.defend_action
+            player.anger = min(max(player.anger + player.action.data.get("anger", 0), 0), 100)
