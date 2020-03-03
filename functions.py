@@ -1,6 +1,6 @@
 from collections import deque
 from math import hypot
-from typing import Generator, Tuple, Collection, List
+from typing import Generator, Tuple, Collection, List, Optional
 
 from constants import DijkstraMap
 from ecs.components.map import Map
@@ -98,7 +98,7 @@ def dijkstra_map(game_map: Map, sources: Collection[Tuple[int, int]], check_expl
     return output
 
 
-def move_dijkstra(game_map: Map, position: Position, key: DijkstraMap, reverse: bool = False) -> None:
+def move_dijkstra(game_map: Map, position: Position, key: DijkstraMap, reverse: bool = False) -> Optional[Tuple[int, int]]:
     neighbors = [
         (x, y)
         for x, y, in iter_neighbors(position.x, position.y, game_map)
@@ -112,7 +112,11 @@ def move_dijkstra(game_map: Map, position: Position, key: DijkstraMap, reverse: 
         key=lambda xy: (game_map.dijkstra[key][xy[1]][xy[0]], hypot(xy[0]-position.x, xy[1]-position.y)),
         reverse=reverse,
     )
-    x, y = neighbors[0]
+    return neighbors[0]
+
+
+def move(game_map: Map, position: Position, target: Tuple[int, int]) -> None:
+    x, y = target
 
     game_map.blocked[position.y][position.x] = False
     game_map.blocked[y][x] = True

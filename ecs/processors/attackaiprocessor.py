@@ -11,7 +11,7 @@ from ecs.components.position import Position
 from ecs.components.staircase import Staircase
 from ecs.components.targeted import Targeted
 from ecs.eventmixin import EventMixin
-from functions import dijkstra_map, iter_neighbors
+from functions import dijkstra_map, iter_neighbors, move_dijkstra
 
 
 class AttackMode(Enum):
@@ -58,10 +58,18 @@ class AttackAIProcessor(Processor, EventMixin):
 
         elif sources:
             game_map.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(game_map, sources)
-            player.attack_action = Event("move", {"dijkstra": DijkstraMap.MONSTER, "anger": 1})
+            target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER)
+
+            if target:
+                player.attack_action = Event("move", {"target": target, "anger": 1})
+                return
 
         elif not game_map.done_exploring:
-            player.attack_action = Event("move", {"dijkstra": DijkstraMap.EXPLORE, "anger": -1})
+            target = move_dijkstra(game_map, player_position, DijkstraMap.EXPLORE)
+
+            if target:
+                player.attack_action = Event("move", {"target": target, "anger": -1})
+                return
 
         else:
             for entity, (position, _) in self.world.get_components(Position, Staircase):
@@ -69,4 +77,8 @@ class AttackAIProcessor(Processor, EventMixin):
                     player.attack_action = Event("stairs", {})
                     break
             else:
-                player.attack_action = Event("move", {"dijkstra": DijkstraMap.STAIRS, "anger": -1})
+                target = move_dijkstra(game_map, player_position, DijkstraMap.STAIRS)
+
+                if target:
+                    player.attack_action = Event("move", {"target": target, "anger": -1})
+                    return

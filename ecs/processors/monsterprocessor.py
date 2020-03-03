@@ -6,7 +6,7 @@ from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.position import Position
 from ecs.components.threatening import Threatening
-from functions import move_dijkstra
+from functions import move_dijkstra, move
 
 
 class MonsterProcessor(Processor):
@@ -22,6 +22,9 @@ class MonsterProcessor(Processor):
                     self.world.remove_component(entity, Threatening)
 
                 if distance > monster.target_distance:
-                    move_dijkstra(game_map, position, DijkstraMap.PLAYER)
+                    target = move_dijkstra(game_map, position, DijkstraMap.PLAYER)
                 else:
-                    move_dijkstra(game_map, position, DijkstraMap.PLAYER, reverse=True)
+                    target = move_dijkstra(game_map, position, DijkstraMap.PLAYER, reverse=True)
+
+                if target:
+                    move(game_map, position, target)
