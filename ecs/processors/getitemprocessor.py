@@ -19,10 +19,9 @@ class GetItemProcessor(Processor):
 
         if event and event.name == "pickup":
             for entity, (item, _) in self.world.get_components(Item, Coincident):
-                if self.world.has_component(entity, Position):
-                    self.world.remove_component(entity, Position)
-                if self.world.has_component(entity, LastKnownPosition):
-                    self.world.remove_component(entity, LastKnownPosition)
+                self.world.remove_component(entity, Coincident)
+                self.world.remove_component(entity, Position)
+                self.world.remove_component(entity, LastKnownPosition)
 
                 self.world.add_component(entity, Inventory())
 

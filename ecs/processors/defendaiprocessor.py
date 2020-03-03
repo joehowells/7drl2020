@@ -11,6 +11,7 @@ from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.targeted import Targeted
 from ecs.components.visible import Visible
+from ecs.processors.spatialprocessor import Coincident
 from functions import move_dijkstra
 
 
@@ -39,20 +40,18 @@ class DefendAIProcessor(Processor):
             player.defend_action = Event("wait", {"anger": -1})
             return
 
-        entities = False
-        for entity, (position, _) in self.world.get_components(LastKnownPosition, Item):
-            entities = True
+        for _ in self.world.get_components(Item, Coincident):
+            player.defend_action = Event("pickup", {"anger": -1})
+            return
 
-            if position.x == player_position.x and position.y == player_position.y:
-                player.defend_action = Event("pickup", {"item": entity, "anger": -1})
-                return
-
-        if entities:
+        for _ in self.world.get_components(Item, LastKnownPosition):
             target = move_dijkstra(game_map, player_position, DijkstraMap.ITEM)
 
             if target:
                 player.defend_action = Event("move", {"target": target, "anger": -1})
                 return
-        else:
-            player.defend_action = Event("wait", {"anger": -1})
-            return
+            else:
+                break
+
+        player.defend_action = Event("wait", {"anger": -1})
+        return
