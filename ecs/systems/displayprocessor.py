@@ -147,7 +147,7 @@ class DisplayProcessor(Processor):
         draw_bar(46, 1, 20, 0xFF333333)
         draw_bar(46, 2, 20, 0xFF333333)
 
-        draw_bar(46, 0, player.health)
+        draw_bar(46, 0, player.health * 2)
         draw_bar(46, 1, player.anger // 5, 0xFFFF0000)
         draw_bar(46, 2, player.visible_threat // 5, 0xFFFFFF00)
         draw_bar(46, 2, player.actual_threat // 5, 0xFFFF0000)
