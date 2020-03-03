@@ -13,7 +13,6 @@ class CombatProcessor(Processor):
         _, (position, player) = next(iter(self.world.get_components(Position, Player)))
 
         event = player.action
-        print(event)
 
         if not event:
             return
