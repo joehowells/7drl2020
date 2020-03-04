@@ -35,7 +35,7 @@ class DefendAIProcessor(Processor):
                 return
 
         for _ in self.world.get_components(Monster, Visible):
-            target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER, reverse=True)
+            target = move_dijkstra(self.world, game_map, player_position, DijkstraMap.MONSTER, reverse=True)
 
             if target:
                 player.defend_action = Action(
@@ -79,7 +79,7 @@ class DefendAIProcessor(Processor):
             )
             return
 
-        target = move_dijkstra(game_map, player_position, DijkstraMap.ITEM)
+        target = move_dijkstra(self.world, game_map, player_position, DijkstraMap.ITEM)
 
         if target:
             player.defend_action = Action(
@@ -90,7 +90,7 @@ class DefendAIProcessor(Processor):
             )
             return
 
-        target = move_dijkstra(game_map, player_position, DijkstraMap.EXPLORE)
+        target = move_dijkstra(self.world, game_map, player_position, DijkstraMap.EXPLORE)
 
         if target:
             player.defend_action = Action(

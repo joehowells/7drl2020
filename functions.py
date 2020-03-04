@@ -1,8 +1,12 @@
 from collections import deque
-from typing import Generator, Tuple, Collection, List, Optional
+from typing import Generator, Tuple, Collection, List, Optional, Set
+
+from esper import World
 
 from constants import DijkstraMap
 from ecs.components.map import Map
+from ecs.components.monster import Monster
+from ecs.components.player import Player
 from ecs.components.position import Position
 
 
@@ -98,15 +102,18 @@ def dijkstra_map(game_map: Map, sources: Collection[Tuple[int, int]], check_expl
     return output
 
 
-def move_dijkstra(game_map: Map, position: Position, key: DijkstraMap, reverse: bool = False) -> Optional[Tuple[int, int]]:
+def move_dijkstra(world: World, game_map: Map, position: Position, key: DijkstraMap, reverse: bool = False,
+                  strict: bool = True) -> Optional[Tuple[int, int]]:
     old_dijkstra = game_map.dijkstra[key][position.y][position.x]
+
+    blocked = get_blocked_tiles(world)
 
     neighbors = []
     for x, y, in iter_neighbors(position.x, position.y, game_map):
         if not game_map.walkable[y][x]:
             continue
 
-        if game_map.blocked[y][x]:
+        if (x, y) in blocked:
             continue
 
         new_dijkstra = game_map.dijkstra[key][y][x]
@@ -114,18 +121,20 @@ def move_dijkstra(game_map: Map, position: Position, key: DijkstraMap, reverse: 
         if new_dijkstra < 0:
             return
 
-        if reverse:
-            if new_dijkstra <= old_dijkstra:
-                continue
-        else:
-            if new_dijkstra >= old_dijkstra:
-                continue
+        if strict and new_dijkstra == old_dijkstra:
+            continue
+        elif reverse and new_dijkstra < old_dijkstra:
+            continue
+        elif new_dijkstra > old_dijkstra:
+            continue
 
         if reverse:
             new_dijkstra = -new_dijkstra
 
         break_ties = abs(x - position.x) and abs(y - position.y)
         neighbors.append((new_dijkstra, break_ties, x, y))
+
+    print(key, neighbors)
 
     if not neighbors:
         return
@@ -136,11 +145,20 @@ def move_dijkstra(game_map: Map, position: Position, key: DijkstraMap, reverse: 
     return x, y
 
 
-def move(game_map: Map, position: Position, target: Tuple[int, int]) -> None:
+def move(position: Position, target: Tuple[int, int]) -> None:
     x, y = target
-
-    game_map.blocked[position.y][position.x] = False
-    game_map.blocked[y][x] = True
-
     position.x = x
     position.y = y
+
+
+def get_blocked_tiles(world: World) -> Set[Tuple[int, int]]:
+    blocked = set()
+    blocked.update(
+        (position.x, position.y)
+        for _, (position, _) in world.get_components(Position, Player)
+    )
+    blocked.update(
+        (position.x, position.y)
+        for _, (position, _) in world.get_components(Position, Monster)
+    )
+    return blocked

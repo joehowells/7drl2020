@@ -30,7 +30,7 @@ class AttackAIProcessor(Processor):
 
         for entity, (position, monster, _) in self.world.get_components(Position, Monster, Adjacent):
             if player.attack <= monster.defend:
-                strong_entities.append(entity)
+                strong_entities.append((entity, monster))
             else:
                 weak_entities.append((-monster.threat[0], monster.health, entity, monster))
 
@@ -48,8 +48,8 @@ class AttackAIProcessor(Processor):
 
         # Attack a strong enemy to build meter
         if strong_entities:
-            target = strong_entities[0]
-            self.world.add_component(target, Targeted())
+            entity, monster = strong_entities[0]
+            self.world.add_component(entity, Targeted())
             player.attack_action = Action(
                 action_type=ActionType.ATTACK,
                 anger=+2,
@@ -57,7 +57,7 @@ class AttackAIProcessor(Processor):
             )
             return
 
-        target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER)
+        target = move_dijkstra(self.world, game_map, player_position, DijkstraMap.MONSTER)
 
         if target:
             player.attack_action = Action(
@@ -77,7 +77,7 @@ class AttackAIProcessor(Processor):
             )
             return
 
-        target = move_dijkstra(game_map, player_position, DijkstraMap.STAIRS)
+        target = move_dijkstra(self.world, game_map, player_position, DijkstraMap.STAIRS)
 
         if target:
             player.attack_action = Action(
@@ -88,7 +88,7 @@ class AttackAIProcessor(Processor):
             )
             return
 
-        target = move_dijkstra(game_map, player_position, DijkstraMap.EXPLORE)
+        target = move_dijkstra(self.world, game_map, player_position, DijkstraMap.EXPLORE)
 
         if target:
             player.attack_action = Action(

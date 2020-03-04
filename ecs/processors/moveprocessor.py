@@ -13,4 +13,4 @@ class MoveProcessor(Processor):
         _, (position, player) = next(iter(self.world.get_components(Position, Player)))
 
         if player.action.action_type is ActionType.MOVE and player.action.target:
-            move(game_map, position, player.action.target)
+            move(position, player.action.target)

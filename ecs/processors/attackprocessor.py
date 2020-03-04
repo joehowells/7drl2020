@@ -23,10 +23,7 @@ class AttackProcessor(Processor):
                 if player.attack > monster.defend:
                     monster.health -= 1
                     if monster.health <= 0:
-                        position = self.world.component_for_entity(entity, Position)
                         self.world.delete_entity(entity)
-                        game_map.blocked[position.y][position.x] = False
-
                         self.world.create_entity(Message(f"You kill the {monster.name}!", 0xFF00FFFF))
                     else:
                         self.world.create_entity(Message(f"You hit the {monster.name}."))

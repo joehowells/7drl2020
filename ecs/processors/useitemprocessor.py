@@ -12,7 +12,7 @@ from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.targeted import Targeted
 from ecs.components.teleportscroll import TeleportScroll
-from functions import move
+from functions import move, get_blocked_tiles
 
 
 class UseItemProcessor(Processor):
@@ -20,6 +20,7 @@ class UseItemProcessor(Processor):
         self.world: World
 
         player_entity, player = next(iter(self.world.get_component(Player)))
+        blocked = get_blocked_tiles(self.world)
 
         if player.action.action_type is ActionType.USE_ITEM:
             for entity, (item, _) in self.world.get_components(Item, Targeted):
@@ -38,11 +39,11 @@ class UseItemProcessor(Processor):
                         x = randint(0, game_map.w - 1)
                         y = randint(0, game_map.h - 1)
 
-                        if not game_map.walkable[y][x] or game_map.blocked[y][x] or not game_map.visible[y][x]:
+                        if not game_map.walkable[y][x] or (x, y) in blocked or not game_map.visible[y][x]:
                             continue
 
                         for position in self.world.try_component(player_entity, Position):
-                            move(game_map, position, (x, y))
+                            move(position, (x, y))
                             break
 
                         break
@@ -60,11 +61,11 @@ class UseItemProcessor(Processor):
                         x = randint(0, game_map.w - 1)
                         y = randint(0, game_map.h - 1)
 
-                        if not game_map.walkable[y][x] or game_map.blocked[y][x]:
+                        if not game_map.walkable[y][x] or (x, y) in blocked:
                             continue
 
                         for position in self.world.try_component(player_entity, Position):
-                            move(game_map, position, (x, y))
+                            move(position, (x, y))
                             break
 
                         break

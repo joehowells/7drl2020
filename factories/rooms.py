@@ -83,9 +83,7 @@ def make_player_room(game_map: Map, entities: List[List[Any]], room: Room, playe
     shuffle(cells)
 
     x, y = cells.pop()
-
     entities.append(make_player(x, y, player))
-    game_map.blocked[y][x] = True
 
 
 def make_stairs_room(game_map: Map, entities: List[List[Any]], room: Room) -> None:
@@ -93,7 +91,6 @@ def make_stairs_room(game_map: Map, entities: List[List[Any]], room: Room) -> No
     shuffle(cells)
 
     x, y = cells.pop()
-
     entities.append(make_stairs(x, y))
 
 
@@ -106,12 +103,9 @@ def make_enemy_room(game_map: Map, entities: List[List[Any]], room: Room, level:
             break
 
         x, y = cells.pop()
-
-        if not game_map.blocked[y][x]:
-            factory = get_factory(level)
-            entity = factory(x, y)
-            entities.append(entity)
-            game_map.blocked[y][x] = True
+        factory = get_factory(level)
+        entity = factory(x, y)
+        entities.append(entity)
 
 
 def make_trap_room(game_map: Map, entities: List[List[Any]], room: Room, level: int = 0) -> None:
@@ -123,23 +117,18 @@ def make_trap_room(game_map: Map, entities: List[List[Any]], room: Room, level: 
             break
 
         x, y = cells.pop()
-
-        if not game_map.blocked[y][x]:
-            factory = get_factory(level)
-            entity = make_trap(x, y, factory)
-            entities.append(entity)
+        factory = get_factory(level)
+        entity = make_trap(x, y, factory)
+        entities.append(entity)
 
     for _ in range(randint(1, 2)):
         if not cells:
             break
 
         x, y = cells.pop()
-
-        if not game_map.blocked[y][x]:
-            factory = get_factory(level)
-            entity = factory(x, y)
-            entities.append(entity)
-            game_map.blocked[y][x] = True
+        factory = get_factory(level)
+        entity = factory(x, y)
+        entities.append(entity)
 
 
 def make_item_room(game_map: Map, entities: List[List[Any]], room: Room, level: int = 0) -> None:
@@ -151,28 +140,23 @@ def make_item_room(game_map: Map, entities: List[List[Any]], room: Room, level: 
             break
 
         x, y = cells.pop()
-
-        if not game_map.blocked[y][x]:
-            factories = [
-                make_healing_potion,
-                make_healing_potion,
-                make_healing_potion,
-                make_blink_scroll,
-                make_blink_scroll,
-                make_teleport_scroll,
-            ]
-            factory = choice(factories)
-            entity = factory(x, y)
-            entities.append(entity)
+        factories = [
+            make_healing_potion,
+            make_healing_potion,
+            make_healing_potion,
+            make_blink_scroll,
+            make_blink_scroll,
+            make_teleport_scroll,
+        ]
+        factory = choice(factories)
+        entity = factory(x, y)
+        entities.append(entity)
 
     for _ in range(randint(2, 4)):
         if not cells:
             break
 
         x, y = cells.pop()
-
-        if not game_map.blocked[y][x]:
-            factory = get_factory(level)
-            entity = factory(x, y)
-            entities.append(entity)
-            game_map.blocked[y][x] = True
+        factory = get_factory(level)
+        entity = factory(x, y)
+        entities.append(entity)

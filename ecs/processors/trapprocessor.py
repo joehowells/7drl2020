@@ -10,6 +10,7 @@ from ecs.components.position import Position
 from ecs.components.trap import Trap
 from ecs.components.visible import Visible
 from factories.entities import make_soldier
+from functions import get_blocked_tiles
 
 
 class TrapProcessor(Processor):
@@ -18,13 +19,14 @@ class TrapProcessor(Processor):
 
         _, game_map = next(iter(self.world.get_component(Map)))
         _, player = next(iter(self.world.get_component(Player)))
+        blocked = get_blocked_tiles(self.world)
 
         if player.action.action_type is ActionType.ATTACK:
             sprung_trap = False
             for entity, (trap, position, _) in self.world.get_components(Trap, Position, Visible):
                 sprung_trap = True
 
-                if not game_map.blocked[position.y][position.x]:
+                if (position.x, position.y) not in blocked:
                     components = make_soldier(position.x, position.y)
                     components.extend([
                         Visible(),

@@ -12,7 +12,6 @@ class Map:
         self.visible = [[False for _ in range(self.w)] for _ in range(self.h)]
         self.transparent = [[False for _ in range(self.w)] for _ in range(self.h)]
         self.explored = [[False for _ in range(self.w)] for _ in range(self.h)]
-        self.blocked = [[False for _ in range(self.w)] for _ in range(self.h)]
 
         self.dijkstra = {
             key: [[-1 for _ in range(self.w)] for _ in range(self.h)]
@@ -23,4 +22,3 @@ class Map:
 
         for x, y in product(range(self.w), range(self.h)):
             self.transparent[y][x] = self.walkable[y][x]
-            self.blocked[y][x] = not self.walkable[y][x]

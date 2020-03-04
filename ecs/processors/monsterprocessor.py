@@ -1,3 +1,5 @@
+from random import random
+
 from esper import Processor
 
 from constants import DijkstraMap
@@ -15,16 +17,13 @@ class MonsterProcessor(Processor):
 
         for entity, (monster, position, _) in self.world.get_components(Monster, Position, Awake):
             distance = game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x]
-            if 1 <= distance <= len(monster.threat):
-                self.world.add_component(entity, Threatening(threat=monster.threat[distance-1]))
+            if 1 <= distance <= len(monster.threat) and random() < 0.9:
+                self.world.add_component(entity, Threatening(threat=monster.threat[distance - 1]))
             else:
                 if self.world.has_component(entity, Threatening):
                     self.world.remove_component(entity, Threatening)
 
-                if distance > len(monster.threat):
-                    target = move_dijkstra(game_map, position, DijkstraMap.PLAYER)
-                else:
-                    target = move_dijkstra(game_map, position, DijkstraMap.PLAYER, reverse=True)
+                target = move_dijkstra(self.world, game_map, position, DijkstraMap.PLAYER, strict=False)
 
                 if target:
-                    move(game_map, position, target)
+                    move(position, target)
