@@ -1,5 +1,6 @@
 from esper import Processor, World
 
+from action import ActionType
 from ecs.components.gamestate import GameState
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
@@ -8,14 +9,13 @@ from ecs.components.player import Player
 from factories.world import make_world
 
 
-class StairProcessor(Processor):
+class UseStairsProcessor(Processor):
     def process(self):
         self.world: World
 
         entity, player = next(iter(self.world.get_component(Player)))
-        event = player.action
 
-        if event and event.name == "stairs":
+        if player.action.action_type is ActionType.USE_STAIRS:
             entities = make_world(player=player)
 
             for entity, _ in self.world.get_component(GameState):

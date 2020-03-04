@@ -1,5 +1,6 @@
 from esper import Processor, World
 
+from action import ActionType
 from ecs.components.item import Item
 from ecs.components.message import Message
 from ecs.components.player import Player
@@ -12,9 +13,7 @@ class UseItemProcessor(Processor):
 
         _, player = next(iter(self.world.get_component(Player)))
 
-        event = player.action
-
-        if event and event.name == "use":
+        if player.action.action_type is ActionType.USE_ITEM:
             for entity, (item, _) in self.world.get_components(Item, Targeted):
                 player.health = min(player.health + 5, 10)
                 self.world.delete_entity(entity)

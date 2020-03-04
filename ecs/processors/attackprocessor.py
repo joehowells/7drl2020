@@ -1,5 +1,6 @@
 from esper import Processor, World
 
+from action import ActionType
 from ecs.components.map import Map
 from ecs.components.message import Message
 from ecs.components.monster import Monster
@@ -8,16 +9,14 @@ from ecs.components.position import Position
 from ecs.components.targeted import Targeted
 
 
-class CombatProcessor(Processor):
+class AttackProcessor(Processor):
     def process(self):
         self.world: World
 
         _, game_map = next(iter(self.world.get_component(Map)))
         _, (position, player) = next(iter(self.world.get_components(Position, Player)))
 
-        event = player.action
-
-        if event and event.name == "attack":
+        if player.action.action_type is ActionType.ATTACK:
             for entity, (monster, _) in self.world.get_components(Monster, Targeted):
                 self.world.remove_component(entity, Targeted)
 

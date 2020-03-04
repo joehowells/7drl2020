@@ -94,16 +94,6 @@ class DisplayProcessor(Processor):
         x_offset = 16 - position.x
         y_offset = 10 - position.y
 
-        if player.attack_action is not None and player.attack_action.name == "move":
-            attack_target = player.attack_action.data["target"]
-        else:
-            attack_target = None
-
-        if player.defend_action is not None and player.defend_action.name == "move":
-            defend_target = player.defend_action.data["target"]
-        else:
-            defend_target = None
-
         _, game_map = next(iter(self.world.get_component(Map)))
 
         key = DijkstraMap.ITEM
@@ -139,13 +129,13 @@ class DisplayProcessor(Processor):
                     elif 512 <= distance <= 767:
                         color = terminal.color_from_argb(255, 767 - distance, 0, 255)
 
-                if (x, y) == attack_target == defend_target:
+                if (x, y) == player.attack_action.target == player.defend_action.target:
                     terminal.color(0xFF000000)
                     terminal.bkcolor(0xFFFF00FF)
-                elif (x, y) == attack_target:
+                elif (x, y) == player.attack_action.target:
                     terminal.color(0xFF000000)
                     terminal.bkcolor(0xFFFF0000)
-                elif (x, y) == defend_target:
+                elif (x, y) == player.defend_action.target:
                     terminal.color(0xFF000000)
                     terminal.bkcolor(0xFF0000FF)
                 else:
@@ -214,8 +204,8 @@ class DisplayProcessor(Processor):
         draw_bar(46, 2, player.visible_threat, 0xFFFFFF00)
         draw_bar(46, 2, player.actual_threat, 0xFFFF0000)
 
-        terminal.printf(34, 4, f"Z: {player.attack_action.name}")
-        terminal.printf(34, 5, f"X: {player.defend_action.name}")
+        terminal.printf(34, 4, f"Z: {player.attack_action}")
+        terminal.printf(34, 5, f"X: {player.defend_action}")
 
         terminal.printf(51, 4, f"Attack: {player.attack}")
         terminal.printf(51, 5, f"Defend: {player.defend}")

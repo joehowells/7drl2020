@@ -1,6 +1,7 @@
 from esper import Processor
 
 from constants import DijkstraMap, AWAKE_DISTANCE
+from action import ActionType
 from ecs.components.awake import Awake
 from ecs.components.map import Map
 from ecs.components.monster import Monster
@@ -16,7 +17,7 @@ class AwakeProcessor(Processor):
 
         event = player.action
 
-        if event and event.name == "attack":
+        if player.action.action_type is ActionType.ATTACK:
             for entity, (_, position) in self.world.get_components(Monster, Position):
                 if self.world.has_component(entity, Awake):
                     if game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x] > AWAKE_DISTANCE:

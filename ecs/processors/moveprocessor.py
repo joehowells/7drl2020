@@ -1,21 +1,16 @@
 from esper import Processor
 
+from action import ActionType
 from ecs.components.map import Map
 from ecs.components.player import Player
 from ecs.components.position import Position
 from functions import move
 
 
-class MovementProcessor(Processor):
+class MoveProcessor(Processor):
     def process(self):
         _, game_map = next(iter(self.world.get_component(Map)))
         _, (position, player) = next(iter(self.world.get_components(Position, Player)))
 
-        event = player.action
-
-        if not event:
-            return
-
-        if event.name == "move":
-            if event.data["target"]:
-                move(game_map, position, event.data["target"])
+        if player.action.action_type is ActionType.MOVE:
+            move(game_map, position, player.action.target)

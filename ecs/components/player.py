@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from ecs.components.action import Action
+from action import Action
 
 
 @dataclass

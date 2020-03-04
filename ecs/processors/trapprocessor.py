@@ -1,5 +1,6 @@
 from esper import Processor, World
 
+from action import ActionType
 from ecs.components.awake import Awake
 from ecs.components.lastknownposition import LastKnownPosition
 from ecs.components.map import Map
@@ -18,9 +19,7 @@ class TrapProcessor(Processor):
         _, game_map = next(iter(self.world.get_component(Map)))
         _, player = next(iter(self.world.get_component(Player)))
 
-        event = player.action
-
-        if event and event.name == "attack":
+        if player.action.action_type is ActionType.ATTACK:
             sprung_trap = False
             for entity, (trap, position, _) in self.world.get_components(Trap, Position, Visible):
                 sprung_trap = True

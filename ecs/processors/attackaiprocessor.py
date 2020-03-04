@@ -3,7 +3,7 @@ from enum import Enum, auto
 from esper import Processor
 
 from constants import DijkstraMap
-from ecs.components.action import Action
+from action import Action, ActionType
 from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
@@ -39,36 +39,36 @@ class AttackAIProcessor(Processor):
             weak_entities.sort()
             target = weak_entities[0][-1]
             self.world.add_component(target, Targeted())
-            player.attack_action = Action("attack", {"target": target, "anger": 2})
+            player.attack_action = Action(ActionType.ATTACK, +2)
             return
 
         # Attack a strong enemy to build meter
         if strong_entities:
             target = strong_entities[0]
             self.world.add_component(target, Targeted())
-            player.attack_action = Action("attack", {"target": target, "anger": 2})
+            player.attack_action = Action(ActionType.ATTACK, +2)
             return
 
         target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER)
 
         if target:
-            player.attack_action = Action("move", {"target": target, "anger": 1})
+            player.attack_action = Action(ActionType.MOVE, +1, target)
             return
 
         target = move_dijkstra(game_map, player_position, DijkstraMap.EXPLORE)
 
         if target:
-            player.attack_action = Action("move", {"target": target, "anger": -1})
+            player.attack_action = Action(ActionType.MOVE, -1, target)
             return
 
         for entity, (position, _, _) in self.world.get_components(Position, Stair, Coincident):
-            player.attack_action = Action("stairs", {})
+            player.attack_action = Action(ActionType.USE_STAIRS, -1)
             return
 
         target = move_dijkstra(game_map, player_position, DijkstraMap.STAIRS)
 
         if target:
-            player.attack_action = Action("move", {"target": target, "anger": -1})
+            player.attack_action = Action(ActionType.MOVE, -1, target)
             return
 
-        player.attack_action = Action("wait", {"anger": -1})
+        player.attack_action = Action(ActionType.WAIT, -1)

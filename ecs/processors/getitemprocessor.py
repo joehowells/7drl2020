@@ -1,5 +1,6 @@
 from esper import Processor, World
 
+from action import ActionType
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
 from ecs.components.lastknownposition import LastKnownPosition
@@ -15,9 +16,7 @@ class GetItemProcessor(Processor):
 
         _, player = next(iter(self.world.get_component(Player)))
 
-        event = player.action
-
-        if event and event.name == "pickup":
+        if player.action.action_type is ActionType.GET_ITEM:
             for entity, (item, _) in self.world.get_components(Item, Coincident):
                 self.world.remove_component(entity, Coincident)
                 self.world.remove_component(entity, Position)

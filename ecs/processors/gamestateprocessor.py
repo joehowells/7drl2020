@@ -6,18 +6,18 @@ from ecs.components.gamestate import GameState
 from ecs.processors.angerprocessor import AngerProcessor
 from ecs.processors.attackaiprocessor import AttackAIProcessor
 from ecs.processors.awakeprocessor import AwakeProcessor
-from ecs.processors.combatsystem import CombatProcessor
+from ecs.processors.attackprocessor import AttackProcessor
 from ecs.processors.defendaiprocessor import DefendAIProcessor
 from ecs.processors.exploremapprocessor import ExploreMapProcessor
 from ecs.processors.itemmapprocessor import ItemMapProcessor
 from ecs.processors.getitemprocessor import GetItemProcessor
 from ecs.processors.monstermapprocessor import MonsterMapProcessor
 from ecs.processors.monsterprocessor import MonsterProcessor
-from ecs.processors.movementprocessor import MovementProcessor
+from ecs.processors.moveprocessor import MoveProcessor
 from ecs.processors.playermapprocessor import PlayerMapProcessor
 from ecs.processors.spatialprocessor import SpatialProcessor
 from ecs.processors.stairmapprocessor import StairMapProcessor
-from ecs.processors.stairprocessor import StairProcessor
+from ecs.processors.usestairsprocessor import UseStairsProcessor
 from ecs.processors.threatprocessor import ThreatProcessor
 from ecs.processors.trapprocessor import TrapProcessor
 from ecs.processors.useitemprocessor import UseItemProcessor
@@ -48,11 +48,11 @@ class GameStateProcessor(Processor):
     def new_game(self):
         self.world: World
 
-        self.world.add_processor(StairProcessor())
+        self.world.add_processor(UseStairsProcessor())
         self.world.add_processor(UseItemProcessor())
-        self.world.add_processor(CombatProcessor())
+        self.world.add_processor(AttackProcessor())
         self.world.add_processor(GetItemProcessor())
-        self.world.add_processor(MovementProcessor())
+        self.world.add_processor(MoveProcessor())
 
         self.world.add_processor(AngerProcessor())
         self.world.add_processor(PlayerMapProcessor())
@@ -86,11 +86,11 @@ class GameStateProcessor(Processor):
     def end_game(self):
         self.world: World
 
-        self.world.remove_processor(StairProcessor)
+        self.world.remove_processor(UseStairsProcessor)
         self.world.remove_processor(UseItemProcessor)
-        self.world.remove_processor(CombatProcessor)
+        self.world.remove_processor(AttackProcessor)
         self.world.remove_processor(GetItemProcessor)
-        self.world.remove_processor(MovementProcessor)
+        self.world.remove_processor(MoveProcessor)
 
         self.world.remove_processor(AngerProcessor)
         self.world.remove_processor(PlayerMapProcessor)
