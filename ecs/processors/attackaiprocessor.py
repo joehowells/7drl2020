@@ -8,7 +8,7 @@ from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.components.stair import Stair
+from ecs.components.stairs import Stairs
 from ecs.components.targeted import Targeted
 from ecs.processors.spatialprocessor import Adjacent, Coincident
 from functions import move_dijkstra
@@ -79,7 +79,7 @@ class AttackAIProcessor(Processor):
             )
             return
 
-        for entity, (position, _, _) in self.world.get_components(Position, Stair, Coincident):
+        for entity, (position, _, _) in self.world.get_components(Position, Stairs, Coincident):
             player.attack_action = Action(
                 action_type=ActionType.USE_STAIRS,
                 anger=-1,

@@ -6,7 +6,7 @@ from esper import Processor, World
 from constants import DijkstraMap
 from ecs.components.lastknownposition import LastKnownPosition
 from ecs.components.map import Map
-from ecs.components.stair import Stair
+from ecs.components.stairs import Stairs
 from functions import dijkstra_map
 
 
@@ -20,7 +20,7 @@ class StairMapProcessor(Processor):
         _, game_map = next(iter(self.world.get_component(Map)))
 
         sources: Set[Tuple[int, int]] = set()
-        for _, (position, _) in self.world.get_components(LastKnownPosition, Stair):
+        for _, (position, _) in self.world.get_components(LastKnownPosition, Stairs):
             sources.add((position.x, position.y))
 
         if self.sources != sources:

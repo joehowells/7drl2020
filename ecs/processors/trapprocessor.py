@@ -9,7 +9,7 @@ from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.trap import Trap
 from ecs.components.visible import Visible
-from factories.world import make_soldier
+from factories.entities import make_soldier
 
 
 class TrapProcessor(Processor):
