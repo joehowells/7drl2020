@@ -80,6 +80,17 @@ class DefendAIProcessor(Processor):
             )
             return
 
+        target = move_dijkstra(game_map, player_position, DijkstraMap.EXPLORE)
+
+        if target:
+            player.defend_action = Action(
+                action_type=ActionType.MOVE,
+                anger=-1,
+                target=target,
+                nice_name="Explore",
+            )
+            return
+
         player.defend_action = Action(
             action_type=ActionType.WAIT,
             anger=-1,

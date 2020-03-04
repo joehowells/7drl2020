@@ -68,17 +68,6 @@ class AttackAIProcessor(Processor):
             )
             return
 
-        target = move_dijkstra(game_map, player_position, DijkstraMap.EXPLORE)
-
-        if target:
-            player.attack_action = Action(
-                action_type=ActionType.MOVE,
-                anger=-1,
-                target=target,
-                nice_name="Explore",
-            )
-            return
-
         for entity, (position, _, _) in self.world.get_components(Position, Stairs, Coincident):
             player.attack_action = Action(
                 action_type=ActionType.USE_STAIRS,
@@ -96,6 +85,17 @@ class AttackAIProcessor(Processor):
                 anger=-1,
                 target=target,
                 nice_name="Find stairs",
+            )
+            return
+
+        target = move_dijkstra(game_map, player_position, DijkstraMap.EXPLORE)
+
+        if target:
+            player.attack_action = Action(
+                action_type=ActionType.MOVE,
+                anger=-1,
+                target=target,
+                nice_name="Explore",
             )
             return
 
