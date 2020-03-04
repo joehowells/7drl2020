@@ -1,11 +1,13 @@
 from typing import List, Any, Optional, Callable
 
 from ecs.components.display import Display
+from ecs.components.healingpotion import HealingPotion
 from ecs.components.item import Item
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.stairs import Stairs
+from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.trap import Trap
 
 
@@ -158,12 +160,24 @@ def make_elite_archer(x: int, y: int) -> List[Any]:
     ]
 
 
-def make_potion(x: int, y: int) -> List[Any]:
+def make_healing_potion(x: int, y: int) -> List[Any]:
     return [
         Display(0x0021, draw_order=-1),
         Item(
-            name="potion",
+            name="healing potion",
         ),
+        HealingPotion(),
+        Position(x, y),
+    ]
+
+
+def make_teleport_scroll(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x003F, draw_order=-1),
+        Item(
+            name="teleport scroll",
+        ),
+        TeleportScroll(),
         Position(x, y),
     ]
 

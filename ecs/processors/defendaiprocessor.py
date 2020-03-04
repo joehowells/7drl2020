@@ -2,6 +2,7 @@ from esper import Processor, World
 
 from action import Action, ActionType
 from constants import DijkstraMap
+from ecs.components.healingpotion import HealingPotion
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
 from ecs.components.map import Map
@@ -9,6 +10,7 @@ from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.targeted import Targeted
+from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.visible import Visible
 from ecs.processors.spatialprocessor import Coincident
 from functions import move_dijkstra
@@ -21,11 +23,8 @@ class DefendAIProcessor(Processor):
         _, game_map = next(iter(self.world.get_component(Map)))
         _, (player, player_position) = next(iter(self.world.get_components(Player, Position)))
 
-        for _ in self.world.get_components(Monster, Visible):
-            entity_pairs = self.world.get_components(Item, Inventory)
-
-            if entity_pairs:
-                entity, (item, _) = entity_pairs[0]
+        if player.health < 10:
+            for entity, (item, _, _) in self.world.get_components(Item, Inventory, HealingPotion):
                 self.world.add_component(entity, Targeted())
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
@@ -34,6 +33,7 @@ class DefendAIProcessor(Processor):
                 )
                 return
 
+        for _ in self.world.get_components(Monster, Visible):
             target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER, reverse=True)
 
             if target:
@@ -42,6 +42,15 @@ class DefendAIProcessor(Processor):
                     anger=-1,
                     target=target,
                     nice_name="Retreat",
+                )
+                return
+
+            for entity, (item, _, _) in self.world.get_components(Item, Inventory, TeleportScroll):
+                self.world.add_component(entity, Targeted())
+                player.defend_action = Action(
+                    action_type=ActionType.USE_ITEM,
+                    anger=-10,
+                    nice_name=f"Use {item.name}",
                 )
                 return
 
