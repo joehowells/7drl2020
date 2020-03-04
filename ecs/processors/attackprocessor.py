@@ -32,6 +32,6 @@ class AttackProcessor(Processor):
                         self.world.create_entity(Message(f"You hit the {monster.name}."))
                 else:
                     self.world.create_entity(Message(
-                        text=f"The {monster.name} blocks. ({player.attack}/{monster.defend}).",
+                        text=f"You miss the {monster.name}.",
                         color=0xFF666666,
                     ))

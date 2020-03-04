@@ -52,11 +52,11 @@ class DefendAIProcessor(Processor):
             )
             return
 
-        for _ in self.world.get_components(Item, Coincident):
+        for _, (item, _) in self.world.get_components(Item, Coincident):
             player.defend_action = Action(
                 action_type=ActionType.GET_ITEM,
                 anger=-1,
-                nice_name="Get item",
+                nice_name=f"Get {item.name}",
             )
             return
 

@@ -34,10 +34,12 @@ class ThreatProcessor(Processor):
         player.visible_threat = min(max(player.visible_threat, 0), 20)
         player.actual_threat = min(max(player.actual_threat, 0), 20)
 
-        if randint(0, 19) < player.actual_threat:
-            # Work out which monster hit us
-            monster = choices(monsters, weights)[0]
+        if player.actual_threat == 0:
+            return
 
+        monster = choices(monsters, weights)[0]
+
+        if randint(0, 19) < player.actual_threat:
             self.world.create_entity(Message(
                 text=f"The {monster.name} hits!",
                 color=0xFFFF0000,
@@ -51,3 +53,9 @@ class ThreatProcessor(Processor):
                     text=f"You die...",
                     priority=-100,
                 ))
+
+        else:
+            self.world.create_entity(Message(
+                text=f"The {monster.name} misses you.",
+                color=0xFF666666,
+            ))
