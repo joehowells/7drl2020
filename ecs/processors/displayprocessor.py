@@ -25,21 +25,16 @@ def draw_borders() -> None:
     for y in range(21):
         terminal.put(33, y, 0x2551)
 
-    for x in range(34, 50):
+    for x in range(34, 84):
         terminal.put(x, 3, 0x2500)
         terminal.put(x, 6, 0x2500)
 
-    for x in range(51, 67):
-        terminal.put(x, 3, 0x2500)
-        terminal.put(x, 6, 0x2500)
-
-    for y in range(4, 6):
-        terminal.put(50, y, 0x2502)
+    for y in range(3):
+        terminal.put(67, y, 0x2502)
 
     terminal.put(33, 3, 0x255F)
     terminal.put(33, 6, 0x255F)
-    terminal.put(50, 3, 0x252C)
-    terminal.put(50, 6, 0x2534)
+    terminal.put(67, 3, 0x2534)
 
 
 def draw_bar(x: int, y: int, value: int, color: int = 0xFFFFFFFF) -> None:
@@ -83,9 +78,6 @@ class DisplayProcessor(Processor):
         self.draw_entities()
         self.draw_ui()
         self.draw_messages()
-
-        i = sum(1 for _ in self.world.get_components(Item, Inventory))
-        terminal.printf(0, 0, str(i))
 
         terminal.refresh()
 
@@ -207,16 +199,20 @@ class DisplayProcessor(Processor):
         terminal.printf(34, 4, f"Z: {player.attack_action.nice_name}")
         terminal.printf(34, 5, f"X: {player.defend_action.nice_name}")
 
-        terminal.printf(51, 4, f"Attack: {player.attack}")
-        terminal.printf(51, 5, f"Defend: {player.defend}")
+        inventory = sum(1 for _ in self.world.get_components(Item, Inventory))
+        inventory = min(max(inventory, 0), 99)
+
+        terminal.printf(68, 0, f"Attack: {player.attack:>2d}")
+        terminal.printf(68, 1, f"Defend: {player.defend:>2d}")
+        terminal.printf(68, 2, f"Items:  {inventory:>2d}")
 
         if player.attack_bonus > 0:
             terminal.color(0xFFFF0000)
-            terminal.printf(61, 4, f"(+{player.attack_bonus})")
+            terminal.printf(79, 0, f"(+{player.attack_bonus})")
 
         if player.defend_bonus > 0:
             terminal.color(0xFFFF0000)
-            terminal.printf(61, 5, f"(+{player.defend_bonus})")
+            terminal.printf(79, 1, f"(+{player.defend_bonus})")
 
     def draw_messages(self):
         terminal.bkcolor(0xFF000000)

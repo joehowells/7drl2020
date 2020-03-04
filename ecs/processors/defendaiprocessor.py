@@ -1,10 +1,9 @@
 from esper import Processor, World
 
-from constants import DijkstraMap
 from action import Action, ActionType
+from constants import DijkstraMap
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
-from ecs.components.lastknownposition import LastKnownPosition
 from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
@@ -31,7 +30,7 @@ class DefendAIProcessor(Processor):
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
                     anger=-10,
-                    nice_name=item.name,
+                    nice_name=f"Use {item.name}",
                 )
                 return
 
@@ -46,7 +45,11 @@ class DefendAIProcessor(Processor):
                 )
                 return
 
-            player.defend_action = Action(ActionType.WAIT, -1)
+            player.defend_action = Action(
+                action_type=ActionType.WAIT,
+                anger=-1,
+                nice_name="Wait",
+            )
             return
 
         for _ in self.world.get_components(Item, Coincident):
@@ -57,19 +60,19 @@ class DefendAIProcessor(Processor):
             )
             return
 
-        for _ in self.world.get_components(Item, LastKnownPosition):
-            target = move_dijkstra(game_map, player_position, DijkstraMap.ITEM)
+        target = move_dijkstra(game_map, player_position, DijkstraMap.ITEM)
 
-            if target:
-                player.defend_action = Action(
-                    action_type=ActionType.MOVE,
-                    anger=-1,
-                    target=target,
-                    nice_name="Find item",
-                )
-                return
-            else:
-                break
+        if target:
+            player.defend_action = Action(
+                action_type=ActionType.MOVE,
+                anger=-1,
+                target=target,
+                nice_name="Find item",
+            )
+            return
 
-        player.defend_action = Action(ActionType.WAIT, -1)
-        return
+        player.defend_action = Action(
+            action_type=ActionType.WAIT,
+            anger=-1,
+            nice_name="Wait",
+        )

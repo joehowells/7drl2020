@@ -2,8 +2,8 @@ from enum import Enum, auto
 
 from esper import Processor
 
-from constants import DijkstraMap
 from action import Action, ActionType
+from constants import DijkstraMap
 from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
@@ -42,7 +42,7 @@ class AttackAIProcessor(Processor):
             player.attack_action = Action(
                 action_type=ActionType.ATTACK,
                 anger=+2,
-                nice_name=monster.name,
+                nice_name=f"Attack {monster.name}",
             )
             return
 
@@ -53,7 +53,7 @@ class AttackAIProcessor(Processor):
             player.attack_action = Action(
                 action_type=ActionType.ATTACK,
                 anger=+2,
-                nice_name=monster.name,
+                nice_name=f"Attack {monster.name}",
             )
             return
 
@@ -99,4 +99,8 @@ class AttackAIProcessor(Processor):
             )
             return
 
-        player.attack_action = Action(ActionType.WAIT, -1)
+        player.attack_action = Action(
+            action_type=ActionType.WAIT,
+            anger=-1,
+            nice_name="Wait",
+        )
