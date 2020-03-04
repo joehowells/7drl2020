@@ -4,7 +4,7 @@ from textwrap import wrap
 from bearlibterminal import terminal
 from esper import Processor, World
 
-from constants import DijkstraMap
+# from constants import DijkstraMap
 from ecs.components.display import Display
 from ecs.components.gamestate import GameState
 from ecs.components.inventory import Inventory
@@ -95,8 +95,8 @@ class DisplayProcessor(Processor):
 
         _, game_map = next(iter(self.world.get_component(Map)))
 
-        key = DijkstraMap.PLAYER
-        max_dijkstra = max(max(value for value in row) for row in game_map.dijkstra[key])
+        # key = DijkstraMap.PLAYER
+        # max_dijkstra = max(max(value for value in row) for row in game_map.dijkstra[key])
 
         for xc, yc in itertools.product(range(33), range(21)):
             x = xc - x_offset
@@ -119,14 +119,14 @@ class DisplayProcessor(Processor):
                 else:
                     code = 0x0023
 
-                if game_map.dijkstra[key][y][x] >= 0:
-                    distance = int(game_map.dijkstra[key][y][x] / max_dijkstra * 767)
-                    if 0 <= distance <= 255:
-                        color = terminal.color_from_argb(255, 255, 255 - distance, 0)
-                    elif 256 <= distance <= 511:
-                        color = terminal.color_from_argb(255, 255, 0, distance - 256)
-                    elif 512 <= distance <= 767:
-                        color = terminal.color_from_argb(255, 767 - distance, 0, 255)
+                # if game_map.dijkstra[key][y][x] >= 0:
+                #     distance = int(game_map.dijkstra[key][y][x] / max_dijkstra * 767)
+                #     if 0 <= distance <= 255:
+                #         color = terminal.color_from_argb(255, 255, 255 - distance, 0)
+                #     elif 256 <= distance <= 511:
+                #         color = terminal.color_from_argb(255, 255, 0, distance - 256)
+                #     elif 512 <= distance <= 767:
+                #         color = terminal.color_from_argb(255, 767 - distance, 0, 255)
 
                 if (x, y) == player.attack_action.target == player.defend_action.target:
                     terminal.color(0xFF000000)
