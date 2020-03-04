@@ -26,29 +26,47 @@ class DefendAIProcessor(Processor):
             entity_pairs = self.world.get_components(Item, Inventory)
 
             if entity_pairs:
-                entity = entity_pairs[0][0]
+                entity, (item, _) = entity_pairs[0]
                 self.world.add_component(entity, Targeted())
-                player.defend_action = Action(ActionType.USE_ITEM, -10)
+                player.defend_action = Action(
+                    action_type=ActionType.USE_ITEM,
+                    anger=-10,
+                    nice_name=item.name,
+                )
                 return
 
             target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER, reverse=True)
 
             if target:
-                player.defend_action = Action(ActionType.MOVE, -1, target)
+                player.defend_action = Action(
+                    action_type=ActionType.MOVE,
+                    anger=-1,
+                    target=target,
+                    nice_name="Retreat",
+                )
                 return
 
             player.defend_action = Action(ActionType.WAIT, -1)
             return
 
         for _ in self.world.get_components(Item, Coincident):
-            player.defend_action = Action(ActionType.GET_ITEM, -1)
+            player.defend_action = Action(
+                action_type=ActionType.GET_ITEM,
+                anger=-1,
+                nice_name="Get item",
+            )
             return
 
         for _ in self.world.get_components(Item, LastKnownPosition):
             target = move_dijkstra(game_map, player_position, DijkstraMap.ITEM)
 
             if target:
-                player.defend_action = Action(ActionType.MOVE, -1, target)
+                player.defend_action = Action(
+                    action_type=ActionType.MOVE,
+                    anger=-1,
+                    target=target,
+                    nice_name="Find item",
+                )
                 return
             else:
                 break

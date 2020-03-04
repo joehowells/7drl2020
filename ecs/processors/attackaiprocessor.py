@@ -32,43 +32,71 @@ class AttackAIProcessor(Processor):
             if player.attack <= monster.defend:
                 strong_entities.append(entity)
             else:
-                weak_entities.append((-monster.threat[0], monster.health, entity))
+                weak_entities.append((-monster.threat[0], monster.health, entity, monster))
 
         # Attack something we can actually damage
         if weak_entities:
             weak_entities.sort()
-            target = weak_entities[0][-1]
-            self.world.add_component(target, Targeted())
-            player.attack_action = Action(ActionType.ATTACK, +2)
+            _, _, entity, monster = weak_entities[0]
+            self.world.add_component(entity, Targeted())
+            player.attack_action = Action(
+                action_type=ActionType.ATTACK,
+                anger=+2,
+                nice_name=monster.name,
+            )
             return
 
         # Attack a strong enemy to build meter
         if strong_entities:
             target = strong_entities[0]
             self.world.add_component(target, Targeted())
-            player.attack_action = Action(ActionType.ATTACK, +2)
+            player.attack_action = Action(
+                action_type=ActionType.ATTACK,
+                anger=+2,
+                nice_name=monster.name,
+            )
             return
 
         target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER)
 
         if target:
-            player.attack_action = Action(ActionType.MOVE, +1, target)
+            player.attack_action = Action(
+                action_type=ActionType.MOVE,
+                anger=+1,
+                target=target,
+                nice_name="Charge",
+            )
             return
 
         target = move_dijkstra(game_map, player_position, DijkstraMap.EXPLORE)
 
         if target:
-            player.attack_action = Action(ActionType.MOVE, -1, target)
+            player.attack_action = Action(
+                action_type=ActionType.MOVE,
+                anger=-1,
+                target=target,
+                nice_name="Explore",
+            )
             return
 
         for entity, (position, _, _) in self.world.get_components(Position, Stair, Coincident):
-            player.attack_action = Action(ActionType.USE_STAIRS, -1)
+            player.attack_action = Action(
+                action_type=ActionType.USE_STAIRS,
+                anger=-1,
+                target=target,
+                nice_name="Use stairs",
+            )
             return
 
         target = move_dijkstra(game_map, player_position, DijkstraMap.STAIRS)
 
         if target:
-            player.attack_action = Action(ActionType.MOVE, -1, target)
+            player.attack_action = Action(
+                action_type=ActionType.MOVE,
+                anger=-1,
+                target=target,
+                nice_name="Find stairs",
+            )
             return
 
         player.attack_action = Action(ActionType.WAIT, -1)

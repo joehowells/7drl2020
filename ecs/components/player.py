@@ -5,9 +5,9 @@ from action import Action
 
 @dataclass
 class Player:
-    action: Action = Action("wait", {"anger": -1})
-    attack_action: Action = Action("wait", {"anger": -1})
-    defend_action: Action = Action("wait", {"anger": -1})
+    action: Action = Action()
+    attack_action: Action = Action()
+    defend_action: Action = Action()
 
     health: int = 10
     anger: int = 0
