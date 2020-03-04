@@ -1,5 +1,6 @@
 import itertools
 from textwrap import wrap
+from typing import Tuple, Set
 
 from bearlibterminal import terminal
 from esper import Processor, World
@@ -12,6 +13,7 @@ from ecs.components.item import Item
 from ecs.components.lastknownposition import LastKnownPosition
 from ecs.components.map import Map
 from ecs.components.message import Message
+from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.targeted import Targeted
@@ -58,6 +60,32 @@ class DisplayProcessor(Processor):
         if state is GameState.MAIN_GAME:
             self.draw_main_game()
 
+    def get_targets(self) -> Tuple[Set[Tuple[int, int]], Set[Tuple[int, int]], Set[Tuple[int, int]]]:
+        """Get coordinates of all targeted tiles."""
+        self.world: World
+
+        attack_targets = set()
+        defend_targets = set()
+
+        for _, player in self.world.get_component(Player):
+            if player.attack_action.target:
+                attack_targets.add(player.attack_action.target)
+
+            if player.defend_action.target:
+                defend_targets.add(player.defend_action.target)
+
+        for entity, (position, _) in self.world.get_components(Position, Targeted):
+            if self.world.has_component(entity, Monster):
+                attack_targets.add((position.x, position.y))
+            else:
+                defend_targets.add((position.x, position.y))
+
+        both_targets = attack_targets.intersection(defend_targets)
+        attack_targets -= both_targets
+        defend_targets -= both_targets
+
+        return attack_targets, defend_targets, both_targets
+
     def draw_title_screen(self):
         self.buffer = []
 
@@ -77,13 +105,14 @@ class DisplayProcessor(Processor):
 
         self.draw_map()
         self.draw_entities()
+        self.highlight_targets()
         self.draw_ui()
         self.draw_messages()
 
         terminal.bkcolor(0xFF000000)
         terminal.color(0xFFFFFFFF)
         for _, player in self.world.get_component(Player):
-            terminal.printf(0, 0, f"Level: {player.level+1}")
+            terminal.printf(0, 0, f"Level: {player.level + 1}")
             break
 
         terminal.refresh()
@@ -128,18 +157,8 @@ class DisplayProcessor(Processor):
                 #     elif 512 <= distance <= 767:
                 #         color = terminal.color_from_argb(255, 767 - distance, 0, 255)
 
-                if (x, y) == player.attack_action.target == player.defend_action.target:
-                    terminal.color(0xFF000000)
-                    terminal.bkcolor(0xFFFF00FF)
-                elif (x, y) == player.attack_action.target:
-                    terminal.color(0xFF000000)
-                    terminal.bkcolor(0xFFFF0000)
-                elif (x, y) == player.defend_action.target:
-                    terminal.color(0xFF000000)
-                    terminal.bkcolor(0xFF0000FF)
-                else:
-                    terminal.color(color)
-                    terminal.bkcolor(0xFF000000)
+                terminal.bkcolor(0xFF000000)
+                terminal.color(color)
 
                 terminal.put(x + x_offset, y + y_offset, code)
 
@@ -182,6 +201,44 @@ class DisplayProcessor(Processor):
                 position.y + y_offset,
                 display.code,
             )
+
+    def highlight_targets(self):
+        attack_targets, defend_targets, both_targets = self.get_targets()
+
+        _, (_, position) = next(iter(self.world.get_components(Player, Position)))
+
+        # Set player offset relative to display
+        x_offset = 16 - position.x
+        y_offset = 10 - position.y
+
+        # Set the bounding box for filtering out entities
+        x_min = position.x - 16
+        x_max = position.x + 16
+        y_min = position.y - 10
+        y_max = position.y + 10
+
+        terminal.color(0xFF000000)
+
+        terminal.bkcolor(0xFFFF0000)
+        for x, y in attack_targets:
+            if x_min <= position.x <= x_max and y_min <= position.y <= y_max:
+                x += x_offset
+                y += y_offset
+                terminal.put(x, y, terminal.pick(x, y))
+
+        terminal.bkcolor(0xFF0000FF)
+        for x, y in defend_targets:
+            if x_min <= position.x <= x_max and y_min <= position.y <= y_max:
+                x += x_offset
+                y += y_offset
+                terminal.put(x, y, terminal.pick(x, y))
+
+        terminal.bkcolor(0xFFFF00FF)
+        for x, y in both_targets:
+            if x_min <= position.x <= x_max and y_min <= position.y <= y_max:
+                x += x_offset
+                y += y_offset
+                terminal.put(x, y, terminal.pick(x, y))
 
     def draw_ui(self):
         _, game_map = next(iter(self.world.get_component(Map)))
