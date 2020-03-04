@@ -1,5 +1,6 @@
 from typing import List, Any, Optional, Callable
 
+from ecs.components.blinkscroll import BlinkScroll
 from ecs.components.display import Display
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.item import Item
@@ -167,6 +168,17 @@ def make_healing_potion(x: int, y: int) -> List[Any]:
             name="healing potion",
         ),
         HealingPotion(),
+        Position(x, y),
+    ]
+
+
+def make_blink_scroll(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x003F, draw_order=-1),
+        Item(
+            name="blink scroll",
+        ),
+        BlinkScroll(),
         Position(x, y),
     ]
 

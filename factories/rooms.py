@@ -7,7 +7,7 @@ from factories.entities import (
     make_soldier, make_defender, make_officer, make_assassin, make_archer, make_trap, make_healing_potion, make_player,
     make_stairs,
     make_elite_soldier, make_elite_defender, make_elite_officer, make_elite_assassin, make_elite_archer,
-    make_teleport_scroll)
+    make_teleport_scroll, make_blink_scroll)
 from factories.map import Room
 
 
@@ -155,6 +155,10 @@ def make_item_room(game_map: Map, entities: List[List[Any]], room: Room, level: 
         if not game_map.blocked[y][x]:
             factories = [
                 make_healing_potion,
+                make_healing_potion,
+                make_healing_potion,
+                make_blink_scroll,
+                make_blink_scroll,
                 make_teleport_scroll,
             ]
             factory = choice(factories)

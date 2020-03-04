@@ -2,6 +2,7 @@ from esper import Processor, World
 
 from action import Action, ActionType
 from constants import DijkstraMap
+from ecs.components.blinkscroll import BlinkScroll
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
@@ -42,6 +43,15 @@ class DefendAIProcessor(Processor):
                     anger=-1,
                     target=target,
                     nice_name="Retreat",
+                )
+                return
+
+            for entity, (item, _, _) in self.world.get_components(Item, Inventory, BlinkScroll):
+                self.world.add_component(entity, Targeted())
+                player.defend_action = Action(
+                    action_type=ActionType.USE_ITEM,
+                    anger=-10,
+                    nice_name=f"Use {item.name}",
                 )
                 return
 
