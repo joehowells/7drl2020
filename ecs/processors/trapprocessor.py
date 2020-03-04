@@ -9,7 +9,7 @@ from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.trap import Trap
 from ecs.components.visible import Visible
-from factories.entities import make_soldier
+from factories.rooms import get_factory
 from functions import get_blocked_tiles
 
 
@@ -27,7 +27,8 @@ class TrapProcessor(Processor):
                 sprung_trap = True
 
                 if (position.x, position.y) not in blocked:
-                    components = make_soldier(position.x, position.y)
+                    factory = get_factory(player.level)
+                    components = factory(position.x, position.y)
                     components.extend([
                         Visible(),
                         Awake(),
