@@ -137,11 +137,14 @@ class DisplayProcessor(Processor):
             if game_map.explored[y][x]:
                 if game_map.visible[y][x]:
                     if game_map.walkable[y][x]:
-                        color = 0x99999999
+                        bkcolor = 0xFF100800
+                        color = 0xFF281400
                     else:
-                        color = 0xCCCCCCCC
+                        bkcolor = 0xFF301800
+                        color = 0xFF582C00
                 else:
-                    color = 0x66666666
+                    bkcolor = 0xFF000000
+                    color = 0xFF202020
 
                 if game_map.walkable[y][x]:
                     code = 0x002E
@@ -157,7 +160,7 @@ class DisplayProcessor(Processor):
                 #     elif 512 <= distance <= 767:
                 #         color = terminal.color_from_argb(255, 767 - distance, 0, 255)
 
-                terminal.bkcolor(0xFF000000)
+                terminal.bkcolor(bkcolor)
                 terminal.color(color)
 
                 terminal.put(x + x_offset, y + y_offset, code)
@@ -186,12 +189,9 @@ class DisplayProcessor(Processor):
             if not x_min <= position.x <= x_max or not y_min <= position.y <= y_max:
                 continue
 
-            if self.world.has_component(entity, Targeted):
-                terminal.bkcolor(0xFFFF0000)
-                terminal.color(0xFF000000)
-            elif self.world.has_component(entity, Visible):
-                terminal.bkcolor(0xFF000000)
-                terminal.color(0xFFFFFFFF)
+            if self.world.has_component(entity, Visible):
+                terminal.bkcolor(0xFF100800)
+                terminal.color(display.color)
             else:
                 terminal.bkcolor(0xFF000000)
                 terminal.color(0xFF666666)
@@ -260,8 +260,13 @@ class DisplayProcessor(Processor):
         draw_bar(46, 2, player.visible_threat, 0xFFFFFF00)
         draw_bar(46, 2, player.actual_threat, 0xFFFF0000)
 
-        terminal.printf(34, 4, f"Z: {player.attack_action.nice_name}")
-        terminal.printf(34, 5, f"X: {player.defend_action.nice_name}")
+        terminal.color(0xFFFF0000)
+        terminal.printf(34, 4, "z)")
+        terminal.color(0xFF0000FF)
+        terminal.printf(34, 5, "x)")
+        terminal.color(0xFFFFFFFF)
+        terminal.printf(37, 4, f"{player.attack_action.nice_name}")
+        terminal.printf(37, 5, f"{player.defend_action.nice_name}")
 
         inventory = sum(1 for _ in self.world.get_components(Item, Inventory))
         inventory = min(max(inventory, 0), 99)
