@@ -1,5 +1,4 @@
 from collections import deque
-from math import hypot
 from typing import Generator, Tuple, Collection, List, Optional
 
 from constants import DijkstraMap
@@ -68,7 +67,7 @@ def iter_neighbors(x: int, y: int, game_map: Map) -> Generator[Tuple[int, int], 
 
 
 def dijkstra_map(game_map: Map, sources: Collection[Tuple[int, int]], check_explored=True, max_value: int = None) -> \
-List[List[int]]:
+        List[List[int]]:
     output = [[-1 for _ in range(game_map.w)] for _ in range(game_map.h)]
     queue = deque()
 
@@ -99,26 +98,42 @@ List[List[int]]:
     return output
 
 
-def move_dijkstra(game_map: Map, position: Position, key: DijkstraMap, reverse: bool = False) -> Optional[
-    Tuple[int, int]]:
-    # TODO: Cleanup
-    neighbors = [
-        (x, y)
-        for x, y, in iter_neighbors(position.x, position.y, game_map)
-        if game_map.walkable[y][x] and not game_map.blocked[y][x] and (
-                (not reverse and game_map.dijkstra[key][y][x] < game_map.dijkstra[key][position.y][position.x])
-                or (reverse and game_map.dijkstra[key][y][x] > game_map.dijkstra[key][position.y][position.x])
-        )
-    ]
+def move_dijkstra(game_map: Map, position: Position, key: DijkstraMap, reverse: bool = False) -> Optional[Tuple[int, int]]:
+    old_dijkstra = game_map.dijkstra[key][position.y][position.x]
+
+    neighbors = []
+    for x, y, in iter_neighbors(position.x, position.y, game_map):
+        if not game_map.walkable[y][x]:
+            continue
+
+        if game_map.blocked[y][x]:
+            continue
+
+        new_dijkstra = game_map.dijkstra[key][y][x]
+
+        if new_dijkstra < 0:
+            return
+
+        if reverse:
+            if new_dijkstra <= old_dijkstra:
+                continue
+        else:
+            if new_dijkstra >= old_dijkstra:
+                continue
+
+        if reverse:
+            new_dijkstra = -new_dijkstra
+
+        break_ties = abs(x - position.x) and abs(y - position.y)
+        neighbors.append((new_dijkstra, break_ties, x, y))
 
     if not neighbors:
         return
 
-    neighbors.sort(
-        key=lambda xy: (game_map.dijkstra[key][xy[1]][xy[0]], hypot(xy[0] - position.x, xy[1] - position.y)),
-        reverse=reverse,
-    )
-    return neighbors[0]
+    neighbors.sort()
+    _, _, x, y = neighbors[0]
+
+    return x, y
 
 
 def move(game_map: Map, position: Position, target: Tuple[int, int]) -> None:
