@@ -22,5 +22,9 @@ class ItemMapProcessor(Processor):
             sources.add((position.x, position.y))
 
         if self.sources != sources:
-            game_map.dijkstra[DijkstraMap.ITEM] = dijkstra_map(game_map, sources)
+            game_map.dijkstra[DijkstraMap.ITEM] = dijkstra_map(
+                game_map=game_map,
+                sources=sources,
+                check_explored=False,
+            )
             self.sources = sources
