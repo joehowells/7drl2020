@@ -3,6 +3,6 @@ from typing import Any, Mapping
 
 
 @dataclass(frozen=True)
-class Event:
+class Action:
     name: str
     data: Mapping[str, Any]

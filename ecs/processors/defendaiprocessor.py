@@ -1,7 +1,7 @@
 from esper import Processor, World
 
 from constants import DijkstraMap
-from ecs.components.event import Event
+from ecs.components.action import Action
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
 from ecs.components.lastknownposition import LastKnownPosition
@@ -28,30 +28,30 @@ class DefendAIProcessor(Processor):
             if entity_pairs:
                 entity = entity_pairs[0][0]
                 self.world.add_component(entity, Targeted())
-                player.defend_action = Event("use", {"anger": -10})
+                player.defend_action = Action("use", {"anger": -10})
                 return
 
             target = move_dijkstra(game_map, player_position, DijkstraMap.MONSTER, reverse=True)
 
             if target:
-                player.defend_action = Event("move", {"target": target, "anger": -1})
+                player.defend_action = Action("move", {"target": target, "anger": -1})
                 return
 
-            player.defend_action = Event("wait", {"anger": -1})
+            player.defend_action = Action("wait", {"anger": -1})
             return
 
         for _ in self.world.get_components(Item, Coincident):
-            player.defend_action = Event("pickup", {"anger": -1})
+            player.defend_action = Action("pickup", {"anger": -1})
             return
 
         for _ in self.world.get_components(Item, LastKnownPosition):
             target = move_dijkstra(game_map, player_position, DijkstraMap.ITEM)
 
             if target:
-                player.defend_action = Event("move", {"target": target, "anger": -1})
+                player.defend_action = Action("move", {"target": target, "anger": -1})
                 return
             else:
                 break
 
-        player.defend_action = Event("wait", {"anger": -1})
+        player.defend_action = Action("wait", {"anger": -1})
         return
