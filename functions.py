@@ -134,8 +134,6 @@ def move_dijkstra(world: World, game_map: Map, position: Position, key: Dijkstra
         break_ties = abs(x - position.x) and abs(y - position.y)
         neighbors.append((new_dijkstra, break_ties, x, y))
 
-    print(key, neighbors)
-
     if not neighbors:
         return
 

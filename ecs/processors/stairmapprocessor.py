@@ -24,6 +24,5 @@ class StairMapProcessor(Processor):
             sources.add((position.x, position.y))
 
         if self.sources != sources:
-            print("gen???")
             game_map.dijkstra[DijkstraMap.STAIRS] = dijkstra_map(game_map, sources, check_explored=False)
             self.sources = sources
