@@ -69,7 +69,7 @@ def make_officer(x: int, y: int) -> List[Any]:
 
 def make_assassin(x: int, y: int) -> List[Any]:
     return [
-        Display(0x0020),
+        Display(0x005F),
         Monster(
             name="assassin",
             threat=[3],

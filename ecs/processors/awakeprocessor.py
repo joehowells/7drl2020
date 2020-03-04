@@ -15,16 +15,13 @@ class AwakeProcessor(Processor):
         _, game_map = next(iter(self.world.get_component(Map)))
         _, player = next(iter(self.world.get_component(Player)))
 
-        event = player.action
+        for entity, (_, position) in self.world.get_components(Monster, Position):
+            if self.world.has_component(entity, Awake):
+                if game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x] > AWAKE_DISTANCE:
+                    self.world.remove_component(entity, Awake)
+            else:
+                if self.world.has_component(entity, Visible):
+                    self.world.add_component(entity, Awake())
 
-        if player.action.action_type is ActionType.ATTACK:
-            for entity, (_, position) in self.world.get_components(Monster, Position):
-                if self.world.has_component(entity, Awake):
-                    if game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x] > AWAKE_DISTANCE:
-                        self.world.remove_component(entity, Awake)
-                else:
-                    if self.world.has_component(entity, Visible):
-                        self.world.add_component(entity, Awake())
-
-                    if event and game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x] <= AWAKE_DISTANCE:
-                        self.world.add_component(entity, Awake())
+                if player.action.action_type is ActionType.ATTACK and game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x] <= AWAKE_DISTANCE:
+                    self.world.add_component(entity, Awake())
