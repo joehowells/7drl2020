@@ -29,7 +29,7 @@ class DefendAIProcessor(Processor):
                 self.world.add_component(entity, Targeted())
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
-                    anger=-10,
+                    anger=-20,
                     nice_name=f"Use {item.name}",
                 )
                 return
@@ -50,7 +50,7 @@ class DefendAIProcessor(Processor):
                 self.world.add_component(entity, Targeted())
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
-                    anger=-10,
+                    anger=-20,
                     nice_name=f"Use {item.name}",
                 )
                 return
@@ -59,7 +59,7 @@ class DefendAIProcessor(Processor):
                 self.world.add_component(entity, Targeted())
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
-                    anger=-10,
+                    anger=-20,
                     nice_name=f"Use {item.name}",
                 )
                 return
