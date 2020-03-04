@@ -1,4 +1,4 @@
-from typing import List, Any, Optional
+from typing import List, Any, Optional, Callable
 
 from ecs.components.display import Display
 from ecs.components.item import Item
@@ -72,7 +72,7 @@ def make_assassin(x: int, y: int) -> List[Any]:
         Display(0x005F),
         Monster(
             name="assassin",
-            threat=[3],
+            threat=[4],
             defend=1,
             health=1,
         ),
@@ -93,6 +93,71 @@ def make_archer(x: int, y: int) -> List[Any]:
     ]
 
 
+def make_elite_soldier(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x0053),
+        Monster(
+            name="elite soldier",
+            threat=[4],
+            defend=2,
+            health=2,
+        ),
+        Position(x, y),
+    ]
+
+
+def make_elite_defender(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x0044),
+        Monster(
+            name="elite defender",
+            threat=[4],
+            defend=3,
+            health=3,
+        ),
+        Position(x, y),
+    ]
+
+
+def make_elite_officer(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x004F),
+        Monster(
+            name="elite officer",
+            threat=[6],
+            defend=2,
+            health=3,
+        ),
+        Position(x, y),
+    ]
+
+
+def make_elite_assassin(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x005F),
+        Monster(
+            name="elite assassin",
+            threat=[8],
+            defend=2,
+            health=2,
+        ),
+        Position(x, y),
+    ]
+
+
+def make_elite_archer(x: int, y: int) -> List[Any]:
+    return [
+        Display(0x0041),
+        Monster(
+            name="elite archer",
+            threat=[2, 6],
+            defend=2,
+            health=2,
+        ),
+        Position(x, y),
+    ]
+
+
 def make_potion(x: int, y: int) -> List[Any]:
     return [
         Display(0x0021, draw_order=-1),
@@ -103,9 +168,9 @@ def make_potion(x: int, y: int) -> List[Any]:
     ]
 
 
-def make_trap(x: int, y: int) -> List[Any]:
+def make_trap(x: int, y: int, factory: Callable[[int, int], List[Any]]) -> List[Any]:
     return [
         Display(0x005E, draw_order=-2),
-        Trap(),
+        Trap(factory),
         Position(x, y),
     ]

@@ -65,6 +65,7 @@ class DisplayProcessor(Processor):
         terminal.color(0xFFFFFFFF)
         terminal.clear()
         terminal.printf(0, 0, "Title Screen")
+        terminal.printf(0, 0, "Press [[Z+X]] to start ...")
         terminal.refresh()
 
     def draw_main_game(self):
@@ -78,6 +79,12 @@ class DisplayProcessor(Processor):
         self.draw_entities()
         self.draw_ui()
         self.draw_messages()
+
+        terminal.bkcolor(0xFF000000)
+        terminal.color(0xFFFFFFFF)
+        for _, player in self.world.get_component(Player):
+            terminal.printf(0, 0, f"Level: {player.level+1}")
+            break
 
         terminal.refresh()
 
@@ -228,7 +235,7 @@ class DisplayProcessor(Processor):
         messages.sort(key=lambda m: m.priority, reverse=True)
 
         for message in messages:
-            for text in wrap(message.text, 31):
+            for text in wrap(message.text, 50):
                 self.buffer.append((text, message.color))
 
         self.buffer = self.buffer[-14:]

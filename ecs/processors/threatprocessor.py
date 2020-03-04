@@ -53,6 +53,10 @@ class ThreatProcessor(Processor):
                     text=f"You die...",
                     priority=-100,
                 ))
+                self.world.create_entity(Message(
+                    text=f"Press [[Z+X]] to return to the title screen...",
+                    priority=-200,
+                ))
 
         else:
             self.world.create_entity(Message(

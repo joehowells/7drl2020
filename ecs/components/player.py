@@ -20,3 +20,6 @@ class Player:
     defend_bonus: int = 0
     attack: int = 1
     defend: int = 1
+
+    # TODO: Find a better place to put this
+    level: int = 0

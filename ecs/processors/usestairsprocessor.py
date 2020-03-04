@@ -1,6 +1,8 @@
 from esper import Processor, World
 
 from action import ActionType
+from constants import MAX_LEVEL
+from ecs.components.dead import Dead
 from ecs.components.gamestate import GameState
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
@@ -16,18 +18,30 @@ class UseStairsProcessor(Processor):
         entity, player = next(iter(self.world.get_component(Player)))
 
         if player.action.action_type is ActionType.USE_STAIRS:
-            entities = make_world(player=player)
+            if player.level >= MAX_LEVEL:
+                self.world.add_component(entity, Dead())
+                self.world.create_entity(Message(
+                    text=f"You have cleared out the dungeon!",
+                    priority=-100,
+                ))
+                self.world.create_entity(Message(
+                    text=f"Press [[Z+X]] to return to the title screen...",
+                    priority=-200,
+                ))
+            else:
+                player.level += 1
+                entities = make_world(player=player, level=player.level)
 
-            for entity, _ in self.world.get_component(GameState):
-                # noinspection PyTypeChecker
-                entities.append(self.world.components_for_entity(entity))
+                for entity, _ in self.world.get_component(GameState):
+                    # noinspection PyTypeChecker
+                    entities.append(self.world.components_for_entity(entity))
 
-            for entity, _ in self.world.get_components(Item, Inventory):
-                # noinspection PyTypeChecker
-                entities.append(self.world.components_for_entity(entity))
+                for entity, _ in self.world.get_components(Item, Inventory):
+                    # noinspection PyTypeChecker
+                    entities.append(self.world.components_for_entity(entity))
 
-            self.world.clear_database()
-            for entity in entities:
-                self.world.create_entity(*entity)
+                self.world.clear_database()
+                for entity in entities:
+                    self.world.create_entity(*entity)
 
-            self.world.create_entity(Message("You go downstairs."))
+                self.world.create_entity(Message("You go downstairs."))

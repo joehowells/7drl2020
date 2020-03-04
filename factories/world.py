@@ -14,7 +14,7 @@ ROOM_FACTORIES = [
 ]
 
 
-def make_world(player: Optional[Player] = None) -> List[List[Any]]:
+def make_world(player: Optional[Player] = None, level: int = 0) -> List[List[Any]]:
     game_map = Map()
     entities = [[game_map]]
 
@@ -26,6 +26,6 @@ def make_world(player: Optional[Player] = None) -> List[List[Any]]:
 
     while big_rooms:
         factory = choice(ROOM_FACTORIES)
-        factory(game_map, entities, big_rooms.pop())
+        factory(game_map, entities, big_rooms.pop(), level)
 
     return entities
