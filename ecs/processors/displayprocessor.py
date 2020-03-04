@@ -45,6 +45,20 @@ def draw_bar(x: int, y: int, value: int, color: int = 0xFFFFFFFF) -> None:
     terminal.color(0xFFFFFFFF)
 
 
+def filter_color(color: int, player: Player) -> int:
+    factor = player.anger / 100
+
+    r = color >> 16 & 255
+    g = color >> 8 & 255
+    b = color & 255
+
+    r = min(int(r + factor*(g+b)), 255)
+    g = int((1.0 - factor) * g)
+    b = int((1.0 - factor) * b)
+
+    return 0xFF000000 + (r << 16) + (g << 8) + b
+
+
 class DisplayProcessor(Processor):
     def __init__(self):
         self.buffer = []
@@ -115,6 +129,14 @@ class DisplayProcessor(Processor):
             terminal.printf(0, 0, f"Level: {player.level + 1}")
             break
 
+        terminal.bkcolor(0xFF000000)
+        terminal.color(0xFF666666)
+        for x in range(0, 8):
+            terminal.put(x, 1, 0x2500)
+
+        terminal.put(8, 0, 0x2502)
+        terminal.put(8, 1, 0x2518)
+
         terminal.refresh()
 
     def draw_map(self):
@@ -142,6 +164,9 @@ class DisplayProcessor(Processor):
                     else:
                         bkcolor = 0xFF301800
                         color = 0xFF582C00
+
+                    bkcolor = filter_color(bkcolor, player)
+                    color = filter_color(color, player)
                 else:
                     bkcolor = 0xFF000000
                     color = 0xFF202020
@@ -166,7 +191,7 @@ class DisplayProcessor(Processor):
                 terminal.put(x + x_offset, y + y_offset, code)
 
     def draw_entities(self):
-        _, (_, position) = next(iter(self.world.get_components(Player, Position)))
+        _, (player, position) = next(iter(self.world.get_components(Player, Position)))
 
         # Set player offset relative to display
         x_offset = 16 - position.x
@@ -190,11 +215,17 @@ class DisplayProcessor(Processor):
                 continue
 
             if self.world.has_component(entity, Visible):
-                terminal.bkcolor(0xFF100800)
-                terminal.color(display.color)
+                bkcolor = 0xFF100800
+                color = display.color
+
+                bkcolor = filter_color(bkcolor, player)
+                color = filter_color(color, player)
             else:
-                terminal.bkcolor(0xFF000000)
-                terminal.color(0xFF666666)
+                bkcolor = 0xFF000000
+                color = 0xFF666666
+
+            terminal.bkcolor(bkcolor)
+            terminal.color(color)
 
             terminal.put(
                 position.x + x_offset,
