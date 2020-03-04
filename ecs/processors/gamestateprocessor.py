@@ -7,6 +7,7 @@ from ecs.processors.angerprocessor import AngerProcessor
 from ecs.processors.attackaiprocessor import AttackAIProcessor
 from ecs.processors.awakeprocessor import AwakeProcessor
 from ecs.processors.attackprocessor import AttackProcessor
+from ecs.processors.cleanuptargetsprocessor import CleanupTargetsProcessor
 from ecs.processors.defendaiprocessor import DefendAIProcessor
 from ecs.processors.exploremapprocessor import ExploreMapProcessor
 from ecs.processors.itemmapprocessor import ItemMapProcessor
@@ -74,6 +75,7 @@ class GameStateProcessor(Processor):
         self.world.add_processor(SpatialProcessor())
 
         # Decide which options to give the player
+        self.world.add_processor(CleanupTargetsProcessor())
         self.world.add_processor(AttackAIProcessor())
         self.world.add_processor(DefendAIProcessor())
 
@@ -112,5 +114,6 @@ class GameStateProcessor(Processor):
         self.world.remove_processor(SpatialProcessor)
 
         # Decide which options to give the player
+        self.world.remove_processor(CleanupTargetsProcessor)
         self.world.remove_processor(AttackAIProcessor)
         self.world.remove_processor(DefendAIProcessor)

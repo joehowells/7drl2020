@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Tuple, Optional
+from typing import Tuple, Union
 
 
 class ActionType(Enum):
@@ -16,5 +16,5 @@ class ActionType(Enum):
 class Action:
     action_type: ActionType = ActionType.WAIT
     anger: int = -1
-    target: Optional[Tuple[int, int]] = None
+    target: Union[int, Tuple[int, int], None] = None
     nice_name: str = "???"
