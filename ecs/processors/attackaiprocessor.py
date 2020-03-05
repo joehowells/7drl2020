@@ -10,7 +10,7 @@ from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.stairs import Stairs
-from ecs.components.targeted import Targeted
+from ecs.components.attacktarget import AttackTarget
 from ecs.processors.spatialprocessor import Adjacent, Coincident
 from functions import move_dijkstra
 
@@ -39,7 +39,7 @@ class AttackAIProcessor(Processor):
         if weak_entities:
             weak_entities.sort()
             _, _, entity, monster = weak_entities[0]
-            self.world.add_component(entity, Targeted())
+            self.world.add_component(entity, AttackTarget())
             player.attack_action = Action(
                 action_type=ActionType.ATTACK,
                 anger=+2,
@@ -50,7 +50,7 @@ class AttackAIProcessor(Processor):
         # Attack a strong enemy to build meter
         if strong_entities:
             entity, monster = strong_entities[0]
-            self.world.add_component(entity, Targeted())
+            self.world.add_component(entity, AttackTarget())
             player.attack_action = Action(
                 action_type=ActionType.ATTACK,
                 anger=+2,

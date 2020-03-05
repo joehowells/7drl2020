@@ -6,7 +6,7 @@ from ecs.components.message import Message
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.components.targeted import Targeted
+from ecs.components.attacktarget import AttackTarget
 
 
 class AttackProcessor(Processor):
@@ -17,8 +17,8 @@ class AttackProcessor(Processor):
         _, (position, player) = next(iter(self.world.get_components(Position, Player)))
 
         if player.action.action_type is ActionType.ATTACK:
-            for entity, (monster, _) in self.world.get_components(Monster, Targeted):
-                self.world.remove_component(entity, Targeted)
+            for entity, (monster, _) in self.world.get_components(Monster, AttackTarget):
+                self.world.remove_component(entity, AttackTarget)
 
                 if player.attack > monster.defend:
                     monster.health -= 1

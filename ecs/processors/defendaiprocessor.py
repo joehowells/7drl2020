@@ -3,6 +3,7 @@ from esper import Processor, World
 from action import Action, ActionType
 from constants import DijkstraMap
 from ecs.components.boss import Boss
+from ecs.components.defendtarget import DefendTarget
 from ecs.components.message import Message
 from ecs.components.taunt import Taunted
 from ecs.components.thunderscroll import ThunderScroll
@@ -14,7 +15,6 @@ from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
-from ecs.components.targeted import Targeted
 from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.visible import Visible
 from ecs.processors.spatialprocessor import Coincident
@@ -43,7 +43,7 @@ class DefendAIProcessor(Processor):
 
         if player.health < 10:
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, HealingPotion):
-                self.world.add_component(entity, Targeted())
+                self.world.add_component(entity, DefendTarget())
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
                     anger=-20,
@@ -53,7 +53,7 @@ class DefendAIProcessor(Processor):
 
         if player.actual_threat > 0:
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, SmokeBomb):
-                self.world.add_component(entity, Targeted())
+                self.world.add_component(entity, DefendTarget())
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
                     anger=-20,
@@ -82,8 +82,8 @@ class DefendAIProcessor(Processor):
                 if candidates:
                     candidates.sort(reverse=True)
                     _, monster_entity, monster = candidates[0]
-                    self.world.add_component(monster_entity, Targeted())
-                    self.world.add_component(entity, Targeted())
+                    self.world.add_component(monster_entity, DefendTarget())
+                    self.world.add_component(entity, DefendTarget())
                     player.defend_action = Action(
                         action_type=ActionType.USE_ITEM,
                         anger=-20,
@@ -92,7 +92,7 @@ class DefendAIProcessor(Processor):
                     return
 
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, TeleportScroll):
-                self.world.add_component(entity, Targeted())
+                self.world.add_component(entity, DefendTarget())
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
                     anger=-20,

@@ -5,8 +5,10 @@ from typing import Tuple, Set
 from bearlibterminal import terminal
 from esper import Processor, World
 
+from ecs.components.attacktarget import AttackTarget
 # from constants import DijkstraMap
 from ecs.components.blinded import Blinded
+from ecs.components.defendtarget import DefendTarget
 from ecs.components.display import Display
 from ecs.components.gamestate import GameState
 from ecs.components.healingpotion import HealingPotion
@@ -15,11 +17,9 @@ from ecs.components.item import Item
 from ecs.components.lastknownposition import LastKnownPosition
 from ecs.components.map import Map
 from ecs.components.message import Message
-from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
-from ecs.components.targeted import Targeted
 from ecs.components.taunt import Taunted
 from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.thunderscroll import ThunderScroll
@@ -98,11 +98,11 @@ class DisplayProcessor(Processor):
             if player.defend_action.target:
                 defend_targets.add(player.defend_action.target)
 
-        for entity, (position, _) in self.world.get_components(Position, Targeted):
-            if self.world.has_component(entity, Monster):
-                attack_targets.add((position.x, position.y))
-            else:
-                defend_targets.add((position.x, position.y))
+        for entity, (position, _) in self.world.get_components(Position, AttackTarget):
+            attack_targets.add((position.x, position.y))
+
+        for entity, (position, _) in self.world.get_components(Position, DefendTarget):
+            defend_targets.add((position.x, position.y))
 
         for _ in self.world.get_components(Player, Taunted):
             defend_targets = set()

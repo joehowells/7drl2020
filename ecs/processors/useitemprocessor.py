@@ -4,6 +4,7 @@ from esper import Processor, World
 
 from action import ActionType
 from ecs.components.blinded import Blinded
+from ecs.components.defendtarget import DefendTarget
 from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.item import Item
@@ -13,7 +14,6 @@ from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
-from ecs.components.targeted import Targeted
 from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.visible import Visible
 from functions import move, get_blocked_tiles
@@ -27,7 +27,7 @@ class UseItemProcessor(Processor):
         blocked = get_blocked_tiles(self.world)
 
         if player.action.action_type is ActionType.USE_ITEM:
-            for entity, (item, _) in self.world.get_components(Item, Targeted):
+            for entity, (item, _) in self.world.get_components(Item, DefendTarget):
                 self.world.create_entity(Message(
                     text=f"You use the {item.name}.",
                     color=0xFF00FFFF,
@@ -41,7 +41,7 @@ class UseItemProcessor(Processor):
                         self.world.add_component(monster_entity, Blinded())
 
                 if self.world.has_component(entity, ThunderScroll):
-                    for monster_entity, (monster, _) in self.world.get_components(Monster, Targeted):
+                    for monster_entity, (monster, _) in self.world.get_components(Monster, DefendTarget):
                         self.world.delete_entity(monster_entity, immediate=True)
                         self.world.create_entity(Message(
                             text=f"The {monster.name} is incinerated!",
