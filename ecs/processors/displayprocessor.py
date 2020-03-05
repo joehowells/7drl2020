@@ -20,6 +20,7 @@ from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
 from ecs.components.targeted import Targeted
+from ecs.components.taunt import Taunted
 from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.visible import Visible
@@ -102,6 +103,9 @@ class DisplayProcessor(Processor):
                 attack_targets.add((position.x, position.y))
             else:
                 defend_targets.add((position.x, position.y))
+
+        for _ in self.world.get_components(Player, Taunted):
+            defend_targets = set()
 
         both_targets = attack_targets.intersection(defend_targets)
         attack_targets -= both_targets
@@ -352,7 +356,7 @@ class DisplayProcessor(Processor):
 
     def draw_ui(self):
         _, game_map = next(iter(self.world.get_component(Map)))
-        _, player = next(iter(self.world.get_component(Player)))
+        player_entity, player = next(iter(self.world.get_component(Player)))
 
         terminal.bkcolor(0xFF000000)
         terminal.color(0xFFFFFFFF)
@@ -372,7 +376,12 @@ class DisplayProcessor(Processor):
 
         terminal.color(0xFFFF0000)
         terminal.printf(34, 4, "z)")
-        terminal.color(0xFF0000FF)
+
+        if self.world.has_component(player_entity, Taunted):
+            terminal.color(0xFFFF0000)
+        else:
+            terminal.color(0xFF0000FF)
+
         terminal.printf(34, 5, "x)")
         terminal.color(0xFFFFFFFF)
         terminal.printf(37, 4, f"{player.attack_action.nice_name}")

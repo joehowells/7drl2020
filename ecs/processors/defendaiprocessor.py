@@ -3,6 +3,8 @@ from esper import Processor, World
 from action import Action, ActionType
 from constants import DijkstraMap
 from ecs.components.boss import Boss
+from ecs.components.message import Message
+from ecs.components.taunt import Taunted
 from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.inventory import Inventory
@@ -24,7 +26,20 @@ class DefendAIProcessor(Processor):
         self.world: World
 
         _, game_map = next(iter(self.world.get_component(Map)))
-        _, (player, player_position) = next(iter(self.world.get_components(Player, Position)))
+        player_entity, (player, player_position) = next(iter(self.world.get_components(Player, Position)))
+
+        for taunted in self.world.try_component(player_entity, Taunted):
+            if taunted.turns_left <= 0:
+                player.anger = min(max(player.anger-10, 0), 100)
+                self.world.remove_component(player_entity, Taunted)
+                self.world.create_entity(Message(
+                    text=f"You snap out of your rage.",
+                ))
+            else:
+                taunted.turns_left -= 1
+                player.anger = min(max(player.anger+5, 0), 100)
+                player.defend_action = player.attack_action
+                return
 
         if player.health < 10:
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, HealingPotion):
