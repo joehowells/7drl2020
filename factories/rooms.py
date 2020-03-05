@@ -4,7 +4,7 @@ from typing import List, Any, Optional
 from ecs.components.map import Map
 from ecs.components.player import Player
 from factories.entities import make_trap, make_player, make_stairs
-from factories.items import get_item_factory
+from factories.items import get_item_factory, make_weapon
 from factories.map import Room
 from factories.monsters import get_monster_factory, make_mid_boss, make_end_boss
 
@@ -81,6 +81,48 @@ def make_item_room(game_map: Map, entities: List[List[Any]], room: Room, level: 
 
         x, y = cells.pop()
         factory = get_monster_factory(level)
+        entity = factory(x, y)
+        entities.append(entity)
+
+
+def make_weapon_room(game_map: Map, entities: List[List[Any]], room: Room, level: int = 0) -> None:
+    cells = [(x, y) for x, y, in room.cells if game_map.walkable[y][x]]
+    shuffle(cells)
+
+    if not cells:
+        return
+
+    x, y = cells.pop()
+    entity = make_weapon(x, y)
+    entities.append(entity)
+
+    for _ in range(randint(1, 2)):
+        if not cells:
+            break
+
+        x, y = cells.pop()
+        factory = get_monster_factory(level + 1)
+        entity = factory(x, y)
+        entities.append(entity)
+
+
+def make_armour_room(game_map: Map, entities: List[List[Any]], room: Room, level: int = 0) -> None:
+    cells = [(x, y) for x, y, in room.cells if game_map.walkable[y][x]]
+    shuffle(cells)
+
+    if not cells:
+        return
+
+    x, y = cells.pop()
+    entity = make_weapon(x, y)
+    entities.append(entity)
+
+    for _ in range(randint(1, 2)):
+        if not cells:
+            break
+
+        x, y = cells.pop()
+        factory = get_monster_factory(level + 1)
         entity = factory(x, y)
         entities.append(entity)
 

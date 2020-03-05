@@ -113,6 +113,4 @@ def get_item_factory() -> Callable[[int, int], List[Any]]:
         make_teleport_scroll,
         make_smoke_bomb,
         make_smoke_bomb,
-        make_weapon,
-        make_armour,
     ])
