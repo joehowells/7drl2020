@@ -7,8 +7,10 @@ from esper import Processor, World
 
 # from constants import DijkstraMap
 from ecs.components.blinded import Blinded
+from ecs.components.blinkscroll import BlinkScroll
 from ecs.components.display import Display
 from ecs.components.gamestate import GameState
+from ecs.components.healingpotion import HealingPotion
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
 from ecs.components.lastknownposition import LastKnownPosition
@@ -17,7 +19,9 @@ from ecs.components.message import Message
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
+from ecs.components.smokebomb import SmokeBomb
 from ecs.components.targeted import Targeted
+from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.visible import Visible
 
 
@@ -32,12 +36,13 @@ def draw_borders() -> None:
         terminal.put(x, 3, 0x2500)
         terminal.put(x, 6, 0x2500)
 
-    for y in range(3):
+    for y in range(6):
         terminal.put(67, y, 0x2502)
 
     terminal.put(33, 3, 0x255F)
     terminal.put(33, 6, 0x255F)
-    terminal.put(67, 3, 0x2534)
+    terminal.put(67, 3, 0x253C)
+    terminal.put(67, 6, 0x2534)
 
 
 def draw_bar(x: int, y: int, value: int, color: int = 0xFFFFFFFF) -> None:
@@ -53,7 +58,7 @@ def filter_color(color: int, player: Player) -> int:
     g = color >> 8 & 255
     b = color & 255
 
-    r = min(int(r + factor*(g+b)), 255)
+    r = min(int(r + factor * (g + b)), 255)
     g = int((1.0 - factor) * g)
     b = int((1.0 - factor) * b)
 
@@ -132,20 +137,6 @@ class DisplayProcessor(Processor):
         self.highlight_targets()
         self.draw_ui()
         self.draw_messages()
-
-        terminal.bkcolor(0xFF000000)
-        terminal.color(0xFFFFFFFF)
-        for _, player in self.world.get_component(Player):
-            terminal.printf(0, 0, f"Level: {player.level + 1}")
-            break
-
-        terminal.bkcolor(0xFF000000)
-        terminal.color(0xFF666666)
-        for x in range(0, 8):
-            terminal.put(x, 1, 0x2500)
-
-        terminal.put(8, 0, 0x2502)
-        terminal.put(8, 1, 0x2518)
 
         terminal.refresh()
 
@@ -316,12 +307,28 @@ class DisplayProcessor(Processor):
         terminal.printf(37, 4, f"{player.attack_action.nice_name}")
         terminal.printf(37, 5, f"{player.defend_action.nice_name}")
 
-        inventory = sum(1 for _ in self.world.get_components(Item, Inventory))
-        inventory = min(max(inventory, 0), 99)
-
         terminal.printf(68, 0, f"Attack: {player.attack:>2d}")
         terminal.printf(68, 1, f"Defend: {player.defend:>2d}")
-        terminal.printf(68, 2, f"Items:  {inventory:>2d}")
+        terminal.printf(68, 2, f"Level:  {player.level + 1:>2d}")
+
+        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, HealingPotion))
+        inventory = min(max(inventory, 0), 9)
+        terminal.printf(68, 4, f"!: {inventory}")
+
+        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, SmokeBomb))
+        inventory = min(max(inventory, 0), 9)
+        terminal.printf(68, 5, f"(: {inventory}")
+
+        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, TeleportScroll))
+        inventory = min(max(inventory, 0), 9)
+        terminal.printf(73, 4, f"?: {inventory}")
+
+        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, BlinkScroll))
+        inventory = min(max(inventory, 0), 9)
+        terminal.printf(73, 5, f"+: {inventory}")
+
+        terminal.printf(78, 4, f"): {inventory}")
+        terminal.printf(78, 5, f"[[: {inventory}")
 
         if player.attack_bonus > 0:
             terminal.color(0xFFFF0000)
