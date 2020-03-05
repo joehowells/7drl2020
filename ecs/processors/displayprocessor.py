@@ -7,7 +7,7 @@ from esper import Processor, World
 
 # from constants import DijkstraMap
 from ecs.components.blinded import Blinded
-from ecs.components.blinkscroll import BlinkScroll
+from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.display import Display
 from ecs.components.gamestate import GameState
 from ecs.components.healingpotion import HealingPotion
@@ -313,22 +313,22 @@ class DisplayProcessor(Processor):
 
         inventory = sum(1 for _ in self.world.get_components(Item, Inventory, HealingPotion))
         inventory = min(max(inventory, 0), 9)
-        terminal.printf(68, 4, f"!: {inventory}")
+        terminal.printf(68, 4, f"[color=#FFFF0066]![/color]: {inventory}")
 
         inventory = sum(1 for _ in self.world.get_components(Item, Inventory, SmokeBomb))
         inventory = min(max(inventory, 0), 9)
-        terminal.printf(68, 5, f"(: {inventory}")
+        terminal.printf(68, 5, f"[color=#FF00FF66]![/color]: {inventory}")
 
         inventory = sum(1 for _ in self.world.get_components(Item, Inventory, TeleportScroll))
         inventory = min(max(inventory, 0), 9)
-        terminal.printf(73, 4, f"?: {inventory}")
+        terminal.printf(73, 4, f"[color=#FF6600FF]?[/color]: {inventory}")
 
-        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, BlinkScroll))
+        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, ThunderScroll))
         inventory = min(max(inventory, 0), 9)
-        terminal.printf(73, 5, f"+: {inventory}")
+        terminal.printf(73, 5, f"[color=#FFFF6600]?[/color]: {inventory}")
 
-        terminal.printf(78, 4, f"): {inventory}")
-        terminal.printf(78, 5, f"[[: {inventory}")
+        terminal.printf(78, 4, f"[color=#FF999999])[/color]: {inventory}")
+        terminal.printf(78, 5, f"[color=#FF999999][[[/color]: {inventory}")
 
         if player.attack_bonus > 0:
             terminal.color(0xFFFF0000)

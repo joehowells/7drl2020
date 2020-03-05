@@ -2,7 +2,7 @@ from esper import Processor, World
 
 from action import Action, ActionType
 from constants import DijkstraMap
-from ecs.components.blinkscroll import BlinkScroll
+from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
@@ -57,14 +57,22 @@ class DefendAIProcessor(Processor):
                 )
                 return
 
-            for entity, (item, _, _) in self.world.get_components(Item, Inventory, BlinkScroll):
-                self.world.add_component(entity, Targeted())
-                player.defend_action = Action(
-                    action_type=ActionType.USE_ITEM,
-                    anger=-20,
-                    nice_name=f"Use {item.name}",
-                )
-                return
+            for entity, (item, _, _) in self.world.get_components(Item, Inventory, ThunderScroll):
+                candidates = []
+                for monster_entity, (monster, _) in self.world.get_components(Monster, Visible):
+                    candidates.append((max(monster.threat), monster_entity, monster))
+
+                if candidates:
+                    candidates.sort()
+                    _, monster_entity, monster = candidates[0]
+                    self.world.add_component(monster_entity, Targeted())
+                    self.world.add_component(entity, Targeted())
+                    player.defend_action = Action(
+                        action_type=ActionType.USE_ITEM,
+                        anger=-20,
+                        nice_name=f"Use {item.name}",
+                    )
+                    return
 
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, TeleportScroll):
                 self.world.add_component(entity, Targeted())

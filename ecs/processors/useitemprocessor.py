@@ -4,7 +4,7 @@ from esper import Processor, World
 
 from action import ActionType
 from ecs.components.blinded import Blinded
-from ecs.components.blinkscroll import BlinkScroll
+from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.item import Item
 from ecs.components.map import Map
@@ -40,26 +40,12 @@ class UseItemProcessor(Processor):
                     for monster_entity, _ in self.world.get_components(Monster, Visible):
                         self.world.add_component(monster_entity, Blinded())
 
-                if self.world.has_component(entity, BlinkScroll):
-                    _, game_map = next(iter(self.world.get_component(Map)))
-
-                    for _ in range(1000):
-                        x = randint(0, game_map.w - 1)
-                        y = randint(0, game_map.h - 1)
-
-                        if not game_map.walkable[y][x] or (x, y) in blocked or not game_map.visible[y][x]:
-                            continue
-
-                        for position in self.world.try_component(player_entity, Position):
-                            move(position, (x, y))
-                            break
-
-                        break
-
-                    else:
+                if self.world.has_component(entity, ThunderScroll):
+                    for monster_entity, (monster, _) in self.world.get_components(Monster, Targeted):
+                        self.world.delete_entity(monster_entity, Blinded())
                         self.world.create_entity(Message(
-                            text=f"Your mind is elsewhere.",
-                            color=0xFFFFFFFF,
+                            text=f"The {monster.name} is incinerated!",
+                            color=0xFF00FFFF,
                         ))
 
                 if self.world.has_component(entity, TeleportScroll):

@@ -1,7 +1,6 @@
 from random import choice
 from typing import List, Any, Optional, Callable
 
-from ecs.components.blinkscroll import BlinkScroll
 from ecs.components.display import Display
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.item import Item
@@ -11,6 +10,7 @@ from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
 from ecs.components.stairs import Stairs
 from ecs.components.teleportscroll import TeleportScroll
+from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.trap import Trap
 
 
@@ -37,7 +37,7 @@ def make_soldier(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x0073,
-            color=0xFFFF6600,
+            color=0xFFFFFFFF,
         ),
         Monster(
             name="soldier",
@@ -53,7 +53,7 @@ def make_defender(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x0064,
-            color=0xFF66FF00,
+            color=0xFF00FF00,
         ),
         Monster(
             name="defender",
@@ -69,7 +69,7 @@ def make_officer(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x006F,
-            color=0xFF6600FF,
+            color=0xFFFFFF00,
         ),
         Monster(
             name="officer",
@@ -101,7 +101,7 @@ def make_archer(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x0061,
-            color=0xFF0066FF,
+            color=0xFF00FFFF,
         ),
         Monster(
             name="archer",
@@ -117,7 +117,7 @@ def make_elite_soldier(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x0053,
-            color=0xFFFF6600,
+            color=0xFFFFFFFF,
         ),
         Monster(
             name="elite soldier",
@@ -149,7 +149,7 @@ def make_elite_officer(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x004F,
-            color=0xFF9900FF,
+            color=0xFFFFFF00,
         ),
         Monster(
             name="elite officer",
@@ -181,7 +181,7 @@ def make_elite_archer(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x0041,
-            color=0xFF00FF99,
+            color=0xFF00FFFF,
         ),
         Monster(
             name="elite archer",
@@ -212,7 +212,7 @@ def make_smoke_bomb(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x0021,
-            color=0xFFCCCCCC,
+            color=0xFF00FF66,
             draw_order=-1,
         ),
         Item(
@@ -223,17 +223,17 @@ def make_smoke_bomb(x: int, y: int) -> List[Any]:
     ]
 
 
-def make_blink_scroll(x: int, y: int) -> List[Any]:
+def make_thunder_scroll(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x003F,
-            color=0xFFCC66FF,
+            color=0xFFFF6600,
             draw_order=-1,
         ),
         Item(
-            name="blink scroll",
+            name="scroll of thunder",
         ),
-        BlinkScroll(),
+        ThunderScroll(),
         Position(x, y),
     ]
 
@@ -246,7 +246,7 @@ def make_teleport_scroll(x: int, y: int) -> List[Any]:
             draw_order=-1,
         ),
         Item(
-            name="teleport scroll",
+            name="scroll of teleport",
         ),
         TeleportScroll(),
         Position(x, y),
@@ -337,8 +337,7 @@ def get_item_factory() -> Callable[[int, int], List[Any]]:
         make_healing_potion,
         make_healing_potion,
         make_healing_potion,
-        make_blink_scroll,
-        make_blink_scroll,
+        make_thunder_scroll,
         make_teleport_scroll,
         make_smoke_bomb,
     ])
