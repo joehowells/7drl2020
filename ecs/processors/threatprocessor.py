@@ -56,13 +56,14 @@ class ThreatProcessor(Processor):
             player.health -= 1
 
             if player.health <= 0:
+                player.killer = f"{monster.article} {monster.name}"
                 self.world.add_component(player_entity, Dead())
                 self.world.create_entity(Message(
                     text=f"You die...",
                     priority=-100,
                 ))
                 self.world.create_entity(Message(
-                    text=f"Press [[Z+X]] to return to the title screen...",
+                    text=f"Press (x) and (y) to continue...",
                     priority=-200,
                 ))
 

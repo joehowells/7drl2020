@@ -25,6 +25,7 @@ class AttackProcessor(Processor):
                     if monster.health <= 0:
                         self.world.delete_entity(entity)
                         self.world.create_entity(Message(f"You kill the {monster.name}!", 0xFF00FFFF))
+                        player.kills[monster.name] += 1
                     else:
                         self.world.create_entity(Message(f"You hit the {monster.name}."))
                 else:

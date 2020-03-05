@@ -49,6 +49,9 @@ class InputProcessor(Processor):
         if game_state is GameState.MAIN_GAME:
             self.process_main_game(game_state_entity)
 
+        if game_state is GameState.GAME_OVER:
+            self.process_game_over(game_state_entity)
+
     def process_title_screen(self, game_state_entity: int) -> None:
         self.world: World
 
@@ -82,7 +85,7 @@ class InputProcessor(Processor):
                 check = self.check_both_keys(event)
 
                 if check:
-                    self.world.add_component(game_state_entity, GameState.TITLE_SCREEN)
+                    self.world.add_component(game_state_entity, GameState.GAME_OVER)
                     return
 
             else:
@@ -96,3 +99,18 @@ class InputProcessor(Processor):
                     player.action = player.defend_action
                     player.anger = min(max(player.anger + player.action.anger, 0), 100)
                     return
+
+    def process_game_over(self, game_state_entity: int) -> None:
+        self.world: World
+
+        while True:
+            event = terminal.read()
+
+            if event == terminal.TK_CLOSE:
+                raise SystemExit
+
+            check = self.check_both_keys(event)
+
+            if check:
+                self.world.add_component(game_state_entity, GameState.TITLE_SCREEN)
+                return

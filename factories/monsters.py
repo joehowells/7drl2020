@@ -49,6 +49,7 @@ def make_officer(x: int, y: int) -> List[Any]:
             threat=[3],
             defend=1,
             health=2,
+            article="an",
         ),
         Position(x, y),
     ]
@@ -65,6 +66,7 @@ def make_assassin(x: int, y: int) -> List[Any]:
             threat=[4],
             defend=1,
             health=1,
+            article="an",
         ),
         Position(x, y),
     ]
@@ -81,6 +83,7 @@ def make_archer(x: int, y: int) -> List[Any]:
             threat=[2, 3],
             defend=1,
             health=1,
+            article="an",
         ),
         Position(x, y),
     ]
@@ -97,6 +100,7 @@ def make_elite_soldier(x: int, y: int) -> List[Any]:
             threat=[4],
             defend=2,
             health=2,
+            article="an",
         ),
         Position(x, y),
     ]
@@ -113,6 +117,7 @@ def make_elite_defender(x: int, y: int) -> List[Any]:
             threat=[4],
             defend=3,
             health=3,
+            article="an",
         ),
         Position(x, y),
     ]
@@ -129,6 +134,7 @@ def make_elite_officer(x: int, y: int) -> List[Any]:
             threat=[6],
             defend=2,
             health=3,
+            article="an",
         ),
         Position(x, y),
     ]
@@ -145,6 +151,7 @@ def make_elite_assassin(x: int, y: int) -> List[Any]:
             threat=[8],
             defend=2,
             health=2,
+            article="an",
         ),
         Position(x, y),
     ]
@@ -161,6 +168,7 @@ def make_elite_archer(x: int, y: int) -> List[Any]:
             threat=[2, 6],
             defend=2,
             health=2,
+            article="an",
         ),
         Position(x, y),
     ]
@@ -178,6 +186,7 @@ def make_mid_boss(x: int, y: int) -> List[Any]:
             defend=5,
             health=3,
             thunder_immune=True,
+            article="the",
         ),
         Position(x, y),
     ]
@@ -195,6 +204,7 @@ def make_end_boss(x: int, y: int) -> List[Any]:
             defend=7,
             health=5,
             thunder_immune=True,
+            article="the",
         ),
         Position(x, y),
     ]

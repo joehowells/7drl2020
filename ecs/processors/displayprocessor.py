@@ -7,7 +7,6 @@ from esper import Processor, World
 
 # from constants import DijkstraMap
 from ecs.components.blinded import Blinded
-from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.display import Display
 from ecs.components.gamestate import GameState
 from ecs.components.healingpotion import HealingPotion
@@ -22,6 +21,7 @@ from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
 from ecs.components.targeted import Targeted
 from ecs.components.teleportscroll import TeleportScroll
+from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.visible import Visible
 
 
@@ -80,6 +80,9 @@ class DisplayProcessor(Processor):
         if state is GameState.MAIN_GAME:
             self.draw_main_game()
 
+        if state is GameState.GAME_OVER:
+            self.draw_game_over()
+
     def get_targets(self) -> Tuple[Set[Tuple[int, int]], Set[Tuple[int, int]], Set[Tuple[int, int]]]:
         """Get coordinates of all targeted tiles."""
         self.world: World
@@ -107,12 +110,10 @@ class DisplayProcessor(Processor):
         return attack_targets, defend_targets, both_targets
 
     def draw_title_screen(self):
-        self.buffer = []
+        terminal.clear()
 
         terminal.bkcolor(0xFF000000)
         terminal.color(0xFFFFFFFF)
-        terminal.clear()
-
         with open("data/title_screen.txt") as file:
             terminal.puts(
                 x=5,
@@ -122,6 +123,75 @@ class DisplayProcessor(Processor):
                 height=21,
                 align=terminal.TK_ALIGN_CENTER | terminal.TK_ALIGN_MIDDLE,
             )
+
+        terminal.refresh()
+
+    def draw_game_over(self):
+        terminal.clear()
+
+        terminal.bkcolor(0xFF000000)
+        terminal.color(0xFFFFFFFF)
+
+        buffer = [
+            "[color=#FFFF0000]Result[/color]",
+            "",
+            "",
+        ]
+
+        for _, player in self.world.get_component(Player):
+            if player.killer:
+                buffer.extend([
+                    "[color=#FF999999]Flavor text.[/color]",
+                    "",
+                    "",
+                    f"You were killed by {player.killer} on level {player.level + 1} of the dungeon.",
+                ])
+            else:
+                buffer.extend([
+                    "[color=#FF999999]Flavor text.[/color]",
+                    "",
+                    "",
+                    "You kicked the militia out of the dungeon.",
+                ])
+
+            buffer.append("")
+
+            if not player.kills:
+                buffer.append("You didn't kill any enemies.")
+            else:
+                buffer.extend([
+                    f"You killed {sum(player.kills.values())} enemies, including:",
+                    "",
+                ])
+
+                # Generate kill strings from Counter
+                items = sorted(player.kills.items())
+
+                kills = []
+                for i, (key, value) in enumerate(items):
+                    plural = "s" if value > 1 else ""
+                    kills.append(f"{value} {key}{plural}")
+
+                if len(kills) % 1:
+                    kills.append("")
+
+                for one, two in zip(kills[::2], kills[1::2]):
+                    buffer.append(f"{one.ljust(24)}  {two.ljust(24)}")
+
+        buffer.extend([
+            "",
+            "",
+            "Press [color=#FFFF0000](z)[/color] and [color=#FF0000FF](x)[/color] to return.",
+        ])
+
+        terminal.puts(
+            x=5,
+            y=1,
+            s="\n".join(buffer),
+            width=74,
+            height=19,
+            align=terminal.TK_ALIGN_CENTER,
+        )
 
         terminal.refresh()
 

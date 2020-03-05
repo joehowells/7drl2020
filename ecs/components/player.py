@@ -1,4 +1,6 @@
-from dataclasses import dataclass
+from collections import Counter
+from dataclasses import dataclass, field
+from typing import Optional
 
 from action import Action
 
@@ -23,5 +25,7 @@ class Player:
     attack: int = 1
     defend: int = 1
 
-    # TODO: Find a better place to put this
     level: int = 0
+
+    kills: Counter = field(default_factory=Counter)
+    killer: Optional[str] = None
