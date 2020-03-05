@@ -185,8 +185,8 @@ def make_mid_boss(x: int, y: int) -> List[Any]:
         Monster(
             name="militia commander",
             threat=[6, 4],
-            defend=5,
-            health=3,
+            defend=4,
+            health=4,
             article="the",
         ),
         Position(x, y),
@@ -204,7 +204,7 @@ def make_end_boss(x: int, y: int) -> List[Any]:
         Monster(
             name="militia captain",
             threat=[8, 6],
-            defend=7,
+            defend=5,
             health=5,
             article="the",
         ),
