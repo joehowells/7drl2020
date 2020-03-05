@@ -2,6 +2,7 @@ from random import choice
 from typing import List, Any, Callable
 
 from ecs.components.display import Display
+from ecs.components.equipment import Equipment
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.item import Item
 from ecs.components.position import Position
@@ -70,12 +71,48 @@ def make_teleport_scroll(x: int, y: int) -> List[Any]:
     ]
 
 
+def make_weapon(x: int, y: int) -> List[Any]:
+    return [
+        Display(
+            code=0x0029,
+            color=0xFF999999,
+            draw_order=-1,
+        ),
+        Item(
+            name="weapon upgrade",
+        ),
+        Equipment.WEAPON,
+        Position(x, y),
+    ]
+
+
+def make_armour(x: int, y: int) -> List[Any]:
+    return [
+        Display(
+            code=0x005B,
+            color=0xFF999999,
+            draw_order=-1,
+        ),
+        Item(
+            name="armour upgrade",
+        ),
+        Equipment.ARMOUR,
+        Position(x, y),
+    ]
+
+
 def get_item_factory() -> Callable[[int, int], List[Any]]:
     return choice([
         make_healing_potion,
         make_healing_potion,
         make_healing_potion,
+        make_healing_potion,
+        make_thunder_scroll,
         make_thunder_scroll,
         make_teleport_scroll,
+        make_teleport_scroll,
         make_smoke_bomb,
+        make_smoke_bomb,
+        make_weapon,
+        make_armour,
     ])

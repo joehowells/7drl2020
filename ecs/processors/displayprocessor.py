@@ -327,8 +327,8 @@ class DisplayProcessor(Processor):
         inventory = min(max(inventory, 0), 9)
         terminal.printf(73, 5, f"[color=#FFFF6600]?[/color]: {inventory}")
 
-        terminal.printf(78, 4, f"[color=#FF999999])[/color]: {inventory}")
-        terminal.printf(78, 5, f"[color=#FF999999][[[/color]: {inventory}")
+        terminal.printf(78, 4, f"[color=#FF999999])[/color]: {player.attack_equip}")
+        terminal.printf(78, 5, f"[color=#FF999999][[[/color]: {player.defend_equip}")
 
         if player.attack_bonus > 0:
             terminal.color(0xFFFF0000)

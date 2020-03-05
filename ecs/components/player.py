@@ -18,6 +18,8 @@ class Player:
     base_defend: int = 1
     attack_bonus: int = 0
     defend_bonus: int = 0
+    attack_equip: int = 0
+    defend_equip: int = 0
     attack: int = 1
     defend: int = 1
 

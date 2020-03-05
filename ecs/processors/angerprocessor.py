@@ -36,8 +36,8 @@ class AngerProcessor(Processor):
             player.attack_bonus += 1
             player.defend_bonus += 1
 
-        player.attack = player.base_attack + player.attack_bonus
-        player.defend = player.base_defend + player.defend_bonus
+        player.attack = player.base_attack + player.attack_equip + player.attack_bonus
+        player.defend = player.base_defend + player.defend_equip + player.defend_bonus
 
         if new_tier > self.old_tier:
             self.world.create_entity(Message(
