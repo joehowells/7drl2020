@@ -49,7 +49,7 @@ def make_thunder_scroll(x: int, y: int) -> List[Any]:
             draw_order=-1,
         ),
         Item(
-            name="scroll of thunder",
+            name="thunder scroll",
         ),
         ThunderScroll(),
         Position(x, y),
@@ -64,7 +64,7 @@ def make_teleport_scroll(x: int, y: int) -> List[Any]:
             draw_order=-1,
         ),
         Item(
-            name="scroll of teleport",
+            name="teleport scroll",
         ),
         TeleportScroll(),
         Position(x, y),
