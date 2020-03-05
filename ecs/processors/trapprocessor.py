@@ -9,7 +9,7 @@ from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.trap import Trap
 from ecs.components.visible import Visible
-from factories.entities import get_monster_factory
+from factories.monsters import get_monster_factory
 from functions import get_blocked_tiles
 
 

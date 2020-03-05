@@ -3,7 +3,9 @@ from typing import List, Any, Optional
 
 from ecs.components.map import Map
 from ecs.components.player import Player
-from factories.entities import make_trap, make_player, make_stairs, get_monster_factory, get_item_factory
+from factories.entities import make_trap, make_player, make_stairs
+from factories.monsters import get_monster_factory
+from factories.items import get_item_factory
 from factories.map import Room
 
 
