@@ -13,7 +13,7 @@ from ecs.processors.inputprocessor import InputProcessor
 def terminal_context():
     terminal.open()
     terminal.set("""
-    font: UbuntuMono-R.ttf, size=12;
+    font: data/UbuntuMono-R.ttf, size=12;
     window.size=84x21;
     input.filter=[keyboard+];
     """)
