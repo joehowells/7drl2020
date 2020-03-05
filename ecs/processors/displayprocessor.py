@@ -181,7 +181,7 @@ class DisplayProcessor(Processor):
                     color = 0xFF202020
 
                 if game_map.walkable[y][x]:
-                    code = 0x002E
+                    code = game_map.floor_glyphs.get((x, y), 0x002E)
                 else:
                     code = 0x0023
 
