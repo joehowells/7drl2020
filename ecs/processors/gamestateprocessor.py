@@ -1,31 +1,65 @@
 from dataclasses import dataclass
+from typing import List, Type
 
 from esper import Processor, World
 
 from ecs.components.gamestate import GameState
 from ecs.processors.angerprocessor import AngerProcessor
 from ecs.processors.attackaiprocessor import AttackAIProcessor
-from ecs.processors.awakeprocessor import AwakeProcessor
 from ecs.processors.attackprocessor import AttackProcessor
+from ecs.processors.awakeprocessor import AwakeProcessor
 from ecs.processors.blindedprocessor import BlindedProcessor
 from ecs.processors.cleanuptargetsprocessor import CleanupTargetsProcessor
 from ecs.processors.defendaiprocessor import DefendAIProcessor
 from ecs.processors.exploremapprocessor import ExploreMapProcessor
-from ecs.processors.itemmapprocessor import ItemMapProcessor
 from ecs.processors.getitemprocessor import GetItemProcessor
+from ecs.processors.itemmapprocessor import ItemMapProcessor
 from ecs.processors.monstermapprocessor import MonsterMapProcessor
 from ecs.processors.monsterprocessor import MonsterProcessor
 from ecs.processors.moveprocessor import MoveProcessor
 from ecs.processors.playermapprocessor import PlayerMapProcessor
 from ecs.processors.spatialprocessor import SpatialProcessor
 from ecs.processors.stairmapprocessor import StairMapProcessor
-from ecs.processors.usestairsprocessor import UseStairsProcessor
 from ecs.processors.threatprocessor import ThreatProcessor
 from ecs.processors.trapprocessor import TrapProcessor
 from ecs.processors.useitemprocessor import UseItemProcessor
+from ecs.processors.usestairsprocessor import UseStairsProcessor
 from ecs.processors.visibilityprocessor import VisibilityProcessor
 from ecs.processors.visionprocessor import VisionProcessor
 from factories.world import make_world
+
+PROCESSORS: List[Type[Processor]] = [
+    UseStairsProcessor,
+    UseItemProcessor,
+    AttackProcessor,
+    GetItemProcessor,
+    MoveProcessor,
+
+    AngerProcessor,
+    PlayerMapProcessor,
+
+    BlindedProcessor,
+    MonsterProcessor,
+    ThreatProcessor,
+    TrapProcessor,
+
+    VisionProcessor,
+    VisibilityProcessor,
+    AwakeProcessor,
+
+    # Update player Dijkstra maps
+    ExploreMapProcessor,
+    ItemMapProcessor,
+    MonsterMapProcessor,
+    StairMapProcessor,
+
+    SpatialProcessor,
+
+    # Decide which options to give the player
+    CleanupTargetsProcessor,
+    AttackAIProcessor,
+    DefendAIProcessor,
+]
 
 
 @dataclass
@@ -50,73 +84,17 @@ class GameStateProcessor(Processor):
     def new_game(self):
         self.world: World
 
-        self.world.add_processor(UseStairsProcessor())
-        self.world.add_processor(UseItemProcessor())
-        self.world.add_processor(AttackProcessor())
-        self.world.add_processor(GetItemProcessor())
-        self.world.add_processor(MoveProcessor())
-
-        self.world.add_processor(AngerProcessor())
-        self.world.add_processor(PlayerMapProcessor())
-
-        self.world.add_processor(BlindedProcessor())
-        self.world.add_processor(MonsterProcessor())
-        self.world.add_processor(ThreatProcessor())
-        self.world.add_processor(TrapProcessor())
-
-        self.world.add_processor(VisionProcessor())
-        self.world.add_processor(VisibilityProcessor())
-        self.world.add_processor(AwakeProcessor())
-
-        # Update player Dijkstra maps
-        self.world.add_processor(ExploreMapProcessor())
-        self.world.add_processor(ItemMapProcessor())
-        self.world.add_processor(MonsterMapProcessor())
-        self.world.add_processor(StairMapProcessor())
-
-        self.world.add_processor(SpatialProcessor())
-
-        # Decide which options to give the player
-        self.world.add_processor(CleanupTargetsProcessor())
-        self.world.add_processor(AttackAIProcessor())
-        self.world.add_processor(DefendAIProcessor())
+        for processor in PROCESSORS:
+            self.world.add_processor(processor())
 
         entities = make_world()
 
         for entity in entities:
             self.world.create_entity(*entity)
 
-    # noinspection PyTypeChecker
     def end_game(self):
         self.world: World
 
-        self.world.remove_processor(UseStairsProcessor)
-        self.world.remove_processor(UseItemProcessor)
-        self.world.remove_processor(AttackProcessor)
-        self.world.remove_processor(GetItemProcessor)
-        self.world.remove_processor(MoveProcessor)
-
-        self.world.remove_processor(AngerProcessor)
-        self.world.remove_processor(PlayerMapProcessor)
-
-        self.world.remove_processor(BlindedProcessor)
-        self.world.remove_processor(MonsterProcessor)
-        self.world.remove_processor(ThreatProcessor)
-        self.world.remove_processor(TrapProcessor)
-
-        self.world.remove_processor(VisionProcessor)
-        self.world.remove_processor(VisibilityProcessor)
-        self.world.remove_processor(AwakeProcessor)
-
-        # Update player Dijkstra maps
-        self.world.remove_processor(ExploreMapProcessor)
-        self.world.remove_processor(ItemMapProcessor)
-        self.world.remove_processor(MonsterMapProcessor)
-        self.world.remove_processor(StairMapProcessor)
-
-        self.world.remove_processor(SpatialProcessor)
-
-        # Decide which options to give the player
-        self.world.remove_processor(CleanupTargetsProcessor)
-        self.world.remove_processor(AttackAIProcessor)
-        self.world.remove_processor(DefendAIProcessor)
+        for processor in PROCESSORS:
+            # noinspection PyTypeChecker
+            self.world.remove_processor(processor)
