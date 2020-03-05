@@ -149,15 +149,10 @@ class DisplayProcessor(Processor):
             if player.killer:
                 buffer.append(f"You were killed by {player.killer} on level {player.level + 1} of the dungeon.")
             else:
-                buffer.extend([
-                    (
-                        "[color=#FF999999]With the milita defeated, you can put your feet up and read your newspaper."
-                        "But you lost it somewhere in the dungeon...[/color]"
-                    ),
-                    "",
-                    "",
-                    "You kicked the militia out of the dungeon.",
-                ])
+                buffer.append((
+                    "[color=#FF999999]With the milita defeated, you can put your feet up and read your newspaper."
+                    " But you lost it somewhere in the dungeon...[/color]"
+                ))
 
             buffer.append("")
 
@@ -165,7 +160,7 @@ class DisplayProcessor(Processor):
                 buffer.append("You didn't kill anyone.")
             else:
                 buffer.extend([
-                    f"You killed {sum(player.kills.values())} enemies, including:",
+                    f"You killed {sum(player.kills.values())} enemies:",
                     "",
                 ])
 
@@ -439,4 +434,8 @@ class DisplayProcessor(Processor):
 
         for row, (message, color) in enumerate(self.buffer):
             terminal.color(color)
-            terminal.printf(34, row + 7, message)
+            terminal.printf(34, row + 7, (
+                message
+                .replace("(z)", "[color=#FFFF0000](z)[/color]")
+                .replace("(x)", "[color=#FF0000FF](x)[/color]")
+            ))

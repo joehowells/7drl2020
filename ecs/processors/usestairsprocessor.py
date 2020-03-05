@@ -25,7 +25,7 @@ class UseStairsProcessor(Processor):
                     priority=-100,
                 ))
                 self.world.create_entity(Message(
-                    text=f"Press [[Z+X]] to return to the title screen...",
+                    text=f"Press (z) and (x) to continue...",
                     priority=-200,
                 ))
             else:

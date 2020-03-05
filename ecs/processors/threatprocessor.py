@@ -63,7 +63,7 @@ class ThreatProcessor(Processor):
                     priority=-100,
                 ))
                 self.world.create_entity(Message(
-                    text=f"Press (x) and (y) to continue...",
+                    text=f"Press (z) and (x) to continue...",
                     priority=-200,
                 ))
 
