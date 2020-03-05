@@ -166,6 +166,40 @@ def make_elite_archer(x: int, y: int) -> List[Any]:
     ]
 
 
+def make_mid_boss(x: int, y: int) -> List[Any]:
+    return [
+        Display(
+            code=0x0032,
+            color=0xFFFFFFFF,
+        ),
+        Monster(
+            name="militia commander",
+            threat=[6, 4],
+            defend=5,
+            health=3,
+            thunder_immune=True,
+        ),
+        Position(x, y),
+    ]
+
+
+def make_end_boss(x: int, y: int) -> List[Any]:
+    return [
+        Display(
+            code=0x0031,
+            color=0xFFFFFFFF,
+        ),
+        Monster(
+            name="militia captain",
+            threat=[8, 6],
+            defend=7,
+            health=5,
+            thunder_immune=True,
+        ),
+        Position(x, y),
+    ]
+
+
 def get_monster_factory(level: int = 0) -> Callable[[int, int], List[Any]]:
     if level <= 0:
         return choice([
@@ -179,7 +213,7 @@ def get_monster_factory(level: int = 0) -> Callable[[int, int], List[Any]]:
             make_archer,
         ])
 
-    if level <= 1:
+    if level <= 2:
         return choice([
             make_soldier,
             make_soldier,
@@ -191,21 +225,7 @@ def get_monster_factory(level: int = 0) -> Callable[[int, int], List[Any]]:
             make_archer,
         ])
 
-    if level <= 2:
-        return choice([
-            make_soldier,
-            make_soldier,
-            make_elite_soldier,
-            make_elite_soldier,
-            make_defender,
-            make_officer,
-            make_assassin,
-            make_archer,
-            make_elite_defender,
-            make_elite_officer,
-        ])
-
-    if level <= 2:
+    if level <= 3:
         return choice([
             make_soldier,
             make_soldier,

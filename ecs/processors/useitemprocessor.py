@@ -42,7 +42,7 @@ class UseItemProcessor(Processor):
 
                 if self.world.has_component(entity, ThunderScroll):
                     for monster_entity, (monster, _) in self.world.get_components(Monster, Targeted):
-                        self.world.delete_entity(monster_entity, Blinded())
+                        self.world.delete_entity(monster_entity, immediate=True)
                         self.world.create_entity(Message(
                             text=f"The {monster.name} is incinerated!",
                             color=0xFF00FFFF,

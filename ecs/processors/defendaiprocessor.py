@@ -60,10 +60,11 @@ class DefendAIProcessor(Processor):
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, ThunderScroll):
                 candidates = []
                 for monster_entity, (monster, _) in self.world.get_components(Monster, Visible):
-                    candidates.append((max(monster.threat), monster_entity, monster))
+                    if not monster.thunder_immune:
+                        candidates.append((max(monster.threat), monster_entity, monster))
 
                 if candidates:
-                    candidates.sort()
+                    candidates.sort(reverse=True)
                     _, monster_entity, monster = candidates[0]
                     self.world.add_component(monster_entity, Targeted())
                     self.world.add_component(entity, Targeted())
