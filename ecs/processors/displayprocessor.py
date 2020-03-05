@@ -143,15 +143,13 @@ class DisplayProcessor(Processor):
 
         for _, player in self.world.get_component(Player):
             if player.killer:
-                buffer.extend([
-                    "[color=#FF999999]Flavor text.[/color]",
-                    "",
-                    "",
-                    f"You were killed by {player.killer} on level {player.level + 1} of the dungeon.",
-                ])
+                buffer.append(f"You were killed by {player.killer} on level {player.level + 1} of the dungeon.")
             else:
                 buffer.extend([
-                    "[color=#FF999999]Flavor text.[/color]",
+                    (
+                        "[color=#FF999999]With the milita defeated, you can put your feet up and read your newspaper."
+                        "But you lost it somewhere in the dungeon...[/color]"
+                    ),
                     "",
                     "",
                     "You kicked the militia out of the dungeon.",
@@ -160,7 +158,7 @@ class DisplayProcessor(Processor):
             buffer.append("")
 
             if not player.kills:
-                buffer.append("You didn't kill any enemies.")
+                buffer.append("You didn't kill anyone.")
             else:
                 buffer.extend([
                     f"You killed {sum(player.kills.values())} enemies, including:",
