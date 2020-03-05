@@ -124,13 +124,13 @@ def move_dijkstra(world: World, game_map: Map, position: Position, key: Dijkstra
         if strict:
             if new_dijkstra == old_dijkstra:
                 continue
+
+        if reverse:
+            if new_dijkstra < old_dijkstra:
+                continue
         else:
-            if reverse:
-                if new_dijkstra < old_dijkstra:
-                    continue
-            else:
-                if new_dijkstra > old_dijkstra:
-                    continue
+            if new_dijkstra > old_dijkstra:
+                continue
 
         if reverse:
             new_dijkstra = -new_dijkstra
