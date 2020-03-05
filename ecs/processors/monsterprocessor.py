@@ -4,6 +4,7 @@ from esper import Processor
 
 from constants import DijkstraMap
 from ecs.components.awake import Awake
+from ecs.components.blinded import Blinded
 from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.position import Position

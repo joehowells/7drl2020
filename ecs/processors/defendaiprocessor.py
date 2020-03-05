@@ -10,6 +10,7 @@ from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
+from ecs.components.smokebomb import SmokeBomb
 from ecs.components.targeted import Targeted
 from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.visible import Visible
@@ -26,6 +27,16 @@ class DefendAIProcessor(Processor):
 
         if player.health < 10:
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, HealingPotion):
+                self.world.add_component(entity, Targeted())
+                player.defend_action = Action(
+                    action_type=ActionType.USE_ITEM,
+                    anger=-20,
+                    nice_name=f"Use {item.name}",
+                )
+                return
+
+        if player.actual_threat > 0:
+            for entity, (item, _, _) in self.world.get_components(Item, Inventory, SmokeBomb):
                 self.world.add_component(entity, Targeted())
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,

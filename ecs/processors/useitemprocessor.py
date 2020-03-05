@@ -3,15 +3,19 @@ from random import randint
 from esper import Processor, World
 
 from action import ActionType
+from ecs.components.blinded import Blinded
 from ecs.components.blinkscroll import BlinkScroll
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.item import Item
 from ecs.components.map import Map
 from ecs.components.message import Message
+from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
+from ecs.components.smokebomb import SmokeBomb
 from ecs.components.targeted import Targeted
 from ecs.components.teleportscroll import TeleportScroll
+from ecs.components.visible import Visible
 from functions import move, get_blocked_tiles
 
 
@@ -31,6 +35,10 @@ class UseItemProcessor(Processor):
 
                 if self.world.has_component(entity, HealingPotion):
                     player.health = min(player.health + 2, 10)
+
+                if self.world.has_component(entity, SmokeBomb):
+                    for monster_entity, _ in self.world.get_components(Monster, Visible):
+                        self.world.add_component(monster_entity, Blinded())
 
                 if self.world.has_component(entity, BlinkScroll):
                     _, game_map = next(iter(self.world.get_component(Map)))

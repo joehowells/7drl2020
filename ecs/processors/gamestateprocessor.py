@@ -7,6 +7,7 @@ from ecs.processors.angerprocessor import AngerProcessor
 from ecs.processors.attackaiprocessor import AttackAIProcessor
 from ecs.processors.awakeprocessor import AwakeProcessor
 from ecs.processors.attackprocessor import AttackProcessor
+from ecs.processors.blindedprocessor import BlindedProcessor
 from ecs.processors.cleanuptargetsprocessor import CleanupTargetsProcessor
 from ecs.processors.defendaiprocessor import DefendAIProcessor
 from ecs.processors.exploremapprocessor import ExploreMapProcessor
@@ -58,6 +59,7 @@ class GameStateProcessor(Processor):
         self.world.add_processor(AngerProcessor())
         self.world.add_processor(PlayerMapProcessor())
 
+        self.world.add_processor(BlindedProcessor())
         self.world.add_processor(MonsterProcessor())
         self.world.add_processor(ThreatProcessor())
         self.world.add_processor(TrapProcessor())
@@ -97,6 +99,7 @@ class GameStateProcessor(Processor):
         self.world.remove_processor(AngerProcessor)
         self.world.remove_processor(PlayerMapProcessor)
 
+        self.world.remove_processor(BlindedProcessor)
         self.world.remove_processor(MonsterProcessor)
         self.world.remove_processor(ThreatProcessor)
         self.world.remove_processor(TrapProcessor)

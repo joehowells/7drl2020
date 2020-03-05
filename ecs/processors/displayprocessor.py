@@ -6,6 +6,7 @@ from bearlibterminal import terminal
 from esper import Processor, World
 
 # from constants import DijkstraMap
+from ecs.components.blinded import Blinded
 from ecs.components.display import Display
 from ecs.components.gamestate import GameState
 from ecs.components.inventory import Inventory
@@ -232,6 +233,13 @@ class DisplayProcessor(Processor):
             else:
                 bkcolor = 0xFF000000
                 color = 0xFF666666
+
+            if self.world.has_component(entity, Blinded):
+                bkcolor = 0xFFFFFFFF
+                color = 0xFF000000
+
+                bkcolor = filter_color(bkcolor, player)
+                color = filter_color(color, player)
 
             terminal.bkcolor(bkcolor)
             terminal.color(color)

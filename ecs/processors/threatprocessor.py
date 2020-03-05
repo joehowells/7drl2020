@@ -2,6 +2,7 @@ from random import randint, choices
 
 from esper import Processor
 
+from ecs.components.blinded import Blinded
 from ecs.components.dead import Dead
 from ecs.components.message import Message
 from ecs.components.monster import Monster
@@ -21,15 +22,22 @@ class ThreatProcessor(Processor):
         weights = []
 
         for entity, (monster, visible) in self.world.get_components(Monster, Visible):
+            if self.world.has_component(entity, Blinded):
+                self.world.create_entity(Message(
+                    text=f"The {monster.name} is blinded by smoke.",
+                    color=0xFFFFFFFF,
+                ))
+                continue
+
             threat = max(0, max(monster.threat) - player.defend)
             player.visible_threat += threat
 
-        for entity, (monster, threatening) in self.world.get_components(Monster, Threatening):
-            threat = max(0, threatening.threat - player.defend)
-            player.actual_threat += threat
+            for threatening in self.world.try_component(entity, Threatening):
+                threat = max(0, threatening.threat - player.defend)
+                player.actual_threat += threat
 
-            monsters.append(monster)
-            weights.append(threat)
+                monsters.append(monster)
+                weights.append(threat)
 
         player.visible_threat = min(max(player.visible_threat, 0), 20)
         player.actual_threat = min(max(player.actual_threat, 0), 20)
