@@ -110,6 +110,9 @@ class DisplayProcessor(Processor):
         return attack_targets, defend_targets, both_targets
 
     def draw_title_screen(self):
+        # Clear the message buffer on first draw to get rid of messages from previous game
+        self.buffer = []
+
         terminal.clear()
 
         terminal.bkcolor(0xFF000000)
