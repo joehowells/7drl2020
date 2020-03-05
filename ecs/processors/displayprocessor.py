@@ -106,8 +106,17 @@ class DisplayProcessor(Processor):
         terminal.bkcolor(0xFF000000)
         terminal.color(0xFFFFFFFF)
         terminal.clear()
-        terminal.printf(0, 0, "Title Screen")
-        terminal.printf(0, 0, "Press [[Z+X]] to start ...")
+
+        with open("data/title_screen.txt") as file:
+            terminal.puts(
+                x=5,
+                y=0,
+                s=file.read(),
+                width=74,
+                height=21,
+                align=terminal.TK_ALIGN_CENTER | terminal.TK_ALIGN_MIDDLE,
+            )
+
         terminal.refresh()
 
     def draw_main_game(self):
