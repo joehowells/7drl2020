@@ -175,7 +175,7 @@ class DisplayProcessor(Processor):
                     plural = "s" if value > 1 else ""
                     kills.append(f"{value} {key}{plural}")
 
-                if len(kills) % 1:
+                if len(kills) % 2:
                     kills.append("")
 
                 for one, two in zip(kills[::2], kills[1::2]):
