@@ -334,11 +334,11 @@ def get_monster_factory(level: int = 0) -> Callable[[int, int], List[Any]]:
 
 def get_item_factory() -> Callable[[int, int], List[Any]]:
     return choice([
-        # make_healing_potion,
-        # make_healing_potion,
-        # make_healing_potion,
-        # make_blink_scroll,
-        # make_blink_scroll,
-        # make_teleport_scroll,
+        make_healing_potion,
+        make_healing_potion,
+        make_healing_potion,
+        make_blink_scroll,
+        make_blink_scroll,
+        make_teleport_scroll,
         make_smoke_bomb,
     ])
