@@ -4,7 +4,7 @@ from typing import List, Any, Optional
 from ecs.components.map import Map
 from ecs.components.player import Player
 from factories.entities import make_trap, make_player, make_stairs
-from factories.items import get_item_factory, make_weapon
+from factories.items import get_item_factory, make_weapon, make_armour
 from factories.map import Room
 from factories.monsters import get_monster_factory, make_mid_boss, make_end_boss
 
@@ -114,7 +114,7 @@ def make_armour_room(game_map: Map, entities: List[List[Any]], room: Room, level
         return
 
     x, y = cells.pop()
-    entity = make_weapon(x, y)
+    entity = make_armour(x, y)
     entities.append(entity)
 
     for _ in range(randint(1, 2)):
