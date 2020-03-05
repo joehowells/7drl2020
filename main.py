@@ -24,7 +24,7 @@ def terminal_context():
 
 class Main:
     def __init__(self):
-        self.world = World(timed=True)
+        self.world = World()
 
         self.world.add_processor(DisplayProcessor(), priority=-100)
         self.world.add_processor(InputProcessor(), priority=-200)
@@ -35,9 +35,6 @@ class Main:
     def core_game_loop(self):
         while True:
             self.world.process()
-
-            if hasattr(self.world, "process_times"):
-                print(self.world.process_times)
 
 
 if __name__ == "__main__":
