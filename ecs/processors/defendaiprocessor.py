@@ -2,6 +2,7 @@ from esper import Processor, World
 
 from action import Action, ActionType
 from constants import DijkstraMap
+from ecs.components.boss import Boss
 from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.inventory import Inventory
@@ -60,7 +61,7 @@ class DefendAIProcessor(Processor):
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, ThunderScroll):
                 candidates = []
                 for monster_entity, (monster, _) in self.world.get_components(Monster, Visible):
-                    if not monster.thunder_immune:
+                    if not self.world.has_component(monster_entity, Boss):
                         candidates.append((max(monster.threat), monster_entity, monster))
 
                 if candidates:

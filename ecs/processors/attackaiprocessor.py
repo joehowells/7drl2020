@@ -4,6 +4,7 @@ from esper import Processor
 
 from action import Action, ActionType
 from constants import DijkstraMap
+from ecs.components.boss import Boss
 from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
@@ -67,6 +68,18 @@ class AttackAIProcessor(Processor):
                 nice_name="Charge",
             )
             return
+
+        for _, (_, monster) in self.world.get_components(Boss, Monster):
+            target = move_dijkstra(self.world, game_map, player_position, DijkstraMap.EXPLORE)
+
+            if target:
+                player.attack_action = Action(
+                    action_type=ActionType.MOVE,
+                    anger=-1,
+                    target=target,
+                    nice_name=f"Find {monster.name}",
+                )
+                return
 
         for entity, (position, _, _) in self.world.get_components(Position, Stairs, Coincident):
             player.attack_action = Action(

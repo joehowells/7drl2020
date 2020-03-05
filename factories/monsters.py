@@ -1,6 +1,7 @@
 from random import choice
 from typing import List, Any, Callable
 
+from ecs.components.boss import Boss
 from ecs.components.display import Display
 from ecs.components.monster import Monster
 from ecs.components.position import Position
@@ -185,10 +186,10 @@ def make_mid_boss(x: int, y: int) -> List[Any]:
             threat=[6, 4],
             defend=5,
             health=3,
-            thunder_immune=True,
             article="the",
         ),
         Position(x, y),
+        Boss(),
     ]
 
 
@@ -203,10 +204,10 @@ def make_end_boss(x: int, y: int) -> List[Any]:
             threat=[8, 6],
             defend=7,
             health=5,
-            thunder_immune=True,
             article="the",
         ),
         Position(x, y),
+        Boss(),
     ]
 
 

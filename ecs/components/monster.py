@@ -9,4 +9,3 @@ class Monster:
     threat: List[int] = field(default_factory=lambda: [1])
     health: int = 1
     defend: int = 1
-    thunder_immune: bool = False
