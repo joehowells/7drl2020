@@ -25,9 +25,8 @@ class TrapProcessor(Processor):
                 if player.action.action_type is ActionType.ATTACK:
                     trap_activated = False
                     for entity, (trap, position, _) in self.world.get_components(Trap, Position, Visible):
-                        trap_activated = True
-
                         if (position.x, position.y) not in blocked:
+                            trap_activated = True
                             factory = get_monster_factory(player.level)
                             components = factory(position.x, position.y)
                             components.extend([
