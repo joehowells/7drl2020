@@ -29,15 +29,6 @@ from ecs.processors.visionprocessor import VisionProcessor
 from factories.world import make_world
 
 HI_PROCESSORS: List[Type[Processor]] = [
-    UseStairsProcessor,
-    UseItemProcessor,
-    AttackProcessor,
-    GetItemProcessor,
-    MoveProcessor,
-
-    AngerProcessor,
-    PlayerMapProcessor,
-
     BlindedProcessor,
     MonsterProcessor,
     ThreatProcessor,
