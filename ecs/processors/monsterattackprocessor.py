@@ -2,6 +2,7 @@ from random import choices, randint
 
 from esper import Processor, World
 
+import script
 from ecs.components.dead import Dead
 from ecs.components.message import Message
 from ecs.components.monster import Monster
@@ -29,7 +30,7 @@ class MonsterAttackProcessor(Processor):
 
             if randint(0, 19) < sum(weights):
                 self.world.create_entity(Message(
-                    text=f"[color=#FFFFFF00]The {monster.name} hits![/color]",
+                    text=script.MONSTER_HIT.format(name=monster.name),
                     priority=40,
                 ))
 
@@ -39,16 +40,16 @@ class MonsterAttackProcessor(Processor):
                     player.killer = f"{monster.article} {monster.name}"
                     self.world.add_component(entity, Dead())
                     self.world.create_entity(Message(
-                        text=f"You die...",
+                        text=script.MONSTER_KILL,
                         priority=-100,
                     ))
                     self.world.create_entity(Message(
-                        text=f"Press [color=#FFFF0000](z)[/color] and [color=#FF0000FF](x)[/color] to continue...",
+                        text=script.GAME_OVER,
                         priority=-200,
                     ))
 
             else:
                 self.world.create_entity(Message(
-                    text=f"[color=#FF666666]The {monster.name} misses you.[/color]",
+                    text=script.MONSTER_MISS.format(name=monster.name),
                     priority=40,
                 ))

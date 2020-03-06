@@ -1,5 +1,6 @@
 from esper import Processor, World
 
+import script
 from action import ActionType
 from ecs.components.awake import Awake
 from ecs.components.lastknownposition import LastKnownPosition
@@ -17,28 +18,28 @@ class TrapProcessor(Processor):
     def process(self):
         self.world: World
 
-        _, game_map = next(iter(self.world.get_component(Map)))
-        _, player = next(iter(self.world.get_component(Player)))
-        blocked = get_blocked_tiles(self.world)
+        for _, game_map in self.world.get_component(Map):
+            for _, player in self.world.get_component(Player):
+                blocked = get_blocked_tiles(self.world)
 
-        if player.action.action_type is ActionType.ATTACK:
-            sprung_trap = False
-            for entity, (trap, position, _) in self.world.get_components(Trap, Position, Visible):
-                sprung_trap = True
+                if player.action.action_type is ActionType.ATTACK:
+                    trap_activated = False
+                    for entity, (trap, position, _) in self.world.get_components(Trap, Position, Visible):
+                        trap_activated = True
 
-                if (position.x, position.y) not in blocked:
-                    factory = get_monster_factory(player.level)
-                    components = factory(position.x, position.y)
-                    components.extend([
-                        Visible(),
-                        Awake(),
-                        LastKnownPosition(position.x, position.y),
-                    ])
-                    self.world.create_entity(*components)
-                    self.world.delete_entity(entity)
+                        if (position.x, position.y) not in blocked:
+                            factory = get_monster_factory(player.level)
+                            components = factory(position.x, position.y)
+                            components.extend([
+                                Visible(),
+                                Awake(),
+                                LastKnownPosition(position.x, position.y),
+                            ])
+                            self.world.create_entity(*components)
+                            self.world.delete_entity(entity)
 
-            if sprung_trap:
-                self.world.create_entity(Message(
-                    text="[color=#FFFFFF00]The noise attracts more enemies![/color]",
-                    priority=30,
-                ))
+                    if trap_activated:
+                        self.world.create_entity(Message(
+                            text=script.TRAP,
+                            priority=30,
+                        ))
