@@ -4,10 +4,9 @@ from typing import List, Type
 from esper import Processor, World
 
 from ecs.components.gamestate import GameState
-from ecs.components.message import Message
 from ecs.processors.angerprocessor import AngerProcessor
 from ecs.processors.attackaiprocessor import AttackAIProcessor
-from ecs.processors.attackprocessor import AttackProcessor
+from ecs.processors.playerattackprocessor import PlayerAttackProcessor
 from ecs.processors.awakeprocessor import AwakeProcessor
 from ecs.processors.blindedprocessor import BlindedProcessor
 from ecs.processors.cleanuptargetsprocessor import CleanupTargetsProcessor
@@ -15,6 +14,7 @@ from ecs.processors.defendaiprocessor import DefendAIProcessor
 from ecs.processors.exploremapprocessor import ExploreMapProcessor
 from ecs.processors.getitemprocessor import GetItemProcessor
 from ecs.processors.itemmapprocessor import ItemMapProcessor
+from ecs.processors.monsterattackprocessor import MonsterAttackProcessor
 from ecs.processors.monstermapprocessor import MonsterMapProcessor
 from ecs.processors.monsterprocessor import MonsterProcessor
 from ecs.processors.moveprocessor import MoveProcessor
@@ -32,7 +32,7 @@ from factories.world import make_world
 HI_PROCESSORS: List[Type[Processor]] = [
     BlindedProcessor,
     MonsterProcessor,
-    ThreatProcessor,
+    MonsterAttackProcessor,
     TrapProcessor,
 
     VisionProcessor,
@@ -46,6 +46,7 @@ HI_PROCESSORS: List[Type[Processor]] = [
     StairMapProcessor,
 
     SpatialProcessor,
+    ThreatProcessor,
 
     # Decide which options to give the player
     AttackAIProcessor,
@@ -57,7 +58,7 @@ LO_PROCESSORS: List[Type[Processor]] = [
     # Player actions
     UseStairsProcessor,
     UseItemProcessor,
-    AttackProcessor,
+    PlayerAttackProcessor,
     GetItemProcessor,
     MoveProcessor,
 

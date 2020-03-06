@@ -11,7 +11,7 @@ from ecs.components.position import Position
 from ecs.components.attacktarget import AttackTarget
 
 
-class AttackProcessor(Processor):
+class PlayerAttackProcessor(Processor):
     def process(self):
         self.world: World
 
