@@ -243,9 +243,11 @@ class DisplayProcessor(Processor):
                     color = 0xFF202020
 
                 if game_map.walkable[y][x]:
-                    code = game_map.floor_glyphs.get((x, y), 0x002E)
+                    code = 0x002E
                 else:
                     code = 0x0023
+
+                code = game_map.glyphs.get((x, y), code)
 
                 # if game_map.dijkstra[key][y][x] >= 0:
                 #     distance = int(game_map.dijkstra[key][y][x] / max_dijkstra * 767)

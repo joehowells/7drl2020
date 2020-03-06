@@ -1,8 +1,8 @@
 from collections import deque
 from dataclasses import dataclass
 from itertools import product, combinations
-from random import shuffle, randint, random
-from typing import List, Tuple, Set
+from random import shuffle, randint, random, choice
+from typing import List, Tuple, Set, Dict
 
 from constants import ROOM_SIZE, GRAPH_MIN_DEPTH, GRAPH_MAX_DEPTH
 
@@ -123,7 +123,7 @@ def link_box(link: Link) -> Room:
     )
 
 
-def make_map() -> Tuple[(List[List[bool]]), List[Room]]:
+def make_map() -> Tuple[(List[List[bool]]), List[Room], Dict[Tuple[int, int], int]]:
     nodes, links = make_graph()
     nodes, links = apply_offset(nodes, links)
     add_more_links(nodes, links)
@@ -180,7 +180,9 @@ def make_map() -> Tuple[(List[List[bool]]), List[Room]]:
 
     w = max(box.x2 for box in nodes.values()) + 1
     h = max(box.y2 for box in nodes.values()) + 1
+
     walkable = [[False for _ in range(w)] for _ in range(h)]
+    glyphs = {}
 
     for room in nodes.values():
         for x, y in product(range(room.x1, room.x2), range(room.y1, room.y2)):
@@ -190,16 +192,24 @@ def make_map() -> Tuple[(List[List[bool]]), List[Room]]:
         if room.w >= 7 and room.h >= 7 and random() < 0.2:
             for x, y in product(range(room.x1 + 2, room.x2 - 2), range(room.y1 + 2, room.y2 - 2)):
                 walkable[y][x] = False
-        elif room.w >= 5 and room.h >= 5:
-            if room.w % 2:  # and random() < 0.4:
-                for x in range(room.x1 + 1, room.x2 - 1, 2):
-                    walkable[room.y1 + 1][x] = False
-                    walkable[room.y2 - 2][x] = False
+        elif room.w >= 5 and room.h >= 5 and random() < 0.5:
+            if not room.w % 2 and not room.h % 2:
+                for x, y in product(range(room.x1 + 1, room.x2 - 1), range(room.y1 + 1, room.y2 - 1)):
+                    glyphs[(x, y)] = 0x002B
+            else:
+                if room.w % 2:
+                    for x in range(room.x1 + 1, room.x2 - 1, 2):
+                        walkable[room.y1 + 1][x] = False
+                        walkable[room.y2 - 2][x] = False
+                        glyphs[(x, room.y1+1)] = 0x0030
+                        glyphs[(x, room.y2-2)] = 0x0030
 
-            if room.h % 2:  # and random() < 0.4:
-                for y in range(room.y1 + 1, room.y2 - 1, 2):
-                    walkable[y][room.x1 + 1] = False
-                    walkable[y][room.x2 - 2] = False
+                if room.h % 2:
+                    for y in range(room.y1 + 1, room.y2 - 1, 2):
+                        walkable[y][room.x1 + 1] = False
+                        walkable[y][room.x2 - 2] = False
+                        glyphs[(room.x1+1, y)] = 0x0030
+                        glyphs[(room.x2-2, y)] = 0x0030
 
     for room in h_links.values():
         for x, y in product(range(room.x1, room.x2), range(room.y1, room.y2)):
@@ -209,4 +219,8 @@ def make_map() -> Tuple[(List[List[bool]]), List[Room]]:
         for x, y in product(range(room.x1, room.x2), range(room.y1, room.y2)):
             walkable[y][x] = True
 
-    return walkable, list(nodes.values())
+    for x, y in product(range(w), range(h)):
+        if walkable[y][x] and (x, y) not in glyphs:
+            glyphs[(x, y)] = choice([0x0027, 0x002C, 0x002E, 0x0060])
+
+    return walkable, list(nodes.values()), glyphs
