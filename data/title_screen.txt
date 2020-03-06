@@ -2,11 +2,9 @@
 [color=#FF333333]another roguelike by jhowl[/color]
 
 
-[color=#FF999999]This is getting ridiculous.[/color]
+[color=#FF999999]This is getting ridiculous. You only left the dungeon for twenty minutes to buy a newspaper, and the local militia have moved in again.[/color]
 
-[color=#FF999999]You only left the dungeon for twenty minutes to buy a newspaper, and the local militia have already moved in.[/color]
-
-[color=#FF999999]No need for a plan ... you are unstoppable when angry, so kick them out![/color]
+[color=#FF999999]You[U+2019]re so angry that you can only think of kicking them out right now![/color]
 
 
 This dungeon crawler only uses the [color=#FFFF0000](z)[/color] and [color=#FF0000FF](x)[/color] keys.
