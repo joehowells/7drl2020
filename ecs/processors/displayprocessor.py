@@ -20,7 +20,7 @@ from ecs.components.message import Message
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
-from ecs.components.taunt import Taunted
+from ecs.components.taunted import Taunted
 from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.visible import Visible

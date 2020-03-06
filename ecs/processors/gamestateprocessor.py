@@ -21,6 +21,7 @@ from ecs.processors.moveprocessor import MoveProcessor
 from ecs.processors.playermapprocessor import PlayerMapProcessor
 from ecs.processors.spatialprocessor import SpatialProcessor
 from ecs.processors.stairmapprocessor import StairMapProcessor
+from ecs.processors.tauntedprocessor import TauntedProcessor
 from ecs.processors.threatprocessor import ThreatProcessor
 from ecs.processors.trapprocessor import TrapProcessor
 from ecs.processors.useitemprocessor import UseItemProcessor
@@ -47,6 +48,7 @@ HI_PROCESSORS: List[Type[Processor]] = [
 
     SpatialProcessor,
     ThreatProcessor,
+    TauntedProcessor,
 
     # Decide which options to give the player
     AttackAIProcessor,

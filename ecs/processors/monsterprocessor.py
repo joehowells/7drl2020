@@ -9,7 +9,8 @@ from ecs.components.message import Message
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.components.taunt import CanTaunt, Taunted
+from ecs.components.taunted import Taunted
+from ecs.components.cantaunt import CanTaunt
 from ecs.components.threatening import Threatening
 from ecs.components.visible import Visible
 from functions import move_dijkstra, move

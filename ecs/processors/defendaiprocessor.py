@@ -8,12 +8,11 @@ from ecs.components.healingpotion import HealingPotion
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
 from ecs.components.map import Map
-from ecs.components.message import Message
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
-from ecs.components.taunt import Taunted
+from ecs.components.taunted import Taunted
 from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.visible import Visible
@@ -28,23 +27,9 @@ class DefendAIProcessor(Processor):
         _, game_map = next(iter(self.world.get_component(Map)))
         player_entity, (player, player_position) = next(iter(self.world.get_components(Player, Position)))
 
-        for taunted in self.world.try_component(player_entity, Taunted):
-            if taunted.turns_left <= 0:
-                player.anger = min(max(player.anger - 10, 0), 100)
-                self.world.remove_component(player_entity, Taunted)
-                self.world.create_entity(Message(
-                    text="You snap out of your rage.",
-                    priority=25,
-                ))
-            else:
-                taunted.turns_left -= 1
-                player.anger = min(max(player.anger + 5, 0), 100)
-                player.defend_action = player.attack_action
-                self.world.create_entity(Message(
-                    text="[color=#FFFFFF00]Your rage clouds your judgement![/color]",
-                    priority=25,
-                ))
-                return
+        if self.world.has_component(player_entity, Taunted):
+            player.defend_action = player.attack_action
+            return
 
         if player.health < 9:
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, HealingPotion):

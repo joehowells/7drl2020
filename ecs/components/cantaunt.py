@@ -1,0 +1,2 @@
+class CanTaunt:
+    pass

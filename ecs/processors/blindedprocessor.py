@@ -6,7 +6,7 @@ from ecs.components.monster import Monster
 
 
 class BlindedProcessor(Processor):
-    """Handles the blinded status effect."""
+    """Handles the Blinded monster status effect."""
 
     def process(self):
         self.world: World
