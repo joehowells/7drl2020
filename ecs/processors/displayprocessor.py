@@ -373,7 +373,14 @@ class DisplayProcessor(Processor):
         draw_bar(46, 1, 20, 0xFF333333)
         draw_bar(46, 2, 20, 0xFF333333)
 
-        draw_bar(46, 0, player.health * 2)
+        if player.health <= 4:
+            color = 0xFFFF0000
+        elif player.health <= 8:
+            color = 0xFFFFFF00
+        else:
+            color = 0xFF00FF00
+
+        draw_bar(46, 0, player.health * 2, color)
         draw_bar(46, 1, player.anger // 5, 0xFFFF0000)
         draw_bar(46, 2, player.visible_threat, 0xFFFFFF00)
         draw_bar(46, 2, player.actual_threat, 0xFFFF0000)
