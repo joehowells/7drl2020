@@ -16,7 +16,7 @@ from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
 from ecs.components.teleportscroll import TeleportScroll
-from ecs.components.thunderscroll import ThunderScroll
+from ecs.components.firescroll import FireScroll
 from ecs.components.visible import Visible
 from functions import move, get_blocked_tiles, color_item_name
 
@@ -40,11 +40,11 @@ class UseItemProcessor(Processor):
                         for monster_entity, _ in self.world.get_components(Monster, Visible):
                             self.world.add_component(monster_entity, Blinded())
 
-                    if self.world.has_component(entity, ThunderScroll):
+                    if self.world.has_component(entity, FireScroll):
                         for monster_entity, (monster, _) in self.world.get_components(Monster, DefendTarget):
                             self.world.delete_entity(monster_entity, immediate=True)
                             self.world.create_entity(Message(
-                                text=script.ITEM_THUNDER.format(name=monster.name),
+                                text=script.ITEM_FIRE.format(name=monster.name),
                                 priority=45,
                             ))
                             player.kills[monster.name] += 1

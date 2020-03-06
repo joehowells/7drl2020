@@ -14,7 +14,7 @@ from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
 from ecs.components.taunted import Taunted
 from ecs.components.teleportscroll import TeleportScroll
-from ecs.components.thunderscroll import ThunderScroll
+from ecs.components.firescroll import FireScroll
 from ecs.components.visible import Visible
 from ecs.processors.spatialprocessor import Coincident
 from functions import move_dijkstra, color_item_name
@@ -53,7 +53,7 @@ class DefendAIProcessor(Processor):
                 )
                 return
 
-            for entity, (item, _, _) in self.world.get_components(Item, Inventory, ThunderScroll):
+            for entity, (item, _, _) in self.world.get_components(Item, Inventory, FireScroll):
                 candidates = []
                 for monster_entity, (monster, _) in self.world.get_components(Monster, Visible):
                     if not self.world.has_component(monster_entity, Boss):

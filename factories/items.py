@@ -8,7 +8,7 @@ from ecs.components.item import Item
 from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
 from ecs.components.teleportscroll import TeleportScroll
-from ecs.components.thunderscroll import ThunderScroll
+from ecs.components.firescroll import FireScroll
 
 
 def make_healing_potion(x: int, y: int) -> List[Any]:
@@ -41,7 +41,7 @@ def make_smoke_bomb(x: int, y: int) -> List[Any]:
     ]
 
 
-def make_thunder_scroll(x: int, y: int) -> List[Any]:
+def make_fire_scroll(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x003F,
@@ -49,9 +49,9 @@ def make_thunder_scroll(x: int, y: int) -> List[Any]:
             draw_order=-1,
         ),
         Item(
-            name="thunder scroll",
+            name="fire scroll",
         ),
-        ThunderScroll(),
+        FireScroll(),
         Position(x, y),
     ]
 
@@ -107,8 +107,8 @@ def get_item_factory() -> Callable[[int, int], List[Any]]:
         make_healing_potion,
         make_healing_potion,
         make_healing_potion,
-        make_thunder_scroll,
-        make_thunder_scroll,
+        make_fire_scroll,
+        make_fire_scroll,
         make_teleport_scroll,
         make_teleport_scroll,
         make_smoke_bomb,

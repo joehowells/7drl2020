@@ -21,5 +21,5 @@ STATUS_RAGE_END = "You snap out of your rage."
 STATUS_RAGE_CONTINUE = "[color=#FFFFFF00]Your rage clouds your judgement![/color]"
 
 ITEM_USE = "You use the {name}."
-ITEM_THUNDER = "[color=#FF00FFFF]You incinerate the {name}![/color]"
+ITEM_FIRE = "[color=#FF00FFFF]You incinerate the {name}![/color]"
 ITEM_TELEPORT_FAIL = "Your mind is elsewhere."

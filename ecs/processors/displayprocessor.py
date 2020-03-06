@@ -23,7 +23,7 @@ from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
 from ecs.components.taunted import Taunted
 from ecs.components.teleportscroll import TeleportScroll
-from ecs.components.thunderscroll import ThunderScroll
+from ecs.components.firescroll import FireScroll
 from ecs.components.visible import Visible
 from ecs.processors.spatialprocessor import Adjacent
 
@@ -420,7 +420,7 @@ class DisplayProcessor(Processor):
         inventory = min(max(inventory, 0), 9)
         terminal.printf(73, 4, f"[color=#FF6600FF]?[/color]: {inventory}")
 
-        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, ThunderScroll))
+        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, FireScroll))
         inventory = min(max(inventory, 0), 9)
         terminal.printf(73, 5, f"[color=#FFFF6600]?[/color]: {inventory}")
 
