@@ -1,3 +1,5 @@
+from random import randint
+
 from esper import Processor, World
 
 from action import ActionType
@@ -20,7 +22,7 @@ class AttackProcessor(Processor):
             for entity, (monster, _) in self.world.get_components(Monster, AttackTarget):
                 self.world.remove_component(entity, AttackTarget)
 
-                if player.attack > monster.defend:
+                if randint(0, monster.defend) < player.attack:
                     monster.health -= 1
                     if monster.health <= 0:
                         self.world.delete_entity(entity)
