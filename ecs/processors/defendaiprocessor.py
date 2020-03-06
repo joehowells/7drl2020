@@ -53,15 +53,6 @@ class DefendAIProcessor(Processor):
                 )
                 return
 
-            for entity, (item, _, _) in self.world.get_components(Item, Inventory, SmokeBomb):
-                self.world.add_component(entity, DefendTarget())
-                player.defend_action = Action(
-                    action_type=ActionType.USE_ITEM,
-                    anger=-20,
-                    nice_name=f"Use {color_item_name(self.world, entity)}",
-                )
-                return
-
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, ThunderScroll):
                 candidates = []
                 for monster_entity, (monster, _) in self.world.get_components(Monster, Visible):
@@ -80,14 +71,24 @@ class DefendAIProcessor(Processor):
                     )
                     return
 
-            for entity, (item, _, _) in self.world.get_components(Item, Inventory, TeleportScroll):
-                self.world.add_component(entity, DefendTarget())
-                player.defend_action = Action(
-                    action_type=ActionType.USE_ITEM,
-                    anger=-20,
-                    nice_name=f"Use {color_item_name(self.world, entity)}",
-                )
-                return
+            if player.actual_threat > 0:
+                for entity, (item, _, _) in self.world.get_components(Item, Inventory, SmokeBomb):
+                    self.world.add_component(entity, DefendTarget())
+                    player.defend_action = Action(
+                        action_type=ActionType.USE_ITEM,
+                        anger=-20,
+                        nice_name=f"Use {color_item_name(self.world, entity)}",
+                    )
+                    return
+
+                for entity, (item, _, _) in self.world.get_components(Item, Inventory, TeleportScroll):
+                    self.world.add_component(entity, DefendTarget())
+                    player.defend_action = Action(
+                        action_type=ActionType.USE_ITEM,
+                        anger=-20,
+                        nice_name=f"Use {color_item_name(self.world, entity)}",
+                    )
+                    return
 
             player.defend_action = Action(
                 action_type=ActionType.WAIT,
