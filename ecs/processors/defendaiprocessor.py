@@ -4,18 +4,18 @@ from action import Action, ActionType
 from constants import DijkstraMap
 from ecs.components.boss import Boss
 from ecs.components.defendtarget import DefendTarget
-from ecs.components.message import Message
-from ecs.components.taunt import Taunted
-from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
 from ecs.components.map import Map
+from ecs.components.message import Message
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
+from ecs.components.taunt import Taunted
 from ecs.components.teleportscroll import TeleportScroll
+from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.visible import Visible
 from ecs.processors.spatialprocessor import Coincident
 from functions import move_dijkstra, color_item_name
@@ -30,7 +30,7 @@ class DefendAIProcessor(Processor):
 
         for taunted in self.world.try_component(player_entity, Taunted):
             if taunted.turns_left <= 0:
-                player.anger = min(max(player.anger-10, 0), 100)
+                player.anger = min(max(player.anger - 10, 0), 100)
                 self.world.remove_component(player_entity, Taunted)
                 self.world.create_entity(Message(
                     text="You snap out of your rage.",
@@ -38,7 +38,7 @@ class DefendAIProcessor(Processor):
                 ))
             else:
                 taunted.turns_left -= 1
-                player.anger = min(max(player.anger+5, 0), 100)
+                player.anger = min(max(player.anger + 5, 0), 100)
                 player.defend_action = player.attack_action
                 self.world.create_entity(Message(
                     text="[color=#FFFFFF00]Your rage clouds your judgement![/color]",
@@ -56,16 +56,6 @@ class DefendAIProcessor(Processor):
                 )
                 return
 
-        if player.actual_threat > 0:
-            for entity, (item, _, _) in self.world.get_components(Item, Inventory, SmokeBomb):
-                self.world.add_component(entity, DefendTarget())
-                player.defend_action = Action(
-                    action_type=ActionType.USE_ITEM,
-                    anger=-20,
-                    nice_name=f"Use {color_item_name(self.world, entity)}",
-                )
-                return
-
         for _ in self.world.get_components(Monster, Visible):
             target = move_dijkstra(self.world, game_map, player_position, DijkstraMap.MONSTER, reverse=True)
 
@@ -75,6 +65,15 @@ class DefendAIProcessor(Processor):
                     anger=-1,
                     target=target,
                     nice_name="Retreat",
+                )
+                return
+
+            for entity, (item, _, _) in self.world.get_components(Item, Inventory, SmokeBomb):
+                self.world.add_component(entity, DefendTarget())
+                player.defend_action = Action(
+                    action_type=ActionType.USE_ITEM,
+                    anger=-20,
+                    nice_name=f"Use {color_item_name(self.world, entity)}",
                 )
                 return
 
