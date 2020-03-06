@@ -387,7 +387,7 @@ class DisplayProcessor(Processor):
                 terminal.printf(37, 5, f"{player.defend_action.nice_name}")
 
                 terminal.printf(68, 0, f"Attack: {player.attack:>2d}")
-                terminal.printf(68, 1, f"Defend: {player.defend:>2d}")
+                terminal.printf(68, 1, f"Armour: {player.defend:>2d}")
                 terminal.printf(68, 2, f"Level:  {player.level + 1:>2d}")
 
                 inventory = sum(1 for _ in self.world.get_components(Item, Inventory, HealingPotion))
