@@ -1,5 +1,6 @@
 from esper import Processor, World
 
+import script
 from ecs.components.blinded import Blinded
 from ecs.components.message import Message
 from ecs.components.monster import Monster
@@ -17,6 +18,6 @@ class BlindedProcessor(Processor):
             else:
                 blinded.turns_left -= 1
                 self.world.create_entity(Message(
-                    text=f"[color=#FF666666]The {monster.name} is blinded by smoke.[/color]",
+                    text=script.STATUS_BLIND_CONTINUE.format(name=monster.name),
                     priority=45,
                 ))

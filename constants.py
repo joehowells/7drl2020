@@ -12,10 +12,12 @@ class DijkstraMap(Enum):
 ROOM_SIZE: int = 9
 GRAPH_MIN_DEPTH: int = 2
 GRAPH_MAX_DEPTH: int = 4
-AWAKE_DISTANCE = 12
-MAX_LEVEL = 5
+AWAKE_DISTANCE: int = 12
+MAX_LEVEL: int = 5
 
+MAX_HEALTH: int = 10
 MAX_ANGER: int = 100
+MAX_THREAT: int = 20
 
 ANGER_TIER_1: int = 20
 ANGER_TIER_2: int = 40

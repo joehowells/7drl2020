@@ -1,5 +1,6 @@
 from esper import Processor, World
 
+import script
 from ecs.components.message import Message
 from ecs.components.player import Player
 from ecs.components.taunted import Taunted
@@ -15,12 +16,12 @@ class TauntedProcessor(Processor):
             if taunted.turns_left <= 0:
                 self.world.remove_component(entity, Taunted)
                 self.world.create_entity(Message(
-                    text="You snap out of your rage.",
+                    text=script.STATUS_RAGE_END,
                     priority=25,
                 ))
             else:
                 taunted.turns_left -= 1
                 self.world.create_entity(Message(
-                    text="[color=#FFFFFF00]Your rage clouds your judgement![/color]",
+                    text=script.STATUS_RAGE_CONTINUE,
                     priority=25,
                 ))
