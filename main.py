@@ -26,9 +26,9 @@ class Main:
     def __init__(self):
         self.world = World()
 
-        self.world.add_processor(DisplayProcessor(), priority=-100)
-        self.world.add_processor(InputProcessor(), priority=-200)
-        self.world.add_processor(GameStateProcessor(), priority=-300)
+        self.world.add_processor(DisplayProcessor(), priority=30)
+        self.world.add_processor(InputProcessor(), priority=20)
+        self.world.add_processor(GameStateProcessor(), priority=100)
 
         self.world.create_entity(GameState.TITLE_SCREEN)
 

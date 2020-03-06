@@ -28,7 +28,7 @@ from ecs.processors.visibilityprocessor import VisibilityProcessor
 from ecs.processors.visionprocessor import VisionProcessor
 from factories.world import make_world
 
-PROCESSORS: List[Type[Processor]] = [
+HI_PROCESSORS: List[Type[Processor]] = [
     UseStairsProcessor,
     UseItemProcessor,
     AttackProcessor,
@@ -56,9 +56,27 @@ PROCESSORS: List[Type[Processor]] = [
     SpatialProcessor,
 
     # Decide which options to give the player
-    CleanupTargetsProcessor,
     AttackAIProcessor,
     DefendAIProcessor,
+]
+
+# Processors that run after user input
+LO_PROCESSORS: List[Type[Processor]] = [
+    # Player actions
+    UseStairsProcessor,
+    UseItemProcessor,
+    AttackProcessor,
+    GetItemProcessor,
+    MoveProcessor,
+
+    # Update anger and combat bonuses
+    AngerProcessor,
+
+    # Update monster Dijkstra map
+    PlayerMapProcessor,
+
+    # Remove target components from all entities
+    CleanupTargetsProcessor,
 ]
 
 
@@ -84,17 +102,23 @@ class GameStateProcessor(Processor):
     def new_game(self):
         self.world: World
 
-        for processor in PROCESSORS:
-            self.world.add_processor(processor())
+        for processor in HI_PROCESSORS:
+            self.world.add_processor(processor(), priority=40)
+
+        for processor in LO_PROCESSORS:
+            self.world.add_processor(processor(), priority=10)
 
         entities = make_world()
 
         for entity in entities:
             self.world.create_entity(*entity)
 
+    # noinspection PyTypeChecker
     def end_game(self):
         self.world: World
 
-        for processor in PROCESSORS:
-            # noinspection PyTypeChecker
+        for processor in HI_PROCESSORS:
+            self.world.remove_processor(processor)
+
+        for processor in LO_PROCESSORS:
             self.world.remove_processor(processor)
