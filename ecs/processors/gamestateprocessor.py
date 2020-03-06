@@ -30,6 +30,7 @@ from ecs.processors.visibilityprocessor import VisibilityProcessor
 from ecs.processors.visionprocessor import VisionProcessor
 from factories.world import make_world
 
+# Processors that run before user input
 HI_PROCESSORS: List[Type[Processor]] = [
     BlindedProcessor,
     MonsterProcessor,
