@@ -23,9 +23,6 @@ class ThreatProcessor(Processor):
 
         for entity, (monster, visible) in self.world.get_components(Monster, Visible):
             if self.world.has_component(entity, Blinded):
-                self.world.create_entity(Message(
-                    text=f"[color=#FF666666]The {monster.name} is blinded by smoke.[/color]",
-                ))
                 continue
 
             threat = max(0, max(monster.threat) - player.defend)
