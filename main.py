@@ -14,7 +14,7 @@ def terminal_context():
     terminal.open()
     terminal.set("""
     window.title='Two Button Berserker';
-    font: data/UbuntuMono-R.ttf, size=12;
+    font: data/UbuntuMono-R.ttf, size=18;
     window.size=84x21;
     input.filter=[keyboard+];
     """)
