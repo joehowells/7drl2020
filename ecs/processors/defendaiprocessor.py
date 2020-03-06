@@ -18,7 +18,7 @@ from ecs.components.smokebomb import SmokeBomb
 from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.visible import Visible
 from ecs.processors.spatialprocessor import Coincident
-from functions import move_dijkstra
+from functions import move_dijkstra, color_item_name
 
 
 class DefendAIProcessor(Processor):
@@ -32,9 +32,7 @@ class DefendAIProcessor(Processor):
             if taunted.turns_left <= 0:
                 player.anger = min(max(player.anger-10, 0), 100)
                 self.world.remove_component(player_entity, Taunted)
-                self.world.create_entity(Message(
-                    text=f"You snap out of your rage.",
-                ))
+                self.world.create_entity(Message("You snap out of your rage."))
             else:
                 taunted.turns_left -= 1
                 player.anger = min(max(player.anger+5, 0), 100)
@@ -47,7 +45,7 @@ class DefendAIProcessor(Processor):
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
                     anger=-20,
-                    nice_name=f"Use {item.name}",
+                    nice_name=f"Use {color_item_name(self.world, entity)}",
                 )
                 return
 
@@ -57,7 +55,7 @@ class DefendAIProcessor(Processor):
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
                     anger=-20,
-                    nice_name=f"Use {item.name}",
+                    nice_name=f"Use {color_item_name(self.world, entity)}",
                 )
                 return
 
@@ -87,7 +85,7 @@ class DefendAIProcessor(Processor):
                     player.defend_action = Action(
                         action_type=ActionType.USE_ITEM,
                         anger=-20,
-                        nice_name=f"Use {item.name}",
+                        nice_name=f"Use {color_item_name(self.world, entity)}",
                     )
                     return
 
@@ -96,7 +94,7 @@ class DefendAIProcessor(Processor):
                 player.defend_action = Action(
                     action_type=ActionType.USE_ITEM,
                     anger=-20,
-                    nice_name=f"Use {item.name}",
+                    nice_name=f"Use {color_item_name(self.world, entity)}",
                 )
                 return
 
@@ -107,11 +105,11 @@ class DefendAIProcessor(Processor):
             )
             return
 
-        for _, (item, _) in self.world.get_components(Item, Coincident):
+        for entity, (item, _) in self.world.get_components(Item, Coincident):
             player.defend_action = Action(
                 action_type=ActionType.GET_ITEM,
                 anger=-1,
-                nice_name=f"Get {item.name}",
+                nice_name=f"Get {color_item_name(self.world, entity)}",
             )
             return
 

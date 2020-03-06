@@ -4,6 +4,8 @@ from typing import Generator, Tuple, Collection, List, Optional, Set
 from esper import World
 
 from constants import DijkstraMap
+from ecs.components.display import Display
+from ecs.components.item import Item
 from ecs.components.map import Map
 from ecs.components.monster import Monster
 from ecs.components.player import Player
@@ -164,3 +166,15 @@ def get_blocked_tiles(world: World) -> Set[Tuple[int, int]]:
         for _, (position, _) in world.get_components(Position, Monster)
     )
     return blocked
+
+
+def color_item_name(world: World, entity: int) -> str:
+    name = "item"
+    for item in world.try_component(entity, Item):
+        name = item.name
+
+    for display in world.try_component(entity, Display):
+        color = hex(display.color).upper()[2:]
+        return f"[color=#{color}]{name}[/color]"
+    else:
+        return name

@@ -39,6 +39,5 @@ class TrapProcessor(Processor):
 
             if sprung_trap:
                 self.world.create_entity(Message(
-                    text=f"Enemies appear from the stairs!",
-                    color=0xFFFFFF00,
+                    text="[color=#FFFFFF00]The noise attracts more enemies![/color]",
                 ))

@@ -1,5 +1,4 @@
 import itertools
-from textwrap import wrap
 from typing import Tuple, Set
 
 from bearlibterminal import terminal
@@ -428,20 +427,18 @@ class DisplayProcessor(Processor):
         # Sort by priority
         messages.sort(key=lambda m: m.priority, reverse=True)
 
+        prefix = "[color=#FF666666]>[/color] "
         for index, message in enumerate(messages):
-            for text in wrap(message.text, 50):
-                self.buffer.append((text, message.color, index == 0))
+            self.buffer.append(prefix + message.text)
+            prefix = "  "
 
         self.buffer = self.buffer[-14:]
+        s = "\n".join(self.buffer)
+        w, h = terminal.measure(s, 50, 14)
 
-        for row, (message, color, new_turn) in enumerate(self.buffer):
-            if new_turn:
-                terminal.color(0xFFFFFFFF)
-                terminal.put(34, row+7, 0x003E)
+        if h < 14:
+            align = terminal.TK_ALIGN_TOP
+        else:
+            align = terminal.TK_ALIGN_BOTTOM
 
-            terminal.color(color)
-            terminal.printf(36, row + 7, (
-                message
-                .replace("(z)", "[color=#FFFF0000](z)[/color]")
-                .replace("(x)", "[color=#FF0000FF](x)[/color]")
-            ))
+        terminal.puts(x=34, y=7, s=s, width=50, height=14, align=align)

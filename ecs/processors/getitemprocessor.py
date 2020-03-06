@@ -9,6 +9,7 @@ from ecs.components.message import Message
 from ecs.components.player import Player
 from ecs.components.position import Position
 from ecs.processors.spatialprocessor import Coincident
+from functions import color_item_name
 
 
 class GetItemProcessor(Processor):
@@ -25,25 +26,17 @@ class GetItemProcessor(Processor):
                     if equipment is Equipment.WEAPON:
 
                         if player.attack_equip >= 9:
-                            self.world.create_entity(Message(
-                                text="You cannot upgrade your weapon any further."
-                            ))
+                            self.world.create_entity(Message("You cannot upgrade your weapon any further."))
                         else:
                             player.attack_equip += 1
-                            self.world.create_entity(Message(
-                                text="You upgrade your weapon."
-                            ))
+                            self.world.create_entity(Message("You upgrade your weapon."))
 
                     if equipment is Equipment.ARMOUR:
                         if player.defend_equip >= 9:
-                            self.world.create_entity(Message(
-                                text="You cannot upgrade your armour any further!"
-                            ))
+                            self.world.create_entity(Message("You cannot upgrade your armour any further."))
                         else:
                             player.defend_equip += 1
-                            self.world.create_entity(Message(
-                                text="You upgrade your armour."
-                            ))
+                            self.world.create_entity(Message("You upgrade your armour."))
 
                     break
                 else:
@@ -54,5 +47,5 @@ class GetItemProcessor(Processor):
                     self.world.add_component(entity, Inventory())
 
                     self.world.create_entity(Message(
-                        text=f"You pick up the {item.name}."
+                        text=f"You pick up the {color_item_name(self.world, entity)}.",
                     ))

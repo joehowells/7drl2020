@@ -21,11 +21,11 @@ class UseStairsProcessor(Processor):
             if player.level >= MAX_LEVEL:
                 self.world.add_component(entity, Dead())
                 self.world.create_entity(Message(
-                    text=f"You have cleared out the dungeon!",
+                    text="You have cleared out the dungeon!",
                     priority=-100,
                 ))
                 self.world.create_entity(Message(
-                    text=f"Press (z) and (x) to continue...",
+                    text="Press [color=#FFFF0000](z)[/color] and [color=#FF0000FF](x)[/color] to continue...",
                     priority=-200,
                 ))
             else:

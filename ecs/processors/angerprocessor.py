@@ -40,15 +40,9 @@ class AngerProcessor(Processor):
         player.defend = player.base_defend + player.defend_equip + player.defend_bonus
 
         if new_tier > self.old_tier:
-            self.world.create_entity(Message(
-                text="Your anger makes you stronger!",
-                color=0xFFFF0000,
-            ))
+            self.world.create_entity(Message("[color=#FFFF0000]Your anger makes you stronger![/color]"))
 
         if new_tier < self.old_tier:
-            self.world.create_entity(Message(
-                text="You calm down.",
-                color=0xFF0000FF,
-            ))
+            self.world.create_entity(Message("[color=#FF0000FF]You calm down.[/color]"))
 
         self.old_tier = new_tier
