@@ -17,12 +17,11 @@ class MonsterMapProcessor(Processor):
     def process(self):
         self.world: World
 
-        _, game_map = next(iter(self.world.get_component(Map)))
+        for _, game_map in self.world.get_component(Map):
+            sources: Set[Tuple[int, int]] = set()
+            for _, (position, monster) in self.world.get_components(LastKnownPosition, Monster):
+                sources.add((position.x, position.y))
 
-        sources: Set[Tuple[int, int]] = set()
-        for _, (position, monster) in self.world.get_components(LastKnownPosition, Monster):
-            sources.add((position.x, position.y))
-
-        if self.sources != sources:
-            game_map.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(game_map, sources)
-            self.sources = sources
+            if self.sources != sources:
+                game_map.dijkstra[DijkstraMap.MONSTER] = dijkstra_map(game_map, sources)
+                self.sources = sources

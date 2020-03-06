@@ -41,16 +41,15 @@ class InputProcessor(Processor):
     def process(self):
         self.world: World
 
-        game_state_entity, game_state = next(iter(self.world.get_component(GameState)))
+        for game_state_entity, game_state in self.world.get_component(GameState):
+            if game_state is GameState.TITLE_SCREEN:
+                self.process_title_screen(game_state_entity)
 
-        if game_state is GameState.TITLE_SCREEN:
-            self.process_title_screen(game_state_entity)
+            if game_state is GameState.MAIN_GAME:
+                self.process_main_game(game_state_entity)
 
-        if game_state is GameState.MAIN_GAME:
-            self.process_main_game(game_state_entity)
-
-        if game_state is GameState.GAME_OVER:
-            self.process_game_over(game_state_entity)
+            if game_state is GameState.GAME_OVER:
+                self.process_game_over(game_state_entity)
 
     def process_title_screen(self, game_state_entity: int) -> None:
         self.world: World
@@ -79,23 +78,22 @@ class InputProcessor(Processor):
             if event == terminal.TK_CLOSE:
                 raise SystemExit
 
-            entity, player = next(iter(self.world.get_component(Player)))
+            for entity, player in self.world.get_component(Player):
+                if self.world.has_component(entity, Dead):
+                    check = self.check_both_keys(event)
 
-            if self.world.has_component(entity, Dead):
-                check = self.check_both_keys(event)
+                    if check:
+                        self.world.add_component(game_state_entity, GameState.GAME_OVER)
+                        return
 
-                if check:
-                    self.world.add_component(game_state_entity, GameState.GAME_OVER)
-                    return
+                else:
+                    if event == terminal.TK_Z:
+                        player.action = player.attack_action
+                        return
 
-            else:
-                if event == terminal.TK_Z:
-                    player.action = player.attack_action
-                    return
-
-                if event == terminal.TK_X:
-                    player.action = player.defend_action
-                    return
+                    if event == terminal.TK_X:
+                        player.action = player.defend_action
+                        return
 
     def process_game_over(self, game_state_entity: int) -> None:
         self.world: World

@@ -1,4 +1,4 @@
-from esper import Processor
+from esper import Processor, World
 
 from action import ActionType
 from ecs.components.map import Map
@@ -9,8 +9,9 @@ from functions import move
 
 class MoveProcessor(Processor):
     def process(self):
-        _, game_map = next(iter(self.world.get_component(Map)))
-        _, (position, player) = next(iter(self.world.get_components(Position, Player)))
+        self.world: World
 
-        if player.action.action_type is ActionType.MOVE and player.action.target:
-            move(position, player.action.target)
+        for _, game_map in self.world.get_component(Map):
+            for _, (position, player) in self.world.get_components(Position, Player):
+                if player.action.action_type is ActionType.MOVE and player.action.target:
+                    move(position, player.action.target)

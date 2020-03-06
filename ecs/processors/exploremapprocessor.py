@@ -16,13 +16,12 @@ class ExploreMapProcessor(Processor):
     def process(self):
         self.world: World
 
-        _, game_map = next(iter(self.world.get_component(Map)))
+        for _, game_map in self.world.get_component(Map):
+            sources: Set[Tuple[int, int]] = set()
+            for x, y in itertools.product(range(game_map.w), range(game_map.h)):
+                if not game_map.explored[y][x]:
+                    sources.add((x, y))
 
-        sources: Set[Tuple[int, int]] = set()
-        for x, y in itertools.product(range(game_map.w), range(game_map.h)):
-            if not game_map.explored[y][x]:
-                sources.add((x, y))
-
-        if self.sources != sources:
-            game_map.dijkstra[DijkstraMap.EXPLORE] = dijkstra_map(game_map, sources)
-            self.sources = sources
+            if self.sources != sources:
+                game_map.dijkstra[DijkstraMap.EXPLORE] = dijkstra_map(game_map, sources)
+                self.sources = sources

@@ -7,10 +7,10 @@ from esper import Processor, World
 from constants import MAX_ANGER
 from ecs.components.assassin import Assassin
 from ecs.components.attacktarget import AttackTarget
-# from constants import DijkstraMap
 from ecs.components.blinded import Blinded
 from ecs.components.defendtarget import DefendTarget
 from ecs.components.display import Display
+from ecs.components.firescroll import FireScroll
 from ecs.components.gamestate import GameState
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.inventory import Inventory
@@ -23,7 +23,6 @@ from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
 from ecs.components.taunted import Taunted
 from ecs.components.teleportscroll import TeleportScroll
-from ecs.components.firescroll import FireScroll
 from ecs.components.visible import Visible
 from ecs.processors.spatialprocessor import Adjacent
 
@@ -76,16 +75,15 @@ class DisplayProcessor(Processor):
     def process(self):
         self.world: World
 
-        _, state = next(iter(self.world.get_component(GameState)))
+        for _, state in self.world.get_component(GameState):
+            if state is GameState.TITLE_SCREEN:
+                self.draw_title_screen()
 
-        if state is GameState.TITLE_SCREEN:
-            self.draw_title_screen()
+            if state is GameState.MAIN_GAME:
+                self.draw_main_game()
 
-        if state is GameState.MAIN_GAME:
-            self.draw_main_game()
-
-        if state is GameState.GAME_OVER:
-            self.draw_game_over()
+            if state is GameState.GAME_OVER:
+                self.draw_game_over()
 
     def get_targets(self) -> Tuple[Set[Tuple[int, int]], Set[Tuple[int, int]], Set[Tuple[int, int]]]:
         """Get coordinates of all targeted tiles."""
@@ -215,225 +213,209 @@ class DisplayProcessor(Processor):
         terminal.refresh()
 
     def draw_map(self):
-        _, (player, position) = next(iter(self.world.get_components(Player, Position)))
-        x_offset = 16 - position.x
-        y_offset = 10 - position.y
+        for _, (player, position) in self.world.get_components(Player, Position):
+            x_offset = 16 - position.x
+            y_offset = 10 - position.y
 
-        _, game_map = next(iter(self.world.get_component(Map)))
+            for _, game_map in self.world.get_component(Map):
+                for xc, yc in itertools.product(range(33), range(21)):
+                    x = xc - x_offset
+                    y = yc - y_offset
 
-        # key = DijkstraMap.PLAYER
-        # max_dijkstra = max(max(value for value in row) for row in game_map.dijkstra[key])
+                    if not 0 <= x < game_map.w or not 0 <= y < game_map.h:
+                        continue
 
-        for xc, yc in itertools.product(range(33), range(21)):
-            x = xc - x_offset
-            y = yc - y_offset
+                    if game_map.explored[y][x]:
+                        if game_map.visible[y][x]:
+                            if game_map.walkable[y][x]:
+                                bkcolor = 0xFF100800
+                                color = 0xFF281400
+                            else:
+                                bkcolor = 0xFF301800
+                                color = 0xFF582C00
 
-            if not 0 <= x < game_map.w or not 0 <= y < game_map.h:
-                continue
+                            bkcolor = filter_color(bkcolor, player)
+                            color = filter_color(color, player)
+                        else:
+                            bkcolor = 0xFF000000
+                            color = 0xFF202020
 
-            if game_map.explored[y][x]:
-                if game_map.visible[y][x]:
-                    if game_map.walkable[y][x]:
-                        bkcolor = 0xFF100800
-                        color = 0xFF281400
-                    else:
-                        bkcolor = 0xFF301800
-                        color = 0xFF582C00
+                        if game_map.walkable[y][x]:
+                            code = 0x002E
+                        else:
+                            code = 0x0023
+
+                        code = game_map.glyphs.get((x, y), code)
+
+                        terminal.bkcolor(bkcolor)
+                        terminal.color(color)
+
+                        terminal.put(x + x_offset, y + y_offset, code)
+
+    def draw_entities(self):
+        for _, (player, player_position) in self.world.get_components(Player, Position):
+            # Set player offset relative to display
+            x_offset = 16 - player_position.x
+            y_offset = 10 - player_position.y
+
+            # Set the bounding box for filtering out entities
+            x_min = player_position.x - 16
+            x_max = player_position.x + 16
+            y_min = player_position.y - 10
+            y_max = player_position.y + 10
+
+            entity_pairs = self.world.get_components(Display, LastKnownPosition)
+
+            if not entity_pairs:
+                return
+
+            entity_pairs.sort(key=lambda pair: pair[1][0].draw_order)
+
+            for entity, (display, position) in entity_pairs:
+                if not x_min <= position.x <= x_max or not y_min <= position.y <= y_max:
+                    continue
+
+                if self.world.has_component(entity, Visible):
+                    bkcolor = 0xFF100800
+                    color = display.color
 
                     bkcolor = filter_color(bkcolor, player)
                     color = filter_color(color, player)
                 else:
                     bkcolor = 0xFF000000
-                    color = 0xFF202020
+                    color = 0xFF666666
 
-                if game_map.walkable[y][x]:
-                    code = 0x002E
-                else:
-                    code = 0x0023
+                if self.world.has_component(entity, Blinded):
+                    bkcolor = 0xFFFFFFFF
+                    color = 0xFF000000
 
-                code = game_map.glyphs.get((x, y), code)
-
-                # if game_map.dijkstra[key][y][x] >= 0:
-                #     distance = int(game_map.dijkstra[key][y][x] / max_dijkstra * 767)
-                #     if 0 <= distance <= 255:
-                #         color = terminal.color_from_argb(255, 255, 255 - distance, 0)
-                #     elif 256 <= distance <= 511:
-                #         color = terminal.color_from_argb(255, 255, 0, distance - 256)
-                #     elif 512 <= distance <= 767:
-                #         color = terminal.color_from_argb(255, 767 - distance, 0, 255)
+                    bkcolor = filter_color(bkcolor, player)
+                    color = filter_color(color, player)
 
                 terminal.bkcolor(bkcolor)
                 terminal.color(color)
 
-                terminal.put(x + x_offset, y + y_offset, code)
+                # Render assassins as underscores until they are in range
+                if self.world.has_component(entity, Assassin) and not self.world.has_component(entity, Adjacent):
+                    code = 0x005F
+                else:
+                    code = display.code
 
-    def draw_entities(self):
-        _, (player, position) = next(iter(self.world.get_components(Player, Position)))
-
-        # Set player offset relative to display
-        x_offset = 16 - position.x
-        y_offset = 10 - position.y
-
-        # Set the bounding box for filtering out entities
-        x_min = position.x - 16
-        x_max = position.x + 16
-        y_min = position.y - 10
-        y_max = position.y + 10
-
-        entity_pairs = self.world.get_components(Display, LastKnownPosition)
-
-        if not entity_pairs:
-            return
-
-        entity_pairs.sort(key=lambda pair: pair[1][0].draw_order)
-
-        for entity, (display, position) in entity_pairs:
-            if not x_min <= position.x <= x_max or not y_min <= position.y <= y_max:
-                continue
-
-            if self.world.has_component(entity, Visible):
-                bkcolor = 0xFF100800
-                color = display.color
-
-                bkcolor = filter_color(bkcolor, player)
-                color = filter_color(color, player)
-            else:
-                bkcolor = 0xFF000000
-                color = 0xFF666666
-
-            if self.world.has_component(entity, Blinded):
-                bkcolor = 0xFFFFFFFF
-                color = 0xFF000000
-
-                bkcolor = filter_color(bkcolor, player)
-                color = filter_color(color, player)
-
-            terminal.bkcolor(bkcolor)
-            terminal.color(color)
-
-            # Render assassins as underscores until they are in range
-            if self.world.has_component(entity, Assassin) and not self.world.has_component(entity, Adjacent):
-                code = 0x005F
-            else:
-                code = display.code
-
-            terminal.put(
-                position.x + x_offset,
-                position.y + y_offset,
-                code,
-            )
+                terminal.put(
+                    position.x + x_offset,
+                    position.y + y_offset,
+                    code,
+                )
 
     def highlight_targets(self):
         attack_targets, defend_targets, both_targets = self.get_targets()
 
-        _, (_, position) = next(iter(self.world.get_components(Player, Position)))
+        for _, (_, position) in self.world.get_components(Player, Position):
+            # Set player offset relative to display
+            x_offset = 16 - position.x
+            y_offset = 10 - position.y
 
-        # Set player offset relative to display
-        x_offset = 16 - position.x
-        y_offset = 10 - position.y
+            # Set the bounding box for filtering out entities
+            x_min = position.x - 16
+            x_max = position.x + 16
+            y_min = position.y - 10
+            y_max = position.y + 10
 
-        # Set the bounding box for filtering out entities
-        x_min = position.x - 16
-        x_max = position.x + 16
-        y_min = position.y - 10
-        y_max = position.y + 10
+            terminal.color(0xFF000000)
 
-        terminal.color(0xFF000000)
+            terminal.bkcolor(0xFFFF0000)
+            for x, y in attack_targets:
+                if x_min <= position.x <= x_max and y_min <= position.y <= y_max:
+                    x += x_offset
+                    y += y_offset
+                    terminal.put(x, y, terminal.pick(x, y))
 
-        terminal.bkcolor(0xFFFF0000)
-        for x, y in attack_targets:
-            if x_min <= position.x <= x_max and y_min <= position.y <= y_max:
-                x += x_offset
-                y += y_offset
-                terminal.put(x, y, terminal.pick(x, y))
+            terminal.bkcolor(0xFF0000FF)
+            for x, y in defend_targets:
+                if x_min <= position.x <= x_max and y_min <= position.y <= y_max:
+                    x += x_offset
+                    y += y_offset
+                    terminal.put(x, y, terminal.pick(x, y))
 
-        terminal.bkcolor(0xFF0000FF)
-        for x, y in defend_targets:
-            if x_min <= position.x <= x_max and y_min <= position.y <= y_max:
-                x += x_offset
-                y += y_offset
-                terminal.put(x, y, terminal.pick(x, y))
-
-        terminal.bkcolor(0xFFFF00FF)
-        for x, y in both_targets:
-            if x_min <= position.x <= x_max and y_min <= position.y <= y_max:
-                x += x_offset
-                y += y_offset
-                terminal.put(x, y, terminal.pick(x, y))
+            terminal.bkcolor(0xFFFF00FF)
+            for x, y in both_targets:
+                if x_min <= position.x <= x_max and y_min <= position.y <= y_max:
+                    x += x_offset
+                    y += y_offset
+                    terminal.put(x, y, terminal.pick(x, y))
 
     def draw_ui(self):
-        _, game_map = next(iter(self.world.get_component(Map)))
-        player_entity, player = next(iter(self.world.get_component(Player)))
+        for _, game_map in self.world.get_component(Map):
+            for player_entity, player in self.world.get_component(Player):
+                terminal.bkcolor(0xFF000000)
+                terminal.color(0xFFFFFFFF)
 
-        terminal.bkcolor(0xFF000000)
-        terminal.color(0xFFFFFFFF)
+                terminal.printf(34, 0, f"Health: {player.health:>3d}")
+                terminal.printf(34, 1, f"Anger:  {player.anger:>3d}")
+                terminal.printf(34, 2, f"Threat: {player.actual_threat:>3d}")
 
-        terminal.printf(34, 0, f"Health: {player.health:>3d}")
-        terminal.printf(34, 1, f"Anger:  {player.anger:>3d}")
-        terminal.printf(34, 2, f"Threat: {player.actual_threat:>3d}")
+                draw_bar(46, 0, 20, 0xFF333333)
+                draw_bar(46, 1, 20, 0xFF333333)
+                draw_bar(46, 2, 20, 0xFF333333)
 
-        draw_bar(46, 0, 20, 0xFF333333)
-        draw_bar(46, 1, 20, 0xFF333333)
-        draw_bar(46, 2, 20, 0xFF333333)
+                if player.health <= 4:
+                    color = 0xFFFF0000
+                elif player.health <= 8:
+                    color = 0xFFFFFF00
+                else:
+                    color = 0xFF00FF00
 
-        if player.health <= 4:
-            color = 0xFFFF0000
-        elif player.health <= 8:
-            color = 0xFFFFFF00
-        else:
-            color = 0xFF00FF00
+                draw_bar(46, 0, player.health * 2, color)
+                draw_bar(46, 1, self.old_anger // 5, 0xFF0000FF)
+                draw_bar(46, 1, player.anger // 5, 0xFFFF0000)
+                draw_bar(46, 2, player.visible_threat, 0xFFFFFF00)
+                draw_bar(46, 2, player.actual_threat, 0xFFFF0000)
 
-        draw_bar(46, 0, player.health * 2, color)
-        draw_bar(46, 1, self.old_anger // 5, 0xFF0000FF)
-        draw_bar(46, 1, player.anger // 5, 0xFFFF0000)
-        draw_bar(46, 2, player.visible_threat, 0xFFFFFF00)
-        draw_bar(46, 2, player.actual_threat, 0xFFFF0000)
+                self.old_anger = player.anger
 
-        self.old_anger = player.anger
+                terminal.color(0xFFFF0000)
+                terminal.printf(34, 4, "z)")
 
-        terminal.color(0xFFFF0000)
-        terminal.printf(34, 4, "z)")
+                if self.world.has_component(player_entity, Taunted):
+                    terminal.color(0xFFFF0000)
+                else:
+                    terminal.color(0xFF0000FF)
 
-        if self.world.has_component(player_entity, Taunted):
-            terminal.color(0xFFFF0000)
-        else:
-            terminal.color(0xFF0000FF)
+                terminal.printf(34, 5, "x)")
+                terminal.color(0xFFFFFFFF)
+                terminal.printf(37, 4, f"{player.attack_action.nice_name}")
+                terminal.printf(37, 5, f"{player.defend_action.nice_name}")
 
-        terminal.printf(34, 5, "x)")
-        terminal.color(0xFFFFFFFF)
-        terminal.printf(37, 4, f"{player.attack_action.nice_name}")
-        terminal.printf(37, 5, f"{player.defend_action.nice_name}")
+                terminal.printf(68, 0, f"Attack: {player.attack:>2d}")
+                terminal.printf(68, 1, f"Defend: {player.defend:>2d}")
+                terminal.printf(68, 2, f"Level:  {player.level + 1:>2d}")
 
-        terminal.printf(68, 0, f"Attack: {player.attack:>2d}")
-        terminal.printf(68, 1, f"Defend: {player.defend:>2d}")
-        terminal.printf(68, 2, f"Level:  {player.level + 1:>2d}")
+                inventory = sum(1 for _ in self.world.get_components(Item, Inventory, HealingPotion))
+                inventory = min(max(inventory, 0), 9)
+                terminal.printf(68, 4, f"[color=#FFFF0066]![/color]: {inventory}")
 
-        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, HealingPotion))
-        inventory = min(max(inventory, 0), 9)
-        terminal.printf(68, 4, f"[color=#FFFF0066]![/color]: {inventory}")
+                inventory = sum(1 for _ in self.world.get_components(Item, Inventory, SmokeBomb))
+                inventory = min(max(inventory, 0), 9)
+                terminal.printf(68, 5, f"[color=#FF00FF66]![/color]: {inventory}")
 
-        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, SmokeBomb))
-        inventory = min(max(inventory, 0), 9)
-        terminal.printf(68, 5, f"[color=#FF00FF66]![/color]: {inventory}")
+                inventory = sum(1 for _ in self.world.get_components(Item, Inventory, TeleportScroll))
+                inventory = min(max(inventory, 0), 9)
+                terminal.printf(73, 4, f"[color=#FF6600FF]?[/color]: {inventory}")
 
-        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, TeleportScroll))
-        inventory = min(max(inventory, 0), 9)
-        terminal.printf(73, 4, f"[color=#FF6600FF]?[/color]: {inventory}")
+                inventory = sum(1 for _ in self.world.get_components(Item, Inventory, FireScroll))
+                inventory = min(max(inventory, 0), 9)
+                terminal.printf(73, 5, f"[color=#FFFF6600]?[/color]: {inventory}")
 
-        inventory = sum(1 for _ in self.world.get_components(Item, Inventory, FireScroll))
-        inventory = min(max(inventory, 0), 9)
-        terminal.printf(73, 5, f"[color=#FFFF6600]?[/color]: {inventory}")
+                terminal.printf(78, 4, f"[color=#FF999999])[/color]: {player.attack_equip}")
+                terminal.printf(78, 5, f"[color=#FF999999][[[/color]: {player.defend_equip}")
 
-        terminal.printf(78, 4, f"[color=#FF999999])[/color]: {player.attack_equip}")
-        terminal.printf(78, 5, f"[color=#FF999999][[[/color]: {player.defend_equip}")
+                if player.attack_bonus > 0:
+                    terminal.color(0xFFFF0000)
+                    terminal.printf(79, 0, f"(+{player.attack_bonus})")
 
-        if player.attack_bonus > 0:
-            terminal.color(0xFFFF0000)
-            terminal.printf(79, 0, f"(+{player.attack_bonus})")
-
-        if player.defend_bonus > 0:
-            terminal.color(0xFFFF0000)
-            terminal.printf(79, 1, f"(+{player.defend_bonus})")
+                if player.defend_bonus > 0:
+                    terminal.color(0xFFFF0000)
+                    terminal.printf(79, 1, f"(+{player.defend_bonus})")
 
     def draw_messages(self):
         terminal.bkcolor(0xFF000000)

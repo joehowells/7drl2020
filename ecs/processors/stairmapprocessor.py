@@ -17,12 +17,11 @@ class StairMapProcessor(Processor):
     def process(self):
         self.world: World
 
-        _, game_map = next(iter(self.world.get_component(Map)))
+        for _, game_map in self.world.get_component(Map):
+            sources: Set[Tuple[int, int]] = set()
+            for _, (position, _) in self.world.get_components(LastKnownPosition, Stairs):
+                sources.add((position.x, position.y))
 
-        sources: Set[Tuple[int, int]] = set()
-        for _, (position, _) in self.world.get_components(LastKnownPosition, Stairs):
-            sources.add((position.x, position.y))
-
-        if self.sources != sources:
-            game_map.dijkstra[DijkstraMap.STAIRS] = dijkstra_map(game_map, sources, check_explored=False)
-            self.sources = sources
+            if self.sources != sources:
+                game_map.dijkstra[DijkstraMap.STAIRS] = dijkstra_map(game_map, sources, check_explored=False)
+                self.sources = sources
