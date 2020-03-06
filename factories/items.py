@@ -3,12 +3,12 @@ from typing import List, Any, Callable
 
 from ecs.components.display import Display
 from ecs.components.equipment import Equipment
+from ecs.components.firescroll import FireScroll
 from ecs.components.healingpotion import HealingPotion
 from ecs.components.item import Item
 from ecs.components.position import Position
 from ecs.components.smokebomb import SmokeBomb
 from ecs.components.teleportscroll import TeleportScroll
-from ecs.components.firescroll import FireScroll
 
 
 def make_healing_potion(x: int, y: int) -> List[Any]:

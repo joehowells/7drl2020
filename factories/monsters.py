@@ -3,10 +3,10 @@ from typing import List, Any, Callable
 
 from ecs.components.assassin import Assassin
 from ecs.components.boss import Boss
+from ecs.components.cantaunt import CanTaunt
 from ecs.components.display import Display
 from ecs.components.monster import Monster
 from ecs.components.position import Position
-from ecs.components.cantaunt import CanTaunt
 
 
 def make_soldier(x: int, y: int) -> List[Any]:
