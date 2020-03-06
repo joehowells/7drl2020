@@ -1,5 +1,6 @@
 from esper import Processor, World
 
+import script
 from action import ActionType
 from ecs.components.equipment import Equipment
 from ecs.components.inventory import Inventory
@@ -26,26 +27,26 @@ class GetItemProcessor(Processor):
 
                             if player.attack_equip >= 9:
                                 self.world.create_entity(Message(
-                                    text="You cannot upgrade your weapon any further.",
+                                    text=script.WEAPON_UPGRADE_FAIL,
                                     priority=45,
                                 ))
                             else:
                                 player.attack_equip += 1
                                 self.world.create_entity(Message(
-                                    text="You upgrade your weapon.",
+                                    text=script.WEAPON_UPGRADE,
                                     priority=45,
                                 ))
 
                         if equipment is Equipment.ARMOUR:
                             if player.defend_equip >= 9:
                                 self.world.create_entity(Message(
-                                    text="You cannot upgrade your armour any further.",
+                                    text=script.ARMOUR_UPGRADE_FAIL,
                                     priority=45,
                                 ))
                             else:
                                 player.defend_equip += 1
                                 self.world.create_entity(Message(
-                                    text="You upgrade your armour.",
+                                    text=script.ARMOUR_UPGRADE,
                                     priority=45,
                                 ))
 
@@ -58,6 +59,6 @@ class GetItemProcessor(Processor):
                         self.world.add_component(entity, Inventory())
 
                         self.world.create_entity(Message(
-                            text=f"You pick up the {color_item_name(self.world, entity)}.",
+                            text=script.PICKUP_ITEM.format(name=color_item_name(self.world, entity)),
                             priority=50,
                         ))

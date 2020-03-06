@@ -23,3 +23,9 @@ STATUS_RAGE_CONTINUE = "[color=#FFFFFF00]Your rage clouds your judgement![/color
 ITEM_USE = "You use the {name}."
 ITEM_FIRE = "[color=#FF00FFFF]You incinerate the {name}![/color]"
 ITEM_TELEPORT_FAIL = "Your mind is elsewhere."
+
+ARMOUR_UPGRADE = "You upgrade your armour."
+ARMOUR_UPGRADE_FAIL = "You cannot upgrade your armour any further."
+WEAPON_UPGRADE = "You upgrade your weapon."
+WEAPON_UPGRADE_FAIL = "You cannot upgrade your weapon any further."
+PICKUP_ITEM = "You pick up the {name}."
