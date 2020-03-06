@@ -7,9 +7,8 @@ from ecs.components.visible import Visible
 
 
 class VisibilityProcessor(Processor):
-    """
-    Determines whether entities are visible.
-    """
+    """Determines whether entities are visible."""
+
     def process(self):
         _, game_map = next(iter(self.world.get_component(Map)))
 
