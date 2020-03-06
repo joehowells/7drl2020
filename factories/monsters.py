@@ -101,7 +101,7 @@ def make_elite_soldier(x: int, y: int) -> List[Any]:
         ),
         Monster(
             name="elite soldier",
-            threat=[4],
+            threat=[5],
             defend=2,
             health=2,
             article="an",
@@ -118,8 +118,8 @@ def make_elite_defender(x: int, y: int) -> List[Any]:
         ),
         Monster(
             name="elite defender",
-            threat=[4],
-            defend=4,
+            threat=[5],
+            defend=5,
             health=2,
             article="an",
         ),
@@ -135,8 +135,8 @@ def make_elite_officer(x: int, y: int) -> List[Any]:
         ),
         Monster(
             name="senior officer",
-            threat=[5],
-            defend=4,
+            threat=[6],
+            defend=5,
             health=3,
             article="a",
         ),
@@ -152,7 +152,7 @@ def make_elite_assassin(x: int, y: int) -> List[Any]:
         ),
         Monster(
             name="elite assassin",
-            threat=[7],
+            threat=[8],
             defend=2,
             health=2,
             article="an",
@@ -170,7 +170,7 @@ def make_elite_archer(x: int, y: int) -> List[Any]:
         ),
         Monster(
             name="elite archer",
-            threat=[2, 7],
+            threat=[2, 8],
             defend=2,
             health=2,
             article="an",
@@ -187,7 +187,7 @@ def make_mid_boss(x: int, y: int) -> List[Any]:
         ),
         Monster(
             name="militia commander",
-            threat=[7, 3],
+            threat=[9, 5],
             defend=4,
             health=4,
             article="the",
@@ -206,7 +206,7 @@ def make_end_boss(x: int, y: int) -> List[Any]:
         ),
         Monster(
             name="militia captain",
-            threat=[9, 5],
+            threat=[11, 5],
             defend=5,
             health=5,
             article="the",
