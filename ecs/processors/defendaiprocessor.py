@@ -120,7 +120,7 @@ class DefendAIProcessor(Processor):
                 action_type=ActionType.MOVE,
                 anger=-1,
                 target=target,
-                nice_name="Find item",
+                nice_name="Gather items",
             )
             return
 
