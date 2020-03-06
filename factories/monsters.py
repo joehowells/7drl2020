@@ -183,7 +183,7 @@ def make_mid_boss(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x0032,
-            color=0xFFFFFFFF,
+            color=0xFFFFFF00,
         ),
         Monster(
             name="militia commander",
@@ -202,7 +202,7 @@ def make_end_boss(x: int, y: int) -> List[Any]:
     return [
         Display(
             code=0x0031,
-            color=0xFFFFFFFF,
+            color=0xFFFFFF00,
         ),
         Monster(
             name="militia captain",
