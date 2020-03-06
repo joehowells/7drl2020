@@ -44,15 +44,15 @@ def make_defender(x: int, y: int) -> List[Any]:
 def make_officer(x: int, y: int) -> List[Any]:
     return [
         Display(
-            code=0x006F,
+            code=0x0034,
             color=0xFFFFFF00,
         ),
         Monster(
-            name="officer",
+            name="junior officer",
             threat=[3],
             defend=4,
             health=2,
-            article="an",
+            article="a",
         ),
         Position(x, y),
     ]
@@ -130,15 +130,15 @@ def make_elite_defender(x: int, y: int) -> List[Any]:
 def make_elite_officer(x: int, y: int) -> List[Any]:
     return [
         Display(
-            code=0x004F,
+            code=0x0033,
             color=0xFFFFFF00,
         ),
         Monster(
-            name="elite officer",
+            name="senior officer",
             threat=[5],
             defend=4,
             health=3,
-            article="an",
+            article="a",
         ),
         Position(x, y),
     ]
