@@ -46,7 +46,7 @@ class DefendAIProcessor(Processor):
                 ))
                 return
 
-        if player.health < 10:
+        if player.health < 9:
             for entity, (item, _, _) in self.world.get_components(Item, Inventory, HealingPotion):
                 self.world.add_component(entity, DefendTarget())
                 player.defend_action = Action(
