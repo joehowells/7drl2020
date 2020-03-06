@@ -4,6 +4,7 @@ from typing import Tuple, Set
 from bearlibterminal import terminal
 from esper import Processor, World
 
+from constants import MAX_ANGER
 from ecs.components.assassin import Assassin
 from ecs.components.attacktarget import AttackTarget
 # from constants import DijkstraMap
@@ -54,7 +55,7 @@ def draw_bar(x: int, y: int, value: int, color: int = 0xFFFFFFFF) -> None:
 
 
 def filter_color(color: int, player: Player) -> int:
-    factor = player.anger / 100
+    factor = player.anger / MAX_ANGER
 
     r = color >> 16 & 255
     g = color >> 8 & 255

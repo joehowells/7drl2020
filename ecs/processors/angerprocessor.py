@@ -1,54 +1,53 @@
 from esper import Processor
 
+from constants import MAX_ANGER, ANGER_TIER_1, ANGER_TIER_2, ANGER_TIER_3, ANGER_TIER_4, ANGER_TIER_5
 from ecs.components.message import Message
 from ecs.components.player import Player
+from script import ANGER_TIER_INCREASED, ANGER_TIER_DECREASED
 
 
 class AngerProcessor(Processor):
+    """Handles player anger and associated combat bonuses."""
+
     def __init__(self):
         self.old_tier = 0
 
     def process(self):
-        _, player = next(iter(self.world.get_component(Player)))
+        for _, player in self.world.get_component(Player):
+            player.attack_bonus = 0
+            player.defend_bonus = 0
+            new_tier = 0
 
-        player.attack_bonus = 0
-        player.defend_bonus = 0
-        new_tier = 0
+            player.anger = min(max(player.anger + player.action.anger, 0), MAX_ANGER)
 
-        if player.anger >= 20:
-            new_tier = 1
-            player.attack_bonus += 1
+            if player.anger >= ANGER_TIER_1:
+                new_tier = 1
+                player.attack_bonus += 1
 
-        if player.anger >= 40:
-            new_tier = 2
-            player.defend_bonus += 1
+            if player.anger >= ANGER_TIER_2:
+                new_tier = 2
+                player.defend_bonus += 1
 
-        if player.anger >= 60:
-            new_tier = 3
-            player.attack_bonus += 1
+            if player.anger >= ANGER_TIER_3:
+                new_tier = 3
+                player.attack_bonus += 1
 
-        if player.anger >= 80:
-            new_tier = 4
-            player.defend_bonus += 1
+            if player.anger >= ANGER_TIER_4:
+                new_tier = 4
+                player.defend_bonus += 1
 
-        if player.anger >= 95:
-            new_tier = 5
-            player.attack_bonus += 1
-            player.defend_bonus += 1
+            if player.anger >= ANGER_TIER_5:
+                new_tier = 5
+                player.attack_bonus += 1
+                player.defend_bonus += 1
 
-        player.attack = player.base_attack + player.attack_equip + player.attack_bonus
-        player.defend = player.base_defend + player.defend_equip + player.defend_bonus
+            player.attack = player.base_attack + player.attack_equip + player.attack_bonus
+            player.defend = player.base_defend + player.defend_equip + player.defend_bonus
 
-        if new_tier > self.old_tier:
-            self.world.create_entity(Message(
-                text="[color=#FFFF0000]Your anger makes you stronger![/color]",
-                priority=20,
-            ))
+            if new_tier > self.old_tier:
+                self.world.create_entity(Message(text=ANGER_TIER_INCREASED, priority=20))
 
-        if new_tier < self.old_tier:
-            self.world.create_entity(Message(
-                text="[color=#FF0000FF]You calm down.[/color]",
-                priority=20,
-            ))
+            if new_tier < self.old_tier:
+                self.world.create_entity(Message(text=ANGER_TIER_DECREASED, priority=20))
 
-        self.old_tier = new_tier
+            self.old_tier = new_tier
