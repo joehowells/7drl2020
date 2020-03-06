@@ -224,6 +224,8 @@ def get_monster_factory(level: int = 0) -> Callable[[int, int], List[Any]]:
             make_soldier,
             make_soldier,
             make_soldier,
+            make_soldier,
+            make_soldier,
             make_defender,
             make_officer,
             make_assassin,
@@ -232,6 +234,8 @@ def get_monster_factory(level: int = 0) -> Callable[[int, int], List[Any]]:
 
     if level <= 2:
         return choice([
+            make_soldier,
+            make_soldier,
             make_soldier,
             make_soldier,
             make_elite_soldier,
@@ -246,6 +250,14 @@ def get_monster_factory(level: int = 0) -> Callable[[int, int], List[Any]]:
         return choice([
             make_soldier,
             make_soldier,
+            make_soldier,
+            make_soldier,
+            make_elite_soldier,
+            make_elite_soldier,
+            make_elite_soldier,
+            make_elite_soldier,
+            make_elite_soldier,
+            make_elite_soldier,
             make_elite_soldier,
             make_elite_soldier,
             make_defender,
@@ -258,7 +270,23 @@ def get_monster_factory(level: int = 0) -> Callable[[int, int], List[Any]]:
             make_elite_archer,
         ])
 
+    if level <= 4:
+        return choice([
+            make_soldier,
+            make_soldier,
+            make_elite_soldier,
+            make_elite_soldier,
+            make_elite_soldier,
+            make_elite_soldier,
+            make_elite_defender,
+            make_elite_officer,
+            make_elite_assassin,
+            make_elite_archer,
+        ])
+
     return choice([
+        make_elite_soldier,
+        make_elite_soldier,
         make_elite_soldier,
         make_elite_soldier,
         make_elite_soldier,
