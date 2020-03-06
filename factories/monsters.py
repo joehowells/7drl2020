@@ -28,11 +28,11 @@ def make_soldier(x: int, y: int) -> List[Any]:
 def make_defender(x: int, y: int) -> List[Any]:
     return [
         Display(
-            code=0x0064,
+            code=0x006B,
             color=0xFF00FF00,
         ),
         Monster(
-            name="defender",
+            name="knight",
             threat=[2],
             defend=4,
             health=1,
@@ -65,7 +65,7 @@ def make_assassin(x: int, y: int) -> List[Any]:
             color=0xFF666666,
         ),
         Monster(
-            name="assassin",
+            name="cutthroat",
             threat=[5],
             defend=1,
             health=1,
@@ -113,11 +113,11 @@ def make_elite_soldier(x: int, y: int) -> List[Any]:
 def make_elite_defender(x: int, y: int) -> List[Any]:
     return [
         Display(
-            code=0x0044,
+            code=0x004B,
             color=0xFF00FF00,
         ),
         Monster(
-            name="elite defender",
+            name="elite knight",
             threat=[5],
             defend=5,
             health=2,
@@ -151,7 +151,7 @@ def make_elite_assassin(x: int, y: int) -> List[Any]:
             color=0xFF666666,
         ),
         Monster(
-            name="elite assassin",
+            name="elite cutthroat",
             threat=[8],
             defend=2,
             health=2,
