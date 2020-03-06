@@ -1,6 +1,7 @@
 from random import choice
 from typing import List, Any, Callable
 
+from ecs.components.assassin import Assassin
 from ecs.components.boss import Boss
 from ecs.components.display import Display
 from ecs.components.monster import Monster
@@ -60,7 +61,7 @@ def make_officer(x: int, y: int) -> List[Any]:
 def make_assassin(x: int, y: int) -> List[Any]:
     return [
         Display(
-            code=0x005F,
+            code=0x0063,
             color=0xFF666666,
         ),
         Monster(
@@ -70,6 +71,7 @@ def make_assassin(x: int, y: int) -> List[Any]:
             health=1,
             article="an",
         ),
+        Assassin(),
         Position(x, y),
     ]
 
@@ -145,7 +147,7 @@ def make_elite_officer(x: int, y: int) -> List[Any]:
 def make_elite_assassin(x: int, y: int) -> List[Any]:
     return [
         Display(
-            code=0x005F,
+            code=0x0043,
             color=0xFF666666,
         ),
         Monster(
@@ -155,6 +157,7 @@ def make_elite_assassin(x: int, y: int) -> List[Any]:
             health=2,
             article="an",
         ),
+        Assassin(),
         Position(x, y),
     ]
 

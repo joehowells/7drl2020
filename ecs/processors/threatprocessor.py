@@ -2,6 +2,7 @@ from random import randint, choices
 
 from esper import Processor
 
+from ecs.components.assassin import Assassin
 from ecs.components.blinded import Blinded
 from ecs.components.dead import Dead
 from ecs.components.message import Message
@@ -25,8 +26,9 @@ class ThreatProcessor(Processor):
             if self.world.has_component(entity, Blinded):
                 continue
 
-            threat = max(0, max(monster.threat) - player.defend)
-            player.visible_threat += threat
+            if not self.world.has_component(entity, Assassin):
+                threat = max(0, max(monster.threat) - player.defend)
+                player.visible_threat += threat
 
             for threatening in self.world.try_component(entity, Threatening):
                 threat = max(0, threatening.threat - player.defend)

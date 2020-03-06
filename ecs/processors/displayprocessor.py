@@ -4,6 +4,7 @@ from typing import Tuple, Set
 from bearlibterminal import terminal
 from esper import Processor, World
 
+from ecs.components.assassin import Assassin
 from ecs.components.attacktarget import AttackTarget
 # from constants import DijkstraMap
 from ecs.components.blinded import Blinded
@@ -23,6 +24,7 @@ from ecs.components.taunt import Taunted
 from ecs.components.teleportscroll import TeleportScroll
 from ecs.components.thunderscroll import ThunderScroll
 from ecs.components.visible import Visible
+from ecs.processors.spatialprocessor import Adjacent
 
 
 def draw_borders() -> None:
@@ -306,10 +308,16 @@ class DisplayProcessor(Processor):
             terminal.bkcolor(bkcolor)
             terminal.color(color)
 
+            # Render assassins as underscores until they are in range
+            if self.world.has_component(entity, Assassin) and not self.world.has_component(entity, Adjacent):
+                code = 0x005F
+            else:
+                code = display.code
+
             terminal.put(
                 position.x + x_offset,
                 position.y + y_offset,
-                display.code,
+                code,
             )
 
     def highlight_targets(self):
