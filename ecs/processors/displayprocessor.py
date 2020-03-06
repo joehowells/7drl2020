@@ -70,6 +70,7 @@ def filter_color(color: int, player: Player) -> int:
 class DisplayProcessor(Processor):
     def __init__(self):
         self.buffer = []
+        self.old_anger = 0
 
     def process(self):
         self.world: World
@@ -117,6 +118,7 @@ class DisplayProcessor(Processor):
     def draw_title_screen(self):
         # Clear the message buffer on first draw to get rid of messages from previous game
         self.buffer = []
+        self.old_anger = 0
 
         terminal.clear()
 
@@ -381,9 +383,12 @@ class DisplayProcessor(Processor):
             color = 0xFF00FF00
 
         draw_bar(46, 0, player.health * 2, color)
+        draw_bar(46, 1, self.old_anger // 5, 0xFF0000FF)
         draw_bar(46, 1, player.anger // 5, 0xFFFF0000)
         draw_bar(46, 2, player.visible_threat, 0xFFFFFF00)
         draw_bar(46, 2, player.actual_threat, 0xFFFF0000)
+
+        self.old_anger = player.anger
 
         terminal.color(0xFFFF0000)
         terminal.printf(34, 4, "z)")
