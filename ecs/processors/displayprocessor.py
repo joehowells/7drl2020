@@ -428,15 +428,19 @@ class DisplayProcessor(Processor):
         # Sort by priority
         messages.sort(key=lambda m: m.priority, reverse=True)
 
-        for message in messages:
+        for index, message in enumerate(messages):
             for text in wrap(message.text, 50):
-                self.buffer.append((text, message.color))
+                self.buffer.append((text, message.color, index == 0))
 
         self.buffer = self.buffer[-14:]
 
-        for row, (message, color) in enumerate(self.buffer):
+        for row, (message, color, new_turn) in enumerate(self.buffer):
+            if new_turn:
+                terminal.color(0xFFFFFFFF)
+                terminal.put(34, row+7, 0x003E)
+
             terminal.color(color)
-            terminal.printf(34, row + 7, (
+            terminal.printf(36, row + 7, (
                 message
                 .replace("(z)", "[color=#FFFF0000](z)[/color]")
                 .replace("(x)", "[color=#FF0000FF](x)[/color]")

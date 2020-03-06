@@ -4,6 +4,7 @@ from typing import List, Type
 from esper import Processor, World
 
 from ecs.components.gamestate import GameState
+from ecs.components.message import Message
 from ecs.processors.angerprocessor import AngerProcessor
 from ecs.processors.attackaiprocessor import AttackAIProcessor
 from ecs.processors.attackprocessor import AttackProcessor
@@ -103,6 +104,8 @@ class GameStateProcessor(Processor):
 
         for entity in entities:
             self.world.create_entity(*entity)
+
+        self.world.create_entity(Message(text="You enter the dungeon.", priority=100))
 
     # noinspection PyTypeChecker
     def end_game(self):
