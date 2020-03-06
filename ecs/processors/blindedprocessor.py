@@ -18,4 +18,5 @@ class BlindedProcessor(Processor):
                 blinded.turns_left -= 1
                 self.world.create_entity(Message(
                     text=f"[color=#FF666666]The {monster.name} is blinded by smoke.[/color]",
+                    priority=45,
                 ))

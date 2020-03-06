@@ -30,6 +30,7 @@ class UseItemProcessor(Processor):
             for entity, (item, _) in self.world.get_components(Item, DefendTarget):
                 self.world.create_entity(Message(
                     text=f"You use the {color_item_name(self.world, entity)}.",
+                    priority=50,
                 ))
 
                 if self.world.has_component(entity, HealingPotion):
@@ -44,6 +45,7 @@ class UseItemProcessor(Processor):
                         self.world.delete_entity(monster_entity, immediate=True)
                         self.world.create_entity(Message(
                             text=f"[color=#FF00FFFF]You incinerate the {monster.name}![/color]",
+                            priority=45,
                         ))
                         player.kills[monster.name] += 1
 
@@ -66,6 +68,7 @@ class UseItemProcessor(Processor):
                     else:
                         self.world.create_entity(Message(
                             text=f"Your mind is elsewhere.",
+                            priority=45,
                         ))
 
                 self.world.delete_entity(entity, immediate=True)

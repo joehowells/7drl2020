@@ -26,17 +26,29 @@ class GetItemProcessor(Processor):
                     if equipment is Equipment.WEAPON:
 
                         if player.attack_equip >= 9:
-                            self.world.create_entity(Message("You cannot upgrade your weapon any further."))
+                            self.world.create_entity(Message(
+                                text="You cannot upgrade your weapon any further.",
+                                priority=45,
+                            ))
                         else:
                             player.attack_equip += 1
-                            self.world.create_entity(Message("You upgrade your weapon."))
+                            self.world.create_entity(Message(
+                                text="You upgrade your weapon.",
+                                priority=45,
+                            ))
 
                     if equipment is Equipment.ARMOUR:
                         if player.defend_equip >= 9:
-                            self.world.create_entity(Message("You cannot upgrade your armour any further."))
+                            self.world.create_entity(Message(
+                                text="You cannot upgrade your armour any further.",
+                                priority=45,
+                            ))
                         else:
                             player.defend_equip += 1
-                            self.world.create_entity(Message("You upgrade your armour."))
+                            self.world.create_entity(Message(
+                                text="You upgrade your armour.",
+                                priority=45,
+                            ))
 
                     break
                 else:
@@ -48,4 +60,5 @@ class GetItemProcessor(Processor):
 
                     self.world.create_entity(Message(
                         text=f"You pick up the {color_item_name(self.world, entity)}.",
+                        priority=50,
                     ))

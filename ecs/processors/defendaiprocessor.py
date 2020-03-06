@@ -32,11 +32,18 @@ class DefendAIProcessor(Processor):
             if taunted.turns_left <= 0:
                 player.anger = min(max(player.anger-10, 0), 100)
                 self.world.remove_component(player_entity, Taunted)
-                self.world.create_entity(Message("You snap out of your rage."))
+                self.world.create_entity(Message(
+                    text="You snap out of your rage.",
+                    priority=25,
+                ))
             else:
                 taunted.turns_left -= 1
                 player.anger = min(max(player.anger+5, 0), 100)
                 player.defend_action = player.attack_action
+                self.world.create_entity(Message(
+                    text="[color=#FFFFFF00]Your rage clouds your judgement![/color]",
+                    priority=25,
+                ))
                 return
 
         if player.health < 10:

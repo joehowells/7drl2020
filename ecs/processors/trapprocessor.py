@@ -40,4 +40,5 @@ class TrapProcessor(Processor):
             if sprung_trap:
                 self.world.create_entity(Message(
                     text="[color=#FFFFFF00]The noise attracts more enemies![/color]",
+                    priority=30,
                 ))

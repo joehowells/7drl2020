@@ -30,6 +30,7 @@ class MonsterAttackProcessor(Processor):
             if randint(0, 19) < sum(weights):
                 self.world.create_entity(Message(
                     text=f"[color=#FFFFFF00]The {monster.name} hits![/color]",
+                    priority=40,
                 ))
 
                 player.health -= 1
@@ -49,4 +50,5 @@ class MonsterAttackProcessor(Processor):
             else:
                 self.world.create_entity(Message(
                     text=f"[color=#FF666666]The {monster.name} misses you.[/color]",
+                    priority=40,
                 ))

@@ -3,12 +3,12 @@ from random import randint
 from esper import Processor, World
 
 from action import ActionType
+from ecs.components.attacktarget import AttackTarget
 from ecs.components.map import Map
 from ecs.components.message import Message
 from ecs.components.monster import Monster
 from ecs.components.player import Player
 from ecs.components.position import Position
-from ecs.components.attacktarget import AttackTarget
 
 
 class PlayerAttackProcessor(Processor):
@@ -26,9 +26,18 @@ class PlayerAttackProcessor(Processor):
                     monster.health -= 1
                     if monster.health <= 0:
                         self.world.delete_entity(entity)
-                        self.world.create_entity(Message(f"[color=#FF00FFFF]You kill the {monster.name}![/color]"))
+                        self.world.create_entity(Message(
+                            text=f"[color=#FF00FFFF]You kill the {monster.name}![/color]",
+                            priority=50,
+                        ))
                         player.kills[monster.name] += 1
                     else:
-                        self.world.create_entity(Message(f"You hit the {monster.name}."))
+                        self.world.create_entity(Message(
+                            text=f"You hit the {monster.name}.",
+                            priority=50,
+                        ))
                 else:
-                    self.world.create_entity(Message(f"[color=#FF666666]You miss the {monster.name}.[/color]"))
+                    self.world.create_entity(Message(
+                        text=f"[color=#FF666666]You miss the {monster.name}.[/color]",
+                        priority=50,
+                    ))
