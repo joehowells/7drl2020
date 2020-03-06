@@ -160,7 +160,7 @@ class DisplayProcessor(Processor):
             buffer.append("")
 
             if not player.kills:
-                buffer.append("You didn't kill anyone.")
+                buffer.append("You didn[U+2019]t kill anyone.")
             else:
                 buffer.extend([
                     f"You killed {sum(player.kills.values())} enemies:",
