@@ -153,8 +153,8 @@ class DisplayProcessor(Processor):
                 buffer.append(f"You were killed by {player.killer} on level {player.level + 1} of the dungeon.")
             else:
                 buffer.append((
-                    "[color=#FF999999]With the milita defeated, you can put your feet up and read your newspaper."
-                    " But you lost it somewhere in the dungeon...[/color]"
+                    "[color=#FF999999]With the milita defeated, you can finally put your feet up and read your"
+                    " newspaper. But you lost it somewhere in the dungeon...[/color]"
                 ))
 
             buffer.append("")
@@ -188,10 +188,10 @@ class DisplayProcessor(Processor):
         ])
 
         terminal.puts(
-            x=5,
+            x=8,
             y=1,
             s="\n".join(buffer),
-            width=74,
+            width=68,
             height=19,
             align=terminal.TK_ALIGN_CENTER,
         )
