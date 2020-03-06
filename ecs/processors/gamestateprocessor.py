@@ -27,7 +27,7 @@ from ecs.processors.trapprocessor import TrapProcessor
 from ecs.processors.useitemprocessor import UseItemProcessor
 from ecs.processors.usestairsprocessor import UseStairsProcessor
 from ecs.processors.visibilityprocessor import VisibilityProcessor
-from ecs.processors.visionprocessor import VisionProcessor
+from ecs.processors.fovprocessor import FOVProcessor
 from factories.world import make_world
 
 # Processors that run before user input
@@ -37,7 +37,7 @@ HI_PROCESSORS: List[Type[Processor]] = [
     MonsterAttackProcessor,
     TrapProcessor,
 
-    VisionProcessor,
+    FOVProcessor,
     VisibilityProcessor,
     AwakeProcessor,
 
