@@ -44,4 +44,7 @@ class UseStairsProcessor(Processor):
                 for entity in entities:
                     self.world.create_entity(*entity)
 
-                self.world.create_entity(Message("You go downstairs."))
+                self.world.create_entity(Message(
+                    text="You go downstairs.",
+                    priority=100,
+                ))

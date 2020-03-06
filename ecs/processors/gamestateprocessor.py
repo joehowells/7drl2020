@@ -105,8 +105,6 @@ class GameStateProcessor(Processor):
         for entity in entities:
             self.world.create_entity(*entity)
 
-        self.world.create_entity(Message(text="You enter the dungeon.", priority=100))
-
     # noinspection PyTypeChecker
     def end_game(self):
         self.world: World

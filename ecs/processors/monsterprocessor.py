@@ -33,7 +33,7 @@ class MonsterProcessor(Processor):
                             if random() < 0.3:
                                 self.world.add_component(player_entity, Taunted())
                                 self.world.create_entity(Message(
-                                    "[color=#FFFFFF00]The {monster.name} taunts you![/color]"
+                                    f"[color=#FFFFFF00]The {monster.name} taunts you![/color]"
                                 ))
                                 return
 

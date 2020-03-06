@@ -2,6 +2,7 @@ from random import choice, shuffle
 from typing import List, Any, Optional
 
 from ecs.components.map import Map
+from ecs.components.message import Message
 from ecs.components.player import Player
 from factories.rooms import make_enemy_room, make_trap_room, make_item_room, make_player_room, make_stairs_room, \
     make_mid_boss_room, make_end_boss_room, make_weapon_room, make_armour_room
@@ -27,10 +28,15 @@ def make_world(player: Optional[Player] = None, level: int = 0) -> List[List[Any
     make_weapon_room(game_map, entities, big_rooms.pop(), level)
     make_armour_room(game_map, entities, big_rooms.pop(), level)
 
+    if level == 0:
+        entities.append([Message(text="You enter the dungeon.", priority=90)])
+
     if level == 2:
+        entities.append([Message(text="[color=#FFFFFF00]The militia commander is on this level.[/color]", priority=90)])
         make_mid_boss_room(game_map, entities, big_rooms.pop())
 
     if level == 5:
+        entities.append([Message(text="[color=#FFFFFF00]The militia captain is on this level.[/color]", priority=90)])
         make_end_boss_room(game_map, entities, big_rooms.pop())
 
     while big_rooms:
