@@ -50,12 +50,12 @@ class RageProcessor(Processor):
                 self.world.create_entity(Message(text=RAGE_TIER_INCREASED, priority=20))
 
                 if new_tier == 5:
-                    self.world.create_entity(Message(text=GAIN_EXTRA_ATTACK, priority=20))
+                    self.world.create_entity(Message(text=GAIN_EXTRA_ATTACK, priority=19))
 
             if new_tier < self.old_tier:
                 self.world.create_entity(Message(text=RAGE_TIER_DECREASED, priority=20))
 
                 if new_tier == 4:
-                    self.world.create_entity(Message(text=LOSE_EXTRA_ATTACK, priority=20))
+                    self.world.create_entity(Message(text=LOSE_EXTRA_ATTACK, priority=19))
 
             self.old_tier = new_tier
