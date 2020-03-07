@@ -142,19 +142,26 @@ class DisplayProcessor(Processor):
         terminal.color(0xFFFFFFFF)
 
         buffer = [
-            "[color=#FFFF0000]Result[/color]",
-            "",
-            "",
         ]
 
         for _, player in self.world.get_component(Player):
             if player.killer:
-                buffer.append(f"You were killed by {player.killer} on level {player.level + 1} of the dungeon.")
+                buffer.extend([
+                    "[color=#FFFF0000]Defeat[/color]",
+                    "",
+                    "",
+                    f"You were killed by {player.killer} on level {player.level + 1} of the dungeon.",
+                ])
             else:
-                buffer.append((
-                    "[color=#FF999999]With the milita defeated, you can finally put your feet up and read your"
-                    " newspaper. But you lost it somewhere in the dungeon...[/color]"
-                ))
+                buffer.extend([
+                    "[color=#FFFF0000]Victory![/color]",
+                    "",
+                    "",
+                    (
+                        "[color=#FF999999]With the milita defeated, you can finally put your feet up and read your"
+                        " newspaper. But you lost it somewhere in the dungeon...[/color]"
+                    ),
+                ])
 
             buffer.append("")
 
