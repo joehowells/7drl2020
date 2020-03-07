@@ -23,7 +23,7 @@ ANGER_TIER_1: int = 20
 ANGER_TIER_2: int = 40
 ANGER_TIER_3: int = 60
 ANGER_TIER_4: int = 80
-ANGER_TIER_5: int = 95
+ANGER_TIER_5: int = 90
 
 FOV_RADIUS: int = 8
 

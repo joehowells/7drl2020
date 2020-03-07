@@ -25,35 +25,25 @@ class AttackAIProcessor(Processor):
     def process(self):
         for _, game_map in self.world.get_component(Map):
             for _, (player, player_position) in self.world.get_components(Player, Position):
-                strong_entities = []
-                weak_entities = []
+                entities = []
+                for entity, (monster, _) in self.world.get_components(Monster, Adjacent):
+                    entities.append((monster.threat, entity, monster))
 
-                for entity, (position, monster, _) in self.world.get_components(Position, Monster, Adjacent):
-                    if player.attack <= monster.defend:
-                        strong_entities.append((entity, monster))
-                    else:
-                        weak_entities.append((-monster.threat[0], monster.health, entity, monster))
+                if entities:
+                    entities.sort(reverse=True)
 
-                # Attack something we can actually damage
-                if weak_entities:
-                    weak_entities.sort()
-                    _, _, entity, monster = weak_entities[0]
-                    self.world.add_component(entity, AttackTarget())
+                    name = None
+                    for _, entity, monster in entities[:player.number_of_attacks]:
+                        self.world.add_component(entity, AttackTarget())
+                        if name is None:
+                            name = monster.name
+                        else:
+                            name = "multiple enemies"
+
                     player.attack_action = Action(
                         action_type=ActionType.ATTACK,
                         anger=+2,
-                        nice_name=f"Attack {monster.name}",
-                    )
-                    return
-
-                # Attack a strong enemy to build meter
-                if strong_entities:
-                    entity, monster = strong_entities[0]
-                    self.world.add_component(entity, AttackTarget())
-                    player.attack_action = Action(
-                        action_type=ActionType.ATTACK,
-                        anger=+2,
-                        nice_name=f"Attack {monster.name}",
+                        nice_name=f"Attack {name}",
                     )
                     return
 

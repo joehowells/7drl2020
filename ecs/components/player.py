@@ -24,6 +24,7 @@ class Player:
     defend_equip: int = 0
     attack: int = 1
     defend: int = 1
+    number_of_attacks: int = 1
 
     level: int = 0
 
