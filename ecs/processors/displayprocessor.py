@@ -4,7 +4,7 @@ from typing import Tuple, Set
 from bearlibterminal import terminal
 from esper import Processor, World
 
-from constants import MAX_ANGER, MAX_HEALTH, MAX_THREAT
+from constants import MAX_RAGE, MAX_HEALTH, MAX_THREAT
 from ecs.components.assassin import Assassin
 from ecs.components.attacktarget import AttackTarget
 from ecs.components.blinded import Blinded
@@ -54,7 +54,7 @@ def draw_bar(x: int, y: int, value: int, max_value: int, color: int = 0xFFFFFFFF
 
 
 def filter_color(color: int, player: Player) -> int:
-    factor = player.anger / MAX_ANGER
+    factor = player.rage / MAX_RAGE
 
     r = color >> 16 & 255
     g = color >> 8 & 255
@@ -70,7 +70,7 @@ def filter_color(color: int, player: Player) -> int:
 class DisplayProcessor(Processor):
     def __init__(self):
         self.buffer = []
-        self.old_anger = 0
+        self.old_rage = 0
 
     def process(self):
         self.world: World
@@ -117,7 +117,7 @@ class DisplayProcessor(Processor):
     def draw_title_screen(self):
         # Clear the message buffer on first draw to get rid of messages from previous game
         self.buffer = []
-        self.old_anger = 0
+        self.old_rage = 0
 
         terminal.clear()
 
@@ -358,7 +358,7 @@ class DisplayProcessor(Processor):
                 terminal.color(0xFFFFFFFF)
 
                 terminal.printf(34, 0, f"Health: {player.health:>3d}")
-                terminal.printf(34, 1, f"Anger:  {player.anger:>3d}")
+                terminal.printf(34, 1, f"Rage:   {player.rage:>3d}")
                 terminal.printf(34, 2, f"Threat: {player.actual_threat:>3d}")
 
                 draw_bar(46, 0, 1, 1, 0xFF333333)
@@ -373,12 +373,12 @@ class DisplayProcessor(Processor):
                     color = 0xFF00FF00
 
                 draw_bar(46, 0, player.health, MAX_HEALTH, color)
-                draw_bar(46, 1, self.old_anger, MAX_ANGER, 0xFF0000FF)
-                draw_bar(46, 1, player.anger, MAX_ANGER, 0xFFFF0000)
+                draw_bar(46, 1, self.old_rage, MAX_RAGE, 0xFF0000FF)
+                draw_bar(46, 1, player.rage, MAX_RAGE, 0xFFFF0000)
                 draw_bar(46, 2, player.visible_threat, MAX_THREAT, 0xFFFFFF00)
                 draw_bar(46, 2, player.actual_threat, MAX_THREAT, 0xFFFF0000)
 
-                self.old_anger = player.anger
+                self.old_rage = player.rage
 
                 terminal.color(0xFFFF0000)
                 terminal.printf(34, 4, "z)")

@@ -4,7 +4,7 @@ from typing import List, Type
 from esper import Processor, World
 
 from ecs.components.gamestate import GameState
-from ecs.processors.angerprocessor import AngerProcessor
+from ecs.processors.rageprocessor import RageProcessor
 from ecs.processors.attackaiprocessor import AttackAIProcessor
 from ecs.processors.awakeprocessor import AwakeProcessor
 from ecs.processors.blindedprocessor import BlindedProcessor
@@ -65,8 +65,8 @@ LO_PROCESSORS: List[Type[Processor]] = [
     GetItemProcessor,
     MoveProcessor,
 
-    # Update anger and combat bonuses
-    AngerProcessor,
+    # Update rage and combat bonuses
+    RageProcessor,
 
     # Update monster Dijkstra map
     PlayerMapProcessor,

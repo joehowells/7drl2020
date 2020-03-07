@@ -1,5 +1,5 @@
-ANGER_TIER_INCREASED: str = "[color=#FFFF0000]Your anger makes you stronger![/color]"
-ANGER_TIER_DECREASED: str = "[color=#FF0000FF]You calm down.[/color]"
+RAGE_TIER_INCREASED: str = "[color=#FFFF0000]Your rage makes you stronger![/color]"
+RAGE_TIER_DECREASED: str = "[color=#FF0000FF]You calm down.[/color]"
 
 GAME_COMPLETE: str = "You have conquered the dungeon!"
 GAME_OVER: str = "Press [color=#FFFF0000](z)[/color] and [color=#FF0000FF](x)[/color] to continue..."
@@ -17,8 +17,8 @@ TRAP: str = "[color=#FFFFFF00]The noise attracts more enemies![/color]"
 USE_STAIRS: str = "You go downstairs."
 
 STATUS_BLIND_CONTINUE: str = "[color=#FF666666]The {name} is blinded by smoke.[/color]"
-STATUS_RAGE_END: str = "You snap out of your rage."
-STATUS_RAGE_CONTINUE: str = "[color=#FFFFFF00]Your rage clouds your judgement![/color]"
+STATUS_RAGE_END: str = "You snap out of it."
+STATUS_RAGE_CONTINUE: str = "[color=#FFFFFF00]You[U+2019]re incensed by the taunt![/color]"
 
 ITEM_USE: str = "You use the {name}."
 ITEM_FIRE: str = "[color=#FF00FFFF]You incinerate the {name}![/color]"

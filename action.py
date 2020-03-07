@@ -15,6 +15,6 @@ class ActionType(Enum):
 @dataclass(frozen=True)
 class Action:
     action_type: ActionType = ActionType.WAIT
-    anger: int = -1
+    rage: int = -1
     target: Union[int, Tuple[int, int], None] = None
     nice_name: str = "???"

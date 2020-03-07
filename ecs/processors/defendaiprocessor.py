@@ -35,7 +35,7 @@ class DefendAIProcessor(Processor):
                         self.world.add_component(entity, DefendTarget())
                         player.defend_action = Action(
                             action_type=ActionType.USE_ITEM,
-                            anger=-20,
+                            rage=-20,
                             nice_name=f"Use {color_item_name(self.world, entity)}",
                         )
                         return
@@ -46,7 +46,7 @@ class DefendAIProcessor(Processor):
                     if target:
                         player.defend_action = Action(
                             action_type=ActionType.MOVE,
-                            anger=-1,
+                            rage=-1,
                             target=target,
                             nice_name="Retreat",
                         )
@@ -65,7 +65,7 @@ class DefendAIProcessor(Processor):
                             self.world.add_component(entity, DefendTarget())
                             player.defend_action = Action(
                                 action_type=ActionType.USE_ITEM,
-                                anger=-20,
+                                rage=-20,
                                 nice_name=f"Use {color_item_name(self.world, entity)}",
                             )
                             return
@@ -75,7 +75,7 @@ class DefendAIProcessor(Processor):
                             self.world.add_component(entity, DefendTarget())
                             player.defend_action = Action(
                                 action_type=ActionType.USE_ITEM,
-                                anger=-20,
+                                rage=-20,
                                 nice_name=f"Use {color_item_name(self.world, entity)}",
                             )
                             return
@@ -84,14 +84,14 @@ class DefendAIProcessor(Processor):
                             self.world.add_component(entity, DefendTarget())
                             player.defend_action = Action(
                                 action_type=ActionType.USE_ITEM,
-                                anger=-20,
+                                rage=-20,
                                 nice_name=f"Use {color_item_name(self.world, entity)}",
                             )
                             return
 
                     player.defend_action = Action(
                         action_type=ActionType.WAIT,
-                        anger=-1,
+                        rage=-1,
                         nice_name="Wait",
                     )
                     return
@@ -99,7 +99,7 @@ class DefendAIProcessor(Processor):
                 for entity, (item, _) in self.world.get_components(Item, Coincident):
                     player.defend_action = Action(
                         action_type=ActionType.GET_ITEM,
-                        anger=-1,
+                        rage=-1,
                         nice_name=f"Get {color_item_name(self.world, entity)}",
                     )
                     return
@@ -109,7 +109,7 @@ class DefendAIProcessor(Processor):
                 if target:
                     player.defend_action = Action(
                         action_type=ActionType.MOVE,
-                        anger=-1,
+                        rage=-1,
                         target=target,
                         nice_name="Gather items",
                     )
@@ -120,7 +120,7 @@ class DefendAIProcessor(Processor):
                 if target:
                     player.defend_action = Action(
                         action_type=ActionType.MOVE,
-                        anger=-1,
+                        rage=-1,
                         target=target,
                         nice_name="Explore",
                     )
@@ -128,6 +128,6 @@ class DefendAIProcessor(Processor):
 
                 player.defend_action = Action(
                     action_type=ActionType.WAIT,
-                    anger=-1,
+                    rage=-1,
                     nice_name="Wait",
                 )

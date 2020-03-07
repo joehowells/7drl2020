@@ -42,7 +42,7 @@ class AttackAIProcessor(Processor):
 
                     player.attack_action = Action(
                         action_type=ActionType.ATTACK,
-                        anger=+2,
+                        rage=+2,
                         nice_name=f"Attack {name}",
                     )
                     return
@@ -52,7 +52,7 @@ class AttackAIProcessor(Processor):
                 if target:
                     player.attack_action = Action(
                         action_type=ActionType.MOVE,
-                        anger=+1,
+                        rage=+1,
                         target=target,
                         nice_name="Charge",
                     )
@@ -64,7 +64,7 @@ class AttackAIProcessor(Processor):
                     if target:
                         player.attack_action = Action(
                             action_type=ActionType.MOVE,
-                            anger=-1,
+                            rage=-1,
                             target=target,
                             nice_name=f"Find {monster.name}",
                         )
@@ -73,7 +73,7 @@ class AttackAIProcessor(Processor):
                 for entity, (position, _, _) in self.world.get_components(Position, Stairs, Coincident):
                     player.attack_action = Action(
                         action_type=ActionType.USE_STAIRS,
-                        anger=-1,
+                        rage=-1,
                         target=target,
                         nice_name="Use stairs",
                     )
@@ -84,7 +84,7 @@ class AttackAIProcessor(Processor):
                 if target:
                     player.attack_action = Action(
                         action_type=ActionType.MOVE,
-                        anger=-1,
+                        rage=-1,
                         target=target,
                         nice_name="Find stairs",
                     )
@@ -95,7 +95,7 @@ class AttackAIProcessor(Processor):
                 if target:
                     player.attack_action = Action(
                         action_type=ActionType.MOVE,
-                        anger=-1,
+                        rage=-1,
                         target=target,
                         nice_name="Explore",
                     )
@@ -103,6 +103,6 @@ class AttackAIProcessor(Processor):
 
                 player.attack_action = Action(
                     action_type=ActionType.WAIT,
-                    anger=-1,
+                    rage=-1,
                     nice_name="Wait",
                 )

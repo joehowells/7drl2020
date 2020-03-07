@@ -12,7 +12,7 @@ class Player:
     defend_action: Action = Action()
 
     health: int = 10
-    anger: int = 0
+    rage: int = 0
     visible_threat: int = 0
     actual_threat: int = 0
 
