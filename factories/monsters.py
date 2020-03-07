@@ -52,7 +52,6 @@ def make_officer(x: int, y: int) -> List[Any]:
             threat=[3],
             defend=4,
             health=2,
-            article="a",
         ),
         Position(x, y),
     ]
@@ -69,7 +68,6 @@ def make_assassin(x: int, y: int) -> List[Any]:
             threat=[5],
             defend=1,
             health=1,
-            article="an",
         ),
         Assassin(),
         Position(x, y),
@@ -138,7 +136,6 @@ def make_elite_officer(x: int, y: int) -> List[Any]:
             threat=[6],
             defend=5,
             health=3,
-            article="a",
         ),
         Position(x, y),
     ]
