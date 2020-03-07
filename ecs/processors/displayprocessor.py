@@ -4,7 +4,7 @@ from typing import Tuple, Set
 from bearlibterminal import terminal
 from esper import Processor, World
 
-from constants import MAX_ANGER
+from constants import MAX_ANGER, MAX_HEALTH, MAX_THREAT
 from ecs.components.assassin import Assassin
 from ecs.components.attacktarget import AttackTarget
 from ecs.components.blinded import Blinded
@@ -47,9 +47,9 @@ def draw_borders() -> None:
     terminal.put(67, 6, 0x2534)
 
 
-def draw_bar(x: int, y: int, value: int, color: int = 0xFFFFFFFF) -> None:
+def draw_bar(x: int, y: int, value: int, max_value: int, color: int = 0xFFFFFFFF) -> None:
     terminal.color(color)
-    terminal.printf(x, y, "=" * value)
+    terminal.printf(x, y, "=" * int(20 * value / max_value))
     terminal.color(0xFFFFFFFF)
 
 
@@ -354,9 +354,9 @@ class DisplayProcessor(Processor):
                 terminal.printf(34, 1, f"Anger:  {player.anger:>3d}")
                 terminal.printf(34, 2, f"Threat: {player.actual_threat:>3d}")
 
-                draw_bar(46, 0, 20, 0xFF333333)
-                draw_bar(46, 1, 20, 0xFF333333)
-                draw_bar(46, 2, 20, 0xFF333333)
+                draw_bar(46, 0, 1, 1, 0xFF333333)
+                draw_bar(46, 1, 1, 1, 0xFF333333)
+                draw_bar(46, 2, 1, 1, 0xFF333333)
 
                 if player.health <= 4:
                     color = 0xFFFF0000
@@ -365,11 +365,11 @@ class DisplayProcessor(Processor):
                 else:
                     color = 0xFF00FF00
 
-                draw_bar(46, 0, player.health * 2, color)
-                draw_bar(46, 1, self.old_anger // 5, 0xFF0000FF)
-                draw_bar(46, 1, player.anger // 5, 0xFFFF0000)
-                draw_bar(46, 2, player.visible_threat, 0xFFFFFF00)
-                draw_bar(46, 2, player.actual_threat, 0xFFFF0000)
+                draw_bar(46, 0, player.health, MAX_HEALTH, color)
+                draw_bar(46, 1, self.old_anger, MAX_ANGER, 0xFF0000FF)
+                draw_bar(46, 1, player.anger, MAX_ANGER, 0xFFFF0000)
+                draw_bar(46, 2, player.visible_threat, MAX_THREAT, 0xFFFFFF00)
+                draw_bar(46, 2, player.actual_threat, MAX_THREAT, 0xFFFF0000)
 
                 self.old_anger = player.anger
 
