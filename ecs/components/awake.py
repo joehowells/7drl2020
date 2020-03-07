@@ -1,0 +1,2 @@
+class Awake:
+    pass

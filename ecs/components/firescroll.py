@@ -1,0 +1,2 @@
+class FireScroll:
+    pass

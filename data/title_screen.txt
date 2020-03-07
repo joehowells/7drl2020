@@ -1,0 +1,13 @@
+[color=#FFFF0000]Two Button Berserker[/color]
+[color=#FF333333]another roguelike by jhowl[/color]
+
+
+[color=#FF999999]This is getting ridiculous. You only left the dungeon for twenty minutes to buy a newspaper, and the local militia have moved in again.[/color]
+
+[color=#FF999999]Forget planning ... you[U+2019]re so angry you could kick them out right now![/color]
+
+
+This dungeon crawler only uses the [color=#FFFF0000](z)[/color] and [color=#FF0000FF](x)[/color] keys.
+What they do depends on the situation.
+
+Press [color=#FFFF0000](z)[/color] and [color=#FF0000FF](x)[/color] at the same time to start!
