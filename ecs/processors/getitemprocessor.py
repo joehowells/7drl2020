@@ -2,6 +2,7 @@ from esper import Processor, World
 
 import script
 from action import ActionType
+from constants import MAX_WEAPON, MAX_ARMOUR
 from ecs.components.equipment import Equipment
 from ecs.components.inventory import Inventory
 from ecs.components.item import Item
@@ -24,8 +25,7 @@ class GetItemProcessor(Processor):
                         self.world.delete_entity(entity, immediate=True)
 
                         if equipment is Equipment.WEAPON:
-
-                            if player.attack_equip >= 9:
+                            if player.attack_equip >= MAX_WEAPON:
                                 self.world.create_entity(Message(
                                     text=script.WEAPON_UPGRADE_FAIL,
                                     priority=45,
@@ -38,7 +38,7 @@ class GetItemProcessor(Processor):
                                 ))
 
                         if equipment is Equipment.ARMOUR:
-                            if player.defend_equip >= 9:
+                            if player.defend_equip >= MAX_ARMOUR:
                                 self.world.create_entity(Message(
                                     text=script.ARMOUR_UPGRADE_FAIL,
                                     priority=45,

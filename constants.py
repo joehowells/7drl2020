@@ -26,3 +26,6 @@ ANGER_TIER_4: int = 80
 ANGER_TIER_5: int = 95
 
 FOV_RADIUS: int = 8
+
+MAX_WEAPON: int = 6
+MAX_ARMOUR: int = 6
