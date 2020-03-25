@@ -19,7 +19,7 @@ class ThreatProcessor(Processor):
                 player.visible_threat = 0
                 player.actual_threat = 0
 
-                for entity, (monster, visible, position) in self.world.get_components(Monster, Visible, Position):
+                for entity, (monster, _, position) in self.world.get_components(Monster, Visible, Position):
                     distance = game_map.dijkstra[DijkstraMap.PLAYER][position.y][position.x]
                     in_range = 1 <= distance <= len(monster.threat)
 
