@@ -55,12 +55,18 @@ class DefendAIProcessor(Processor):
                     for entity, (item, _, _) in self.world.get_components(Item, Inventory, FireScroll):
                         candidates = []
                         for monster_entity, (monster, _) in self.world.get_components(Monster, Visible):
-                            if not self.world.has_component(monster_entity, Boss):
-                                candidates.append((max(monster.threat), monster_entity, monster))
+                            if self.world.has_component(monster_entity, Boss):
+                                continue
+
+                            if monster.visible_threat <= 0:
+                                continue
+
+                            candidate = (monster.actual_threat, monster.visible_threat, monster_entity, monster)
+                            candidates.append(candidate)
 
                         if candidates:
                             candidates.sort(reverse=True)
-                            _, monster_entity, monster = candidates[0]
+                            _, _, monster_entity, monster = candidates[0]
                             self.world.add_component(monster_entity, DefendTarget())
                             self.world.add_component(entity, DefendTarget())
                             player.defend_action = Action(

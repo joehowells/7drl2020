@@ -4,6 +4,7 @@ from typing import List, Type
 from esper import Processor, World
 
 from ecs.components.gamestate import GameState
+from ecs.processors.actualthreatprocessor import ActualThreatProcessor
 from ecs.processors.rageprocessor import RageProcessor
 from ecs.processors.attackaiprocessor import AttackAIProcessor
 from ecs.processors.awakeprocessor import AwakeProcessor
@@ -23,11 +24,12 @@ from ecs.processors.playermapprocessor import PlayerMapProcessor
 from ecs.processors.spatialprocessor import SpatialProcessor
 from ecs.processors.stairmapprocessor import StairMapProcessor
 from ecs.processors.tauntedprocessor import TauntedProcessor
-from ecs.processors.threatprocessor import ThreatProcessor
+from ecs.processors.playerthreatprocessor import PlayerThreatProcessor
 from ecs.processors.trapprocessor import TrapProcessor
 from ecs.processors.useitemprocessor import UseItemProcessor
 from ecs.processors.usestairsprocessor import UseStairsProcessor
 from ecs.processors.visibilityprocessor import VisibilityProcessor
+from ecs.processors.visiblethreatprocessor import VisibleThreatProcessor
 from factories.world import make_world
 
 # Processors that run before user input
@@ -48,7 +50,9 @@ HI_PROCESSORS: List[Type[Processor]] = [
     StairMapProcessor,
 
     SpatialProcessor,
-    ThreatProcessor,
+    VisibleThreatProcessor,
+    ActualThreatProcessor,
+    PlayerThreatProcessor,
     TauntedProcessor,
 
     # Decide which options to give the player
