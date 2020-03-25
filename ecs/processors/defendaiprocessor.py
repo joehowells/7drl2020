@@ -58,10 +58,11 @@ class DefendAIProcessor(Processor):
                             if self.world.has_component(monster_entity, Boss):
                                 continue
 
-                            if monster.max_threat <= 0:
+                            if monster.visible_threat <= 0:
                                 continue
 
-                            candidates.append((monster.cur_threat, monster.max_threat, monster_entity, monster))
+                            candidate = (monster.actual_threat, monster.visible_threat, monster_entity, monster)
+                            candidates.append(candidate)
 
                         if candidates:
                             candidates.sort(reverse=True)
