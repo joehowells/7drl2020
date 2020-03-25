@@ -10,5 +10,5 @@ class Monster:
     health: int = 1
     defend: int = 1
 
-    cur_threat: int = 0
-    max_threat: int = 0
+    visible_threat: int = 0
+    actual_threat: int = 0
